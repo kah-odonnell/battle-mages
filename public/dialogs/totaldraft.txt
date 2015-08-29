@@ -1,0 +1,1859 @@
+Long ago, a psychotic monarch terrorized the world through bloodshed and fire on the back of a great dragon.
+
+500 years later, the Mad Queen has returned.
+
+Only a few young Evokers, students of the art of arcane conjuration, can uncover the secret plots of a tournament between the greatest names in magic and stop the Mad Queen, who seeks to reclaim the dragon token that can make or break an Empire.
+
+Token Tempest
+
+["Guard I","Cold night. "],
+["Guard II","Yeah. "],
+["Guard I","You know what would pass the time? "],
+["Guard II","Besides doing our job without distractions? "],
+["Guard I","For God's sake, lighten up. We're sharing this assignment for the rest of winter. "],
+["Guard I","Are you going to stand in silence the entire time?  "],
+["Guard II","Fine. What do you want me to say? "],
+["Guard I","You could start by telling me about yourself. "],
+["Guard II","I am Kynro, a legionnaire of the Empire.  "],
+["Guard II","End of trivia. "],
+["Guard I","What about your Aptitude? "],
+["Guard II","I beg your pardon? "],
+["Guard I","What ability were you born with? For instance, my son can see very well in the dark, "],
+["Guard I","and my wife can heal my bruises. "],
+["Guard II","I know what an Aptitude is, but you should only care about one: "],
+
+Prologue
+Morgan 
+	Acquires the invocation relic 
+
+Act I - Garen
+	Grunt: Hey. Get out of bed!
+	Garen: Fine. But only because you keep coming in here.
+	Grunt: Did you sleep with that thing on your wrist?
+	Garen: I wouldn't want my new parserrokah stolen, would I?
+	Grunt: It already is stolen! 
+	Grunt: Once you've sold it, you can give your brothers their cut, 
+	Grunt: and you can stop worrying about it going missing in the night.
+	Garen: I'm going to say this again, and hopefully, for the last time:
+	Garen: I'm not selling it.
+	Garen: It's worth more to me on my wrist than it is at any pawn shop.
+	Grunt: That's not how the Painted Skulls do things, Garen.
+	Grunt: What we take, we share, and there's nothing to share if you don't sell it.
+	Grunt: But you're probably sick of hearing it from me.
+	Garen: You read my mind.
+	Grunt: So you can hear it from the boss instead.
+	Garen: What do you mean?
+	Grunt: I mean that Riko is waiting for you in the basin.
+	Grunt: Says he wants to exchange words. My advice? Don't keep him waiting.
+	/Thought bubbles:
+	Garen: So long as I have this parserrokah, there's noone I can't mug. 
+	Garen: I won't let Riko take it from me.
+	Garen: But first, I'm going to need an evocation token to defend myself,
+	Garen: and the only place I can hope to find one is the vault!
+	/Cue puzzle: the player controls the direction of the flow of water in the sewer to get to the vault
+
+	Garen: Turns out the vault is just a treasure chest. Go figure.
+	Garen: Wait a minute. These tokens! They're blank! 
+	Garen: Unless...
+	Garen: Unless I can use my Aptitude to imbue them.
+	Garen: Here goes nothing.
+	Player chooses between 
+		Perfect Stalker(Vagrant/Aberration), 
+		Nightmare Heart(Plant/Abberation),
+		Phase Spider (Undead, Insect)
+	/Garen rides a water current out of the vault, and falls into the central cistern, where Riko and the rest of the Painted Skulls are waiting.
+
+	Garen: Good morning, Riko.
+	Riko: It's 3 in the afternoon.
+	Garen: Well, we thieves do our best work at night.
+	Garen: Don't you think it's a bit early to drag everyone out of bed?
+	Riko: Enough, Garen. 
+	Riko: I've been told you pulled off a most lucrative score a few nights ago.
+	Garen: You're right. I mugged an Evoker. You must be pretty proud of me.
+	Garen: Do you like my parserrokah?
+	Riko: I do. I'm sure it would fetch a good price,
+	Riko: and I'm sure your collegues here would appreciate recieving their share.
+	Garen: Then I invite them to take it from me!
+	//Garen evokes his evocation
+	Riko: I'm not impressed by theatrics. Hand over the parserrokah.
+	Garen: I don't think you're in a position to be making demands, Riko.
+	Riko: Oh, but I am.
+	/Riko reveals a parserrokah on his arm
+	Riko: You're not the first cocky young brat I've had to put down!
+	//Battle starts
+
+Act I - Temora
+	Ilias: Speaker Marlo? It's Ilias, sir.
+	Marlo: Excellent. Is Temora with you?
+	Ilias: No, sir. She must be running late, to no one's suprise.
+	Ilias: What is it that you need?
+	Marlo: As you know, 
+	Marlo: Arcane Dynamics will be hosting its yearly evocation tournament in a week.
+	Marlo: Every major hold will be sending two representatives to compete,
+	Marlo: and this company is no exception.
+	Ilias: Of course. Ever since you took me as your pupil,
+	Ilias: I've wanted to participate in the Arcane Quadrennial.
+	Ilias: But traditionally, the company president and those with your Aptitude
+	Ilias: are the ones who represent Arcane Dynamics.
+	Marlo: Yes. But as of this year, I am both the Speaker AND the company president,
+	Marlo: which means we need a second competitor.
+	Ilias: I would be honored to-
+	Marlo: However, the tournament is more than just sport!
+	Marlo: The rules declare that the victor of each round takes from the loser
+	Marlo: an evocation token of his choice.
+	Marlo: The most powerful weapons in Exilia will be changing hands. 
+	Marlo: We can't afford to lose ours to those who would wish us harm.
+	Marlo: And if the rumors are true, and the Mad Queen has indeed returned- 
+	Ilias: Those rumors began ten years ago, and she has yet to make an appearance.
+	Ilias: They are just rumors. Nothing more!
+	Marlo: I would hope so.
+	Marlo: 500 years ago, the High King of Exilia was a Speaker, like myself.
+	Marlo: On his death bed, he chose his daughter, Morkana Kurruo, to serve as one of the Queen Regents,
+	Marlo: to wait for the next Speaker to be born into the world. 
+	Marlo: Instead, she hunted and killed the inheritors of his Aptitude, some of whom were mere infants.
+	Marlo: Her kin rule over Exilia to this day. 
+	Marlo: Fortunately, they no longer continue the practice of killing Speakers,
+	Marlo: but I doubt the Emperor would consider me a friend.
+	/Temora enters
+	Temora: Ilias...
+	Ilias: Temora.
+	Temora: You wished to see me, Speaker Marlo?
+	Marlo: Welcome, Temora. I was just discussing the Arcane Quadrennial with your colleague.
+	Marlo: Arcane Dynamics needs one more participant, 
+	Marlo: and I'd like to know which of you is better suited for the task.
+	Ilias: You're considering HER?! Sir, I must say, that is a terrible idea!
+	Temora: I am inclined to agree.
+	Temora: I fail to see how playing a child's game will further my research.
+	Temora: Evocation mastery has more practical applications than battles. 
+	Ilias: As though YOU can call what you do 'mastery.' Ha!
+	Ilias: You wouldn't be capable of making it past the first round.
+	Temora: I admit, evoking battles are not my specialty.
+	Ilias: See sir? She-
+	Temora: Which means, Ilias, that they are definitely not yours.
+	Ilias: That's big talk for a girl who wants to run from a fight.
+	Ilias: Surely you can beat me if you think battles are so beneath you.
+	Temora: I do not have my evocation tokens with me. Fortunately for you.
+	Ilias: Oh, wait a minute! It just so happens I have a blank one on me!
+	Ilias: You can just make a new token right now! Or do you want to change your excuse?
+	Temora: ...
+	Temora: No. This will do.
+	//Temora is provided a choice
+		Cosmic Arbiter (Illusionist/Necromancer/Cleric)
+		Revenant Armor (Knight/Undead)
+		Arcane Avatar (Aero/Geo/Aqua/Pyromancer)
+	Ilias: Then let's make it interesting. If I win, you'll do my paperwork for a month.
+	Temora: I accept. 
+	Marlo: There is no reason for you both to make a wager. Think this through!
+	Temora: And if I win, you will not speak to me without my without my permission. Forever.
+	Ilias: I accept! Let's battle!
+	/Battle starts
+	Temora: That settles it.
+	Ilias: ...
+	Ilias: ...!
+	Temora: Do not worry, Ilias. Just because you embarrased yourself today
+	Temora: does not mean you will embarrass yourself in front of thousands during the tourney. 
+	Marlo: Temora, are you certain you won't change your mind?
+	Temora: I am.
+	Marlo: Very well.
+	Marlo: If you won't participate in the tournament, I expect great things from your research.
+	Marlo: Both of you are dismissed.
+	/Temora leaves Arcane Castle and heads to Merchant's Row after donning a hooded robe
+	/Temora enters Bardabos's shop
+	Bardabos: Welcome to my humble shop. I carry wares from every corner of Exilia. 
+	Bardabos: Is there something I can help you with?
+	Temora: I am here to pick up an order I placed a week ago.
+	Bardabos: Oh? And what was the name for your order?
+	(Temora glances around the shop)
+	(Temora removes the hood concealing her face)
+	Temora: Temora Tengarten.
+	Bardabos: Ah, yes. One moment please.
+	(Bardabos leaves for the backroom of his shop, then returns)
+	Bardabos: Here we are. One vial of boar's blood.
+	(angrily) Temora: Keep your voice down.
+	Bardabos: You know, warriors of the Akanthi desert drink the blood of animals.
+	Bardabos: They believe it grants them the strength and heightened senses of their prey.
+	Bardabos: I'm sure this is how you intend to use this vial? 
+	Bardabos: If not, then the only other explanation- 
+	Bardabos: Well, I dare not say it-
+	Temora: Then do not.
+	Bardabos: Temora... Do you intend to practice...
+	Bardabos: Blood Magic?
+	Temora: You buy from pirates. Does it matter to whom you sell?
+	Temora: It is none of your concern what I intend to do with that blood.
+	Bardabos: Oh, but it is. So long as I pay off the right people, the Empire will turn a blind eye to selling stolen goods.
+	Bardabos: But if you are caught, it's my name they'll force out of you.
+	Bardabos: And no payment is enough for Lord Rin to overlook the use of blood magic.
+	Temora: Fortunately, you are not Lord Rin. 
+	Temora: I shall double my asking price. Either you will relinquish the vial or I will leave.
+	Temora: There will be no further negotiation.
+	Bardabos: ...
+	Temora: ...
+	Bardabos: ...
+	Temora: ...
+	Bardabos: ...
+	Temora: Triple.
+	Bardabos: Sold.
+
+Act I - Morgan
+		Dunn: Welcome to Donnington, Lady Sidra! I hope the roads were kind?
+		Sidra: Of course! There's a reason I collect taxes from my subjects, Lord Dunn. 
+		Dunn: I had been meaning to ask! Hohoho!
+		Dunn: To what do we owe the honor of a visit? 
+		Sidra: No need to be shy, my Lord.
+		Sidra: I've already told them all about your enthusiasm for the Arcane Quadrennial.
+		Sidra: I was sure you'd appreciate meeting the contenders on their way to Sundren Falls.
+		Sidra: Allow me to introduce my brother, Lord Simon Cynderon of Birchwood Hall.
+		Simon: It's a pleasure to-
+		Dunn: Yes, of course! That double-geomancer gambit back in the semi-finals of 88! Phenomenal evoking!
+		Simon: I lost that match.
+		Dunn: Aye, you did, and you lost me a lot of money! 
+		Dunn: But, I should have known better than to bet against the Blind Speaker.
+		Simon: Yes, Marlo will be quite an obstacle this year as well.
+		Simon: Fortunately, my fellow representative here is quite an evoking prodigy.
+		Simon: With her help, I believe Birchwood Hall will even the odds.
+		Simon: Lord Dunn, meet Lady Morgan Laremore.
+		Morgan: Well met, my Lord. I was quite humbled when Lord Simon granted me the opportunity to compete.
+		Simon: And I in turn was quite humbled by her mastery of the Binding Tongue.
+		Temora: And where did you study, Lady Morgan?
+		Morgan: Self-taught.
+		Temora: Is that so?
+		Dunn: My guests, allow me to introduce one of Donnington's very own, Temora Tengarten.
+		Temora: A pleasure.
+		Dunn: Temora has returned home on behalf of Arcane Dynamics. Her company is scouting for new talent.
+		Morgan: I see. You must know the Blind Speaker?
+		Temora: I do. I am Marlo's apprentice.
+		Morgan: Is it true, then? Is he really blind?
+		Temora: He is. However, when it comes to battling, he is at no disadvantage.
+		Temora: His Aptitude grants him unconditional control over his evocations,
+		Temora: whereas you or I would be limited to our knowledge of the Binding Tongue vocabulary. 
+		Simon: I suppose it's not for nothing that individuals with his Aptitude ruled over Exilia.
+		Temora: Yes. I wish both of you the best of luck in the tournament.
+		/Temora exits
+		Simon: She seems... pleasant.
+		Dunn: She's dedicated to her work, my lord. Tomorrow, she chooses a lifetime colleague, 
+		Dunn: and I'm sure the decision is weighing heavily on her.
+		Dunn: If you're not in a hurry come morning, perhaps you'd be willing to attend the scouting event?
+		Sidra: It would be interesting to see how Arcane Dynamics operates.
+		Dunn: Excellent! If you'd follow me, I can show you to your rooms in the Keep. 
+		Dunn: And since you are my liege lady,
+		Dunn: I suppose they truly are YOUR rooms! Hohoho!
+
+		Morgan: Is there a reason you're pacing? My room is directly below yours.
+		Simon: Good. That's what I asked for.
+		Morgan: And why?
+		Simon: So we could talk without being overheard. I have news.
+		Simon: Princess Nyoka Kurruo will be representing the Imperial City during the tournament.
+		Simon: ...
+		Simon: Why are you smiling? This is bad! 
+		Morgan: How, exactly?
+		Simon: The Lord of Sundren Falls is going to croak soon. 
+		Morgan: And his son Rin is a bastard... So? Where does Nyoka factor into it? 
+		Simon: The Emperor would rather eat his own crown than give Sundren Falls to Rin,
+		Simon: so he'll be looking for loyal Southerners to replace him. 
+		Morgan: Such as yourself.
+		Simon: Such as myself. But, if Princess Nyoka is the one to defeat her father's enemies,
+		Simon: as opposed to us, I've lost my only chance to prove myself worthy of the title.
+		Morgan: Don't overestimate the Princess. She'll likely be eliminated in the first round.
+		Morgan: Then, you can defeat Rin and Marlo yourself, 
+		Morgan: and the Empire will honor you with the task of dissolving Arcane Dynamics. Everyone wins.
+		Simon: And if they don't want to risk a member of the royal family losing a tournament in front of thousands?!
+		Morgan: Get some rest, Lord Simon. It will do you no good to fret over what you don't know.
+
+		Morgan: Keh heh.
+		Morgan: Haha!
+		Morgan: Kha Ha Ha Ha Ha! 
+		Morgan: Nyoka will arrive in Sundren Falls with the most powerful evocation in existance,
+		Morgan: and I'm going to be the one to take it from her!
+		Morgan: Tlilticoatl the Black Dragon!
+		Morgan: I won't rest until it's in my hands once more!
+
+
+	Aem attends the Arcane Dynamics event and imbues the "Arcane Recruiter," which looks exactly like Temora. Garen arrives and wins the event. Dunn announces that Donnington will be represented in the tournament by its two new Evokers
+		Aem: Ok, Aem. You can do this.
+		Aem: Just open the door.
+		/The player attempts to leave Aem's house, but is stopped by more dialogue
+		Aem: Heeereee we go. Just going out the front door. 
+		Aem: Nice and casual.
+		Aem: No! Bold and determined!
+		Aem: Casually determined? Yes!
+		Aem: I'll walk out the front door, casually determined.
+		Aem: There's nothing to fear on the other side of that door.
+		Aem: Except for my entire future.
+		Aem: No! I can do this!
+		Aem: Power pose!
+		Aem: I am Aem, and I am worthy of an Arcane Dynamics career!
+		Aem: I am Aem, and I am worthy of Temora!
+		Aem: Wait, that came out wrong.
+		Aem: I am worthy of a platonic, working relationship with Temora! 
+		Aem: Oh, sweet, sweet, Temora. Your eyes glow like... icicles in the sun!
+		Aem: Arise, fair sun, and let ice give way to a flowing spring,
+		Aem: and show me what my future doth bring, hithero-
+		Mom: Just go outside already!
+
+		Temora: The rules are the same as they were four years ago, when I had the honor of being chosen by the Speaker.
+		Temora: Prospective candidates will harness their Aptitudes and channel them into this: an evocation token. 
+		Temora: Observe.
+		//Temora evokes her chosen evocation
+		Dunn: Brilliant!
+		Temora: Imbuing an evocation token takes more than raw magical power. 
+		Temora: It is a reflection of your heart and mind, 
+		Temora: so take care to focus only on that which you wish to make a reality.
+		Temora: Who will go first?
+		// Several candidates later
+		Temora: Does anyone else wish to come forward?
+		Aem: I do.
+		Temora: State your name.
+		Aem: I- Temora, we've been friends since we were little. Do you not remember my name?
+		Temora: ...
+		Temora: Of course I remember. But for the sake of formality, state your name.
+		Aem: Aem Arborling.
+		Temora: Aem Arborling, I call upon you to imbue this token.
+		// Aem imbues the Arcane Recruiter. 
+		Temora: Stand back, please.
+		// Temora evokes the Arcane Recruiter. It looks just like her, but wears extremely revealing clothing
+		Aem: ...
+		Morgan: Oh, wow. I don't see this ending well.
+		Dunn: The face is quite a likeness!
+		Dunn: The body is quite, well... exposed.
+		Temora: What exactly were you focusing on?! My chest?!
+		Aem: I messed up! Can I have a do-over?
+		Temora: No! 
+		Temora: Unfortunately, it seems I have failed to find a suitable candidate for the position. 
+		Temora: I apologize for wasting your time, my lords and ladies.
+		Morgan: I can't fault you for having high standards, Temora.
+		Morgan: But it seems you haven't yet exhausted EVERY choice.
+		/Garen moves through the crowd toward Temora
+		Temora: Garen.	
+		Garen: Temora, it's been too long! You look suprised to see me.
+		Temora: Our evoking battle had a wager. If you lost, you were to submit to the authorities.
+		Temora: By all the laws of magic, you should be in prison right now.
+		Garen: You told me I had to turn myself in. You never said I couldn't break myself out.
+		Temora: And you suppose I should reward your criminal behavior with an Arcane Dynamics salary?
+		Garen: I can't change my past, but you can give me the opportunity to change my future.
+		Garen: Let me show you what I can do.
+		Temora: ...
+		Temora: Very well. Garen, I call upon you to imbue this token.
+		Aem: Oh, I get it. He doesn't have to state HIS name!
+
+		Temora: Remarkable. I have never seen stats like these.
+		Garen: So? Do I have the job?
+		Temora: There is more to it than making powerful creatures, Garen.
+
+		Morgan: If there's more to it, I fail to see the point of this little contest. 
+		Simon: Perhaps it's tradition? Temora did say that the Blind Speaker chose her at an event like this.
+		Morgan: If that's the case, then powerful creatures must be exactly what the Speaker is looking for.
+		Morgan: Seems Temora has different priorities. What could they be?
+
+		Temora: There will be a significant amount of paperwork-
+		Garen: I accept.
+		Temora: Not to mention the non-disclosure agreement-
+		Garen: I accept.
+		Temora: A mandatory drug test-
+		Garen: Gimme 2 weeks and I accept.
+		Temora: and paycheck deductions for uniform and boarding.
+		Garen: Let's wrap this up.
+		Temora: Garen.
+		Temora: Welcome to Arcane Dynamics.
+		Aem: I don't believe this...
+		Aem: All my life I've wanted to be an Evoker, and that criminal steals the job,
+		Aem: as criminals are want to do.
+		Aem: It isn't over yet. This 'Garen' will slip up eventually, and I'll be ready.
+		Simon: Quite an impressive evocation, Garen.
+		Simon: If only I could match Arcane Dynamics' offer, I'd hire you myself.
+		Morgan: Indeed. Congratulations, new Evoker.
+		Dunn: Now that we've concluded, Temora, I'd like to share a very special announcement!
+		Temora: Very well. I do not suppose I could stop you.
+		Dunn: As of this month, Donnington is the 32nd largest town in Exilia!
+		Temora: 32nd? Whats the significance of-
+		Temora: No... No! It can't be!
+		Dunn: That of course means our town is the 32nd and final participant in the Arcane Quadrennial!
+		Dunn: A round of applause for the newest contestants, Temora and Garen of Donnington!
+		Temora: I- You cannot-
+		Dunn: You'll do us proud, I'm sure! Both of you will!
+		Temora: You- 
+		Temora: Y-y-you-
+		Temora: You lard ball of a man!!!
+		Dunn: What did you say?!
+		Garen: She said, 'you laudable man.' 
+		Garen: We humbly accept, of course.
+		Morgan: Well, this is quite interesting. I suppose it's too early for us to say our goodbyes.
+		Morgan: If all goes well in the tournament, we'll be meeting again in the arena! Keh heh.
+
+
+
+
+
+Act II - Before the Storm
+	Scene I - Ensemble
+	Scene II - Temora
+	Scene III - Morgan
+	Scene IV - Garen
+	Scene V - Aem
+
+	Ensemble (Garen, Simon, Sidra, and Morgan) arrives in Sundren Falls. They are greeted by a party of Cithrin, Marlo, and Rin. Temora shows Garen half of her research
+		Imperial Camp
+		East Exilia Trading Company
+		Rin: Lady Sidra. Sundren Falls welcomes you with open arms.
+		Rin: You and Lord Simon both.
+		Sidra: Thank you, Rin. How fares your father?
+		Rin: Do not trouble yourself, my lady. He is in the care of the finest doctors in the Empire.
+		Rin: He regrets that he cannot meet you in person, and he sends his regards.
+		Rin: You must be Lady Morgan. Lord Simon's "secret weapon," if I'm not mistaken?
+		Morgan: A pleasure. But it's hardly a secret if you tell everyone, Lord Rin.
+		Rin: Then I must apologize in advance, my lady. It seems your secret is out.
+		Rin: I'm not the only one in Sundren Falls who wished to meet you.
+		Rin: This is Marlo of Arcane Dynamics. If both of you do well in the tournament,
+		Rin: I believe you could be facing each other in the semi-finals.
+		Morgan: It would be quite an honor to battle against the Speaker. Temora had nothing but praise.
+		Marlo: Oh? You've met my pupil? 
+		Morgan: Yes, we've had the pleasure of traveling together. In fact, she's standing right over-
+		Morgan: Well, now she's hiding behind someone-
+		Morgan: And she's shooting daggers at me now-
+		Temora: Yes, I am here.
+		Temora: Hello, sir. 
+		Marlo: Welcome back, Temora. Did you find any new talent in Donnington?
+		Temora: I did. Speaker Marlo, meet Garen. 
+		Marlo: Wonderful. Temora is a difficult individual to impress, Garen,
+		Marlo: but I'm sure she'll appreciate having a second set of hands to help with her research. 
+		Marlo: She takes it quite seriously.
+		Garen: Actually, mister Speaker, research will only be our second priority.
+		Marlo: Is that so? And what will you be making your first priority, Temora?
+		Temora: The tournament. Sir.
+		Sidra: We were in the company of Lord Dunn when we heard the news.
+		Sidra: For the first time ever, Donnington will compete in the Arcane Quadrennial!
+		Sidra: When Temora learned she would be representing her hometown, her face positively lit up!
+		Temora: ... (her face is twitching with anger)
+		Marlo: Oh? Is this true?
+		Temora: Every last word. 
+		Sidra: A duo of small town heroes come up from nothing to surmount a tournament's impossible odds!
+		Sidra: It would make an excellent play! 
+		Sidra: Publically, I'll be supporting my brother and the Lady Morgan, of course,
+		Sidra: but privately, I'll be rooting for you!
+		Simon: Sister, please. You're embarrassing the poor girl.
+		Cithrin: ahem!
+		Rin: Ah, yes. There's one more person I'd like you all to meet.
+		Rin: Allow me to introduce Cithrin, the Magistrate of Cith Bank.
+		Cithrin: Good afternoon. I'm sure the contestants among us have a busy day of preparation,
+		Cithrin: so I'll attempt to keep this brief. I assume you're all familiar with the tournament's 'house rules?'
+		Temora: Could you remind us? Just in case it might be someone's first day owning a parserrokah.
+		Garen: Hey! (angrily)
+		Temora: Sorry.
+		Temora: LEGALLY owning a parserrokah.
+		Cithrin: Very well. 
+		Cithrin: The Arcane Quadrennial has a tradition whereby the loser of a match forfeits to the victor a token of the victor's choosing.
+		Garen: Is there a way to opt out of this tradition?
+		Cithrin: Well, it's a bit complicated. A wager can be made before any evoking battle, for any purpose.
+		Cithrin: Technically, you could ask anything of your opponent, so long as it remains in the realm of possibility.
+		Garen: So, I could ask my opponent to turn themselves in to the authorities? And they'd have to do it?
+		Cithrin: If you were to prove victorious, then yes.
+		Cithrin: They may try to fight it at first, but the end result is always the same. 
+		Cithrin: Evokers are bound to the laws of magic, and an evoking battle is an irrefutable contract.
+		Cithrin: I must say, though, that's a very... specific example.
+		Cithrin: I think I speak for Lord Rin when I say that Sundren Falls doesn't condone vigilante justice.
+		Garen: Looking at you, Temora.
+		Temora: Do not test me, Garen.
+		Cithrin: Since these wagers can get a bit messy, most Evokers simply agree to ante their best tokens.
+		Cithrin: That means a lot of high-value items will be exchanged, and these aren't exactly commodities.
+		Cithrin: They are weapons of war, plain and simple, and their security should be everyone's concern.
+		Cithrin: Which is why I've taken the liberty of opening bank accounts in your names.
+		Garen: Free of charge?!
+		Cithrin: ....
+		Cithrin: I'm going to assume you haven't had any prior business with a bank.
+		Garen: You would be correct.
+		Cithrin: In that case, Mister Garen, 
+		Cithrin: I'd advise you do not hide the spoils of victory under your mattress,
+		Cithrin: and that you instead make use of the Bank's services.
+		Garen: Under my mattress? That's ludicrous!
+		Garen: I don't even know where I'm sleeping tonight!
+		Temora: So help me.
+		Cithrin: On a lighter note, I'd like to provide you all with a complimentary e-Venue.
+		Cithrin: It will allow you to manage your account and communicate with your colleagues no matter where you are.
+		Cithrin: It's an electronic venue that fits your wrist!
+		/A hologram appears in front of Cithrin
+		Cithrin: Oh, I'm getting a call. One moment please.
+		/Cithrin leaves
+		Marlo: I must apologize, but there's a certain voice I expected to hear from.
+		Marlo: Is Lord Simon among you?
+		Simon: I am, my good friend.
+		Marlo: Simon, you're here. It seems you haven't given up yet.
+		Temora: So it begins. Now would be a good time for us to walk away awkwardly.
+		Garen: But we haven't gotten our free e-Venues yet. What's the rush?
+		Temora: Just wait and see.
+		Simon: You've won a good number of my tokens over the years, old man. This time, I'll be taking them back.
+		Marlo: Oh, you didn't have to reenter the tournament just for those. You could have asked.
+		Marlo: To be honest, I'm surprised you want them back at all.
+		Simon: And why is that?
+		Marlo: They didn't seem to help you before.
+		Simon: Very funny. The past is the past, Marlo,
+		Simon: and if you expect to beat me again, you're blind in more ways than one.
+		Rin: That's enough. Both of you. You'll have an opportunity to settle this in the arena.
+		Marlo: He's right, Simon. But just in case you're eliminated during the first round,
+		Marlo: I'll let you rummage through the collection of paperweights I've won from you.
+		Simon: Paperweights?!
+		Marlo: The drafts in Arcane Castle are very strong, so I have to choose my paperweights quite carefully.
+		Marlo: Temora, what's the name of that one? 
+		Marlo: The evocation token I use to hold down my grocery list?
+		Temora: I would prefer not to be made a part of this. Sir.
+		Simon: Out with it, girl!
+		Sidra: For God's sake, Simon! You spent the whole day riding with her! She has a name!
+		Simon: The truth, Temora. At once. The penatly for lying in front of your leige lord is severe.
+		Temora: ...
+		Temora: Crystal Armor. The token that took you all the way to the finals eight years ago.
+		Simon: Marlo, you blind bastard! You're using Crystal Armor to hold down your bloody grocery list?!
+		Temora: Actually, my lord, the Speaker is mistaken.
+		Temora: I am quite confident that he uses it as a coaster.
+		Simon: Aaaargggh, that does it! Marlo, I challenge you to an evoking battle, here and now!
+
+		/Other commoners begin to congregate as Marlo and Simon start a battle.
+		Commoner1: Ey! Check out those unruly dudes in the fancy threads!
+		Commoner2: Looks like a couple noblemen 'bout to throw down. You know what that means!
+		BOTH: ♫ Maaaagical BATTLE! ♫ 
+		Commoner1: Wait. Freeze. I just got the illest idea.
+		Commoner2: Lay it on me.
+		Commoner1: Let's put some money on this bad boy!
+
+		Sidra: Heavens above. I was a fool to think I could have one quiet night.
+		Rin: Can I get you anything, Lady Sidra? Something to drink?
+		Sidra: It's a bit early, don't you think?
+		Rin: The Emperor is set to arrive at any moment, and this rabble will be the first thing he sees.
+		Rin: I can already tell you, this won't be a night I'll care to remember.
+		Sidra: You make a good point. I'll have what you're having.
+		Garen: Make that a triple, my friend. This is getting interesting.
+
+		Simon: I evoke the all-powerful Shifter of Sands!
+		Marlo: You should have known I'd be prepared for a move like that!
+		Simon: A counteraction! That can't be!
+
+		Commoner1: Friends!
+		Commoner1: Romans!
+		Roman (in a tracksuit): Eyy!
+		Commoner1: Countrymen! Lend us your ears!
+		Commoner2: For your gambling pleasure, your noble lords have chosen to face each other
+		Commoner1: In an epic battle of magical wits and arcane connivery!
+		Commoner2: If you believe yourself lucky enough to make a quick buck, then I have news for you:
+		/He looks at the fourth wall
+		Commoner2: Christmas just came early.
+		Commoner1: ...
+		Commoner1: Uh, what the hell is Christmas?
+		Commoner2: What I meant to say was 'the tournament just came early,'
+		Commoner2: but I locked up. I panicked, and I spouted some gibberish.
+		Commoner2: Public speaking is one of my fears, ya know? How are you not nervous?
+		Commoner1: Oh, I'm nervous as hell.
+		Commoner2: For real?
+		Commoner1: Bro, I am mere SECONDS away from a total. nervous. breakdown. 
+		Commoner1: If it weren't for one little piece of advice, that is.
+		Commoner2: Hit me with it. 
+		Commoner1: I once knew a guy, who knew a guy, 
+		BOTH: One, two, skip a few,
+		Commoner1: Who knew a guy who studied under a Breathing Guru from the Northern Mountains.
+		Commoner2: Whoa! They have those?! What did the Guru say?
+		Commoner1: The key to public speaking? Short, quick breaths.
+		Commoner2: Wow. So simple. I love it.
+		Morgan: You know we can all hear you, right?
+		Commoner2: Well hello to you, too! What's your story, red glory?
+		/Morgan has red hair
+		Morgan: Ugh.
+		Commoner2: Bam. Tell me you just witnessed that.
+		Commoner1: No doubt I did. You're exuding so much confidence, even NOBLEwomen want to strike up a convo.
+		Commoner1: Not to mention, that B is a   
+		BOTH: ♫ Diiime Piece! 
+		Commoner1: ...
+		Commoner2: ...
+		Commoner1: I think we let ourselves get a little sidetracked.
+		Commoner2: I think you're right.
+
+		Cithrin: What's the meaning of all this?!
+		Temora: Lord Simon and the Speaker have lost all sense of civility,
+		Temora: and they have challenged each other to an Evoking battle. 
+		Cithrin: Well, that much is obvious.
+		/A hologram appears in front of Cithrin
+		Cithrin: #tournamentprelude and #grudgematch are trending all over my facespace.
+		Cithrin: This little duel is generating so much traffic that the Bank's servers are over-capacity.
+		Cithrin: We've had to scale onto the Arcane Dynamics cloud, for God's sake! 
+		Garen: I'm sorry, what year is this?
+		Cithrin: The question is, how could anyone be misled into thinking this was interesting?
+
+		Commoner1: Oh, and it seems like Marlo has boxed Simon into a corner!
+		Commoner2: That's right, <name?>. Simon had no choice but to evoke his remaining units in a single turn!
+		Commoner1: He's risking it all for just one final push! If Simon doesn't have protection,
+		Commoner1: he could be making a huge mistake!
+		Cithrin: Well, it seems I have my answer.
+		Garen: Lady Magistrate? You mentioned something about a complimentary smart phone?
+		Cithrin: Oh! You mean the e-Venue? 
+		Garen: Sure. Whatever.
+		Cithrin: Well, I'm afraid that as of this hour, they've been recalled. Something about 'cutting off circulation.'
+		/She holds up her arm. it's white and blue.
+		Cithrin: I still use mine, and I've never had a problem! 
+		Cithrin: But alas, I can no longer give you one. For legal reasons.
+		Cithrin: However...
+		Cithrin: I suppose the prototype could use a new set of Beta testers.
+		Cithrin: And I suppose I've been mourning the loss of the Alpha testers for long enough...
+		Garen: Wait, what?
+		Cithrin: That settles it! 
+		Cithrin: How would you like a shiny, sparkling new, Cith Bank designed,
+		Cithrin: Re-Venue?!
+		Garen: It's everything I never knew I wanted! I'll treasure it forever.
+		Cithrin: Ahahaha! Forever! That's rich! 
+		Cithrin: But, no. The battery in that thing is designed to putter out after a year and a half. 
+		Cithrin: Well, it was great meeting you all, but I'm afraid there are a few positions that need to be filled
+		Cithrin: before the start of the tournament tomorrow.
+		Cithrin: Best of luck in the preliminaries! Yourself included, Lady... Morgan.
+
+		Commoner1: Last call for all bets! It's 4:1 in favor of the Blind Speaker, but who knows?
+		Commoner2: The Lord Cynderon might just get lucky, and the same goes for you!
+		Simon: Plebian pricks.
+		Commoner1: Ladies and gentlemen, there is still time to get in on this hot action!
+		Commoner2: Speaking of hot action, take a look at 3 o'clock.
+		Cithrin: Hello, gentlemen. May I have a moment of your time?
+		Commoner1: Let's see. Fancy garment?
+		Commoner2: Check.
+		Commoner1: Swagger in her step?
+		Commoner2: Check.
+		Commoner1: Lavish accessories?
+		Commoner2: Don't act like you don't see that hairpin.
+		Commoner1: Doesn't smell like a horse?
+		Commoner2: Check. It seems we have ourselves a 
+		BOTH: ♫ HIGH ROLLER!
+		Commoner1: So what about it, my fair lady? Care to make a wager?
+		Cithrin: I prefer the term 'high-risk investment.' And yes.
+		Cithrin: I'm offering you two a job.
+
+	Morgan
+		Garen: So.
+		Morgan: So.
+		Garen: Some banquet, huh? I can't say I've ever been to one before. Much less one held in my honor.
+		Morgan: It's in honor of all the Arcane Quadrennial contestants. Not you.
+		Garen: ...
+		Garen: You know, I could make a sarcastic comment about how 'you must be fun at parties,' 
+		Garen: if it weren't for the facts that we're at a party and you aren't being very fun. 
+		Garen: Are you mad about the seating arrangement?
+		Morgan: Suprised is the better way to describe it. 
+		Morgan: I imagined sitting next to my fellow representative of Birchwood Hall,
+		Morgan: as opposed to some Donnington dreg.
+		Garen: Dreg, eh? Well, fortuneately for you, 
+		Garen: we seem to be sitting on the OPPOSITE side of the room from the Emperor.
+		Morgan: How exactly is that fortunate for me?
+		Garen: Well, for starters, you aren't having to kiss any royal asses,
+		Garen: which is good, since you don't even seem to be pretending to have manners.
+		Morgan: And secondly?
+		Garen: You can drink as much as you want, and no one's going to care.
+		Temora: Thap's the spitrit! *hic*
+		Morgan: Temora. What a delight.
+		Temora: You think I am two drunk to dissect sarcasm in your voice?
+		Temora: Because I am not drunk.
+		Morgan: I didn't say you were.
+		Temora: Touche.
+		Morgan: Don't you think it's a little early in the story to be breaking character?
+		Morgan: The tournament starts tomorrow. You're bound to be hungover.
+		Temora: To hell with the tourbulent.
+		Temora: For the Evokers, its nothing but a contest to see whose got the biggest *hic*.
+		Temora: For the Emperror, its bread and circuses. Childish.
+		Garen: Childish? Temora, you're 15. 
+		Temora: And I am more mature that any of these clowns.
+		Temora: Speaking of clowns, looks like those two finally fimished their matsch.
+
+		/Simon and Marlo enter the banquet hall and approach the dias.
+		Emperor: Lord Simon. When I arrived in Sundren Falls,
+		Emperor: I was suprised you weren't the first one helping me off my horse.
+		Emperor: Your sister tells me you were busy battling the Speaker.
+		Emperor: I thought you would have learned your lesson by now.
+		Simon: Your Grace, I humbly ask for your forgiveness. 
+		/Simon bows
+		Simon: I am at your service.
+		Emperor: And you, Speaker Marlo. This is Arcane Dynamics' tournament,
+		Emperor: I expected to see its host at the inaugural banquet.
+		Simon: Emperor Kurruo. It's nice to finally meet you in person.
+		/Marlo doesn't bow
+		Emperor: ...
+		Emperor: ...
+
+		Temora: Uh oh. He didn't bow.
+		Nyoka: It seems your employer still clings to an ancient, ill-concieved notion
+		Nyoka: that the Speaker should be High King.
+		Temora: Who the *hic* are you?
+		Nyoka: Princess Nyoka Kurruo. You know, the Emperor's daughter.
+		Temora: Oh. I guess I should bow, too, then.
+		Nyoka: Don't trouble yourself.
+		Nyoka: If you're looking to not offend me, you've already missed your window of opportunity.
+		Temora: Cool.
+		Nyoka: I see your preparation for the Arcane Quadrennial is well underway.
+		Temora: It should not take much preshparation for me to throw my match.
+		Garen: Temora! You're going to throw your match? You can't!
+		Temora: Make me.
+		Temora: I mean, try and stop me.
+		Nyoka: How inspiring. Don't you work for Arcane Dynamics?
+		Nyoka: Are you honestly the best Evoker there is to represent the company? 
+		Temora: Actully, I am respersenting my hometown Donnington.
+		Nyoka: Never heard of it.
+		Temora: Exactly.
+		Morgan: And you, Princess? Are you the best Evoker there is to represent the Empire?
+		Nyoka: Ha!
+		Nyoka: Of course I'm the best.
+		Nyoka: You think the Empire would send me if there was a chance I'd lose to, well, you losers?
+		Morgan: No. 
+		Nyoka: I didn't think so. Now, if you'll excuse me, 
+		/She uses air quotes
+		Nyoka: I have to go meet the rest of the 'competition.'
+		Nyoka: Ahahahahaha!
+		/Nyoka walks away.
+		Morgan: Best of luck, Princess. 
+		Morgan: I'm sure an arrogant brat with her dad's gun can accomplish anything.
+		/Others in the vicinity turn around to look. Nyoka walks back.
+		Nyoka: Lady Morgan Laremore, is it?
+		Morgan: That's right.
+		Nyoka: Then allow me to congratulate you. A toast,
+		Nyoka: to the lady from the lesser House who made it into Lord Simon Cynderon's bedroom. 
+		Morgan: Excuse me?
+		Nyoka: No small feat, I'm sure! 
+		Nyoka: You must be pretty skilled in the sheets to have turned him hetero.
+		Nyoka: And as for 'dad's gun?' I assume you're refering to Tlilticoatl the Black Dragon?
+		Nyoka: I'm sorry to inform you that Tlilticoatl the Black Dragon
+		Nyoka: won't be making an appearance during the tournament.
+		Nyoka: When I crush you, 
+		Nyoka: and I WILL crush you,
+		Nyoka: there will be no question that I did it on my own merit.
+		Nyoka: Besides, use of the most powerful evocation in existance is reserved for fighting actual THREATS,
+		Nyoka: not low-born whores.
+		Nyoka: Ciao!
+
+		/Morgan's eye starts twitching. The background goes black-and-white. Her hands become engulfed in fireballs.
+		/The spirit of the real Morgan appears, and the former Morgan (Morkana) is now looking more insane
+		Morgan: You want to kill her, don't you?
+		Morkana: You! 
+		Morkana: I didn't say you could speak to me!!!
+		Morgan: Do it. Kill her. She insulted you, didn't she?!
+		Morgan: You've killed for less before!
+		Morkana: Kha Ha Ha Ha!
+		Morkana: This is odd. 
+		Morkana: You've never WANTED me to kill before.
+		Morkana: Is this a pathetic attempt at a trick?
+		Morgan: The death of one is preferable to the death of hundreds, or more,
+		Morgan: and everyone will suffer if you end up getting what you want!
+		Morkana: So, you want me to set fire to the poor girl so that I'll blow my cover?
+		Morkana: I'm impressed that you're finally showing some pragmatism.
+		Morkana: But no, her transgression is not quite worthy of death!
+		Morkana: How could she possibly have known she had the honor of addressing a Queen?!
+		Morgan: You're not a Queen. You're nothing!
+		Morkana: Wrong! So long as this invocation relic rests around your neck,
+		Morkana: I am the REAL Morgan Laremore!
+		Morkana: You're nothing but an intrusive afterthought!
+		/Color returns to the background and Morgan disappears.
+		Morkana: So SHUT UP!!!
+		Garen: Morgan... Nyoka's long gone. Are you alright?
+		Morkana: I- what?!
+		/She regains her composure
+		Morgan: I mean, yes. Yes, I'm fine.
+		Morgan: I'm afraid I've lost my appetite.
+		/She exits
+		Temora: Nyoka was brutal. I subbose madness runs in the family.
+		Garen: What do you mean?
+		Temora: Well, Mad Queen Morkana was Nyoka Kurruo's great-great-great-great-
+		Garen: One, two, skip a few...
+		Temora: great-grandmother.
+		Garen: And if the Mad Queen has returned, that makes two potential heirs to the throne.
+		Temora: Precisely. If they do meet, I doubt they would -hic-
+		Temora: I doubt they would -hic-
+		Temora: -get along.
+		Temora: Will you pass me Morgan's drink?
+		Garen: You've had enough.
+
+	Temora
+		/Landscape of the edge of Sundren Falls, with the bridge to Arcane Castle over the void
+		Garen: So, I'm finally about to enter Arcane Castle.
+		Garen: I figured I'd be wearing a ski mask for this.
+		Temora: You fantasized burglarizing it?
+		Garen: Sure, but I had to accept that it'd be folly. 
+		Garen: How could I escape after I'd looted it dry? Only one entrance was built.
+		Temora: Arcane Castle wasn't built. It appeared overnight, 500 years ago.
+		Garen: What?!
+		Temora: In fact, Arcane Castle is not a castle at all.
+		Temora: It is an evocation, not unlike your <starter unit>,
+		Temora: and is maintained by a parserrokah housed in its chandelier.
+		Garen: An evocation? But it's enormous! Where did it come from?
+		Temora: That is a company secret.
+		Garen: Are you forgetting that I'm part of the company now?
+		Temora: Garen, it might help if you consider yourself on a probationary period.
+		Garen: It wouldn't be the first. 
+		Temora: You can either convince me you are worth being my research assistant,
+		Temora: or you can suffer a fate most terrible:
+		Temora: working in the Arcane Dynamics sales department.
+		Garen: No! Not sales! 
+		Garen: I hope that threat is just the alcohol talking.
+		Temora: It is not. The adrenaline required to walk along this bridge is quite sobering.  
+		Garen: Alright, Temora. I'll bite. Show me your research.
+		Temora: I- What? Are you mocking me? 
+		Garen: No? How do you expect me to help you if-
+		Temora: You would not understand the mere basics of my work!
+		Temora: It will take months of study before you could begin to appreciate
+		Temora: the career you have been given, much less what I have done with mine!
+		Garen: Tssh. This is a waste of time.
+		Garen: It's clear there's nothing I can do to earn your respect.
+		Garen: Goodbye.
+		Garen: Instead of waiting around to be reassigned to sales, 
+		Garen: I'm going back to my old way of making money.
+		/He walks away, then walks back
+		Garen: You know. Stealing it.
+		Temora: Wait. I... apologize.
+		Temora: There is one thing I can show you.
+
+		Garen: This is where you sleep, isn't it?
+		Garen: If you're showing me your research, shouldn't we go to the research lab?
+		Temora: No!
+		Temora: You are not to enter my research lab, under any circumstances!
+		Temora: Do I make myself perfectly clear?
+		Garen: Clear as milk.
+		Temora: Garen!
+		Garen: Yes, fine. On my honor.
+		Temora: Good. 
+		Temora: Now, defend yourself with everything you have!
+		Garen: What?!	
+		/A battle starts, but Temora doesn't use an evocation. She herself enters the battle against Garen's units.
+		Garen: Temora, what are you doing? You don't have any evocations out!
+		Temora: I do not need an evocation. This is my research, Garen:
+		Temora: enhanced parserrokah fluid!
+		Temora: With it, I can use any action token I wish, using myself in place of an evocation.
+		/Temora defeats Garen's single unit
+		Temora: Arcane Dynamics' parserrokah fluid has dominated the market for more than a century,
+		Temora: but before it became the standard, fluids could serve many different purposes.
+		Garen: Fluids like... blood, by chance?
+		Temora: ...!
+		Temora: How do you know about blood magic?
+		Garen: I know you can spend life in prison for practicing it,
+		Garen: and I consider myself quite familiar with our penal code.
+		Garen: So, it's used as parserrokah fluid? That's interesting.
+		Temora: Yes. The texts on blood magic have been purged from every library in the Empire.
+		Temora: Only minor references remain. They mention unparralleled control over evocations, but-
+		Garen: But what?
+		Temora: Nothing. 
+		Temora: It is getting late. We will talk in the morning.
+
+	Garen
+		Garen: I think I've waited long enough. Temora should be sound asleep by now.
+		Garen: Time to find out what's in her research lab.
+
+		Garen: It's locked. 
+		Garen: I guess we'll never know...
+		Garen: how long this lock could have remained unpicked.
+		/He enters the room. It is covered in gruesome blood stains.
+		Garen: Oh God!
+		Garen: Wha- what is this?!
+		Garen: Did Temora bring me here...
+		Garen: to kill me?!
+		Garen: The listless expression...!
+		Garen: That cold tone of voice...!
+		Garen: I should've known, she's a-
+		Temora: Trouble sleeping?
+		Garen: ...!
+		Garen: Can you blame me?!
+		Garen: My room is down the hall from a psychopath!
+		Temora: I knew it was foolish to hire you.
+		Temora: You have managed to disobey the only explicit instruction I gave you.
+		Temora: Now, you are a true problem.
+		Temora: A problem with only one possible solution.
+		/Temora approaches Garen and Garen backs away.
+		Garen: Temora, I've never snitched on anyone.
+		Garen: Let me leave, and no one will ever learn of the atrocities you pull here.
+		Temora: No. You should know, Garen, that I am a thorough person, 
+		Temora: and I will not tolerate the uncertainty that comes with leaving a loose end.
+		Temora: When I defeat you, you will never be able to speak again!
+
+		Temora: I lost...
+		Garen: That's right. 
+		Garen: You should know, Temora, that I too am a thorough person,
+		Garen: which means I know how to end fights. Permanently.
+		/Nightmare heart appears, and a pointed tendril approaches Temora's neck
+		Temora: You're going to kill me?! 
+		Temora: I admit, what I've done is illegal, but you're making it out to be murder!
+		Garen: Wait, this isn't murder? You aren't a serial killer?
+		Temora: No! 
+		Garen: Then the blood-
+		Temora: Is an essential component in blood magic!
+		Garen: ...
+		Garen: Ah Ha Ha Ha!
+		Temora: This is funny, how?!
+		Garen: When you gave me this job, I imagined my life would be on the straight and narrow.
+		Garen: But now, I'm involved in blood magic? That's the worst crime of them all.
+		Garen: I believed I could 'turn my life around,' but a 360 wasn't what I had in mind.
+		Temora: You will NOT be involved.
+		Temora: Instead, you will be terminated immediately!
+		Garen: Oh? And what reason will you give the Speaker for my sudden unemployment?
+		Garen: Will it be because I caught you, quite literally, red-handed? 
+		Temora: Ngh...
+		Garen: Remember, I won the evoking battle, which means I set the terms!
+		Temora: That is not how it works. 
+		Temora: You are supposed to set the terms before the battle.
+		Garen: Well, let me set these terms now:
+		Garen: I'll keep my mouth shut about what you're doing here if you let me help you.
+		Temora: Help me? Why do you want to help a practicioner of blood magic?
+		Garen: I need a chance to prove you can trust me. Besides, I know from experience:
+		Garen: it wouldn't be illegal if it wasn't worth doing.
+
+	Aem
+		T-Ray: Welcome back to the opening match of the 121st Arcane Quadrennial!
+		Clyde: And a booooring match it is, T-Ray! 
+		T-Ray: Which is why, instead of covering it,
+		Clyde: we're live-reading your facespace twips, as you twerp them!
+		T-Ray: @BattlinFan from Porte Oliva writes:
+		T-Ray: 'prvldgd 2 b away frm wife + kids 4 trnamnt frnt-rw seat #humbled' 
+		Clyde: Well, @BattlinFan, the character limit is 140, 
+		Clyde: but you showed a grand total of:
+		BOTH: Zero character!
+		T-Ray: Moving right along.
+		Clyde: @Keepsitreel from Sundren Falls writes:
+		Clyde: 'Creativ problem solving, born leader, aspiring professional, will relocate! #ambitious'
+		T-Ray: Not too relevant to the tournament, Clyde.
+		Clyde: That's cause it's my sister, T-Ray, and she's still living on my couch.
+		T-Ray: Good lookin' out.
+
+		Aem: Thanks for inviting me to your box seats, Lord Dunn.
+		Dunn: The pleasure is positively mine, Mister Arborling!
+		Dunn: I never had a son, you know.
+		Dunn: You're like the whipping boy that my son, who I never had, never had!
+		Aem: Oh. Thanks? 
+		Aem: Too bad our town isn't off to a great start.
+
+		/Temora is fighting her opponent. Her evocation attempts an attack against the enemy.
+		T-Ray: Temora's evocation still can't land a hit against her opponent's!
+		Clyde: It's as though she isn't even trying, T-Ray.
+
+		Dunn: I can't believe Temora would throw the match...
+		Aem: I could. But, I have to wonder about that opposing unit.
+		Aem: It's as though it's reacting to Temora's attacks. Like it has a mind of its own.
+		Aem: Have you ever seen an evocation move like that?
+
+		/Temora's unit gets destroyed.
+		T-Ray: It seems this match has come to its end. 
+		Clyde: No doubt. 
+		T-Ray: Temora might have another evocation up her sleeve,
+		T-Ray: but why should she play it if she doesn't want to-
+		/Temora evokes the unit Aem made: Arcane Recruiter
+		T-Ray: Whoa! The lady from Donnington reveals her new unit!
+		Clyde: Is it just me or am I seeing double? Temora's evocation is... Temora?!
+
+		Aem: Hey! I MADE THAT!
+		Aem: I thought she was embarrased by it, and now she's using it in front of thousands?!
+		Dunn: I guess she DOES want to win. And I guess she's desperate to do it!
+		Dunn: Go Temora! And... go other-Temora!
+		/Rin walks into the box.
+		Rin: Excuse me. I'm in the box next to yours, and I couldn't help but overhear.
+		Rin: You created that evocation?
+		Aem: You're damn right I did!
+		Aem: It was my submission for a job at Arcane Dynamics.
+		Aem: She turned me down, and now she's using it?!
+		Rin: Well, just because you can't work with her doesn't mean your talents should go to waste.
+		Aem: Exactly! Wait, what?
+		Rin: Young man,
+		Rin: how would you like to become my squire?
+
+
+Sundren Falls
+Porte Olivia
+Donnington
+Birchwood Hall
+Halfway
+
+Imperial City
+Kornaku
+
+
+
+2232 1528
+Garen, Graden
+
+Act III - The Preliminaries
+	Temora
+		Cithrin: Good morning, Evokers! 
+		Cithrin: And welcome to Sundren Falls for the 121st Arcane Quadrennial!
+		Cithrin: As always, your opponent for the preliminaries will be chosen at random.
+		Cithrin: However, two individuals representing the same hold will be kept on 
+		Cithrin: opposite sides of the bracket,
+		Cithrin: meaning you could very well face your closest ally during the Championship match.
+
+		Tomo: Hear that, Princess? We could very well have that match I've been wanting to have!
+		Nyoka: Don't bother trying, Tomo. The audience deserves a Final that isn't utterly one-sided.
+
+		Marlo: Remember, Arcane Dynamics has a legacy to uphold. Hold nothing back!
+		Ilias: I won't fail you, sir!
+		Ilias: ...please not Temora please not Temora please not Temora...
+
+		Simon: This is it, Morgan. Prove to me you were the right choice.
+		Morgan: Of course. You have too much to gain for me to lose.
+		/Thinking:
+		Morgan: And so do I. 
+		Morgan: The sooner I face Nyoka, the sooner I'll have the Black Dragon under my control,
+		Morgan: and the sooner I can stop pretending to be your ally, you stupid, dumb... idiot.
+
+		Rin: The Arcane Quadrennial celebrates Sundren Falls' survival of the Empire's seige, centuries ago.
+		Rin: The peace endures, but so does the grudge. 
+		Wester: Don't worry, sire. We'll send them packing, just like 500 years ago.
+
+		Garen: Look at all these famous Evokers. Doesn't it make you at least a little excited?
+		Temora: Yes. Excited to get this over with.
+		Garen: Well, unlike you, I don't intend to lose!
+
+		Cithrin: And the first Evoker of the first match of the preliminaries:
+		Cithrin: Kata Hynko of Kornaku!
+
+		/Thinking:
+		Morgan: Defeating Kata in an evoking battle and binding him to do my bidding was easy.
+		Morgan: Lets hope his opponent has a bit more trouble.
+		Morgan: If he fails to bring me something to fight the Black Dragon, 
+		Morgan: the tournament isn't all he'll end up losing. Keh heh.
+
+		Cithrin: And his opponenent will be:
+		Cithrin: Temora Tengarten of Donnington!
+		Temora: Excellent. An early match clears up my schedule quite suitably.
+		Cithrin: Contestants, please report to the arena as soon as you are ready for your match.
+		Cithrin: The arena is to your left, out the city gates.
+		Garen: Well, Temora, now's your chance to prepare. If you want to at least pretend you're trying,
+		Garen: you might want to find some suckers to win tokens from.
+		Garen: Our colleagues at Arcane Castle come to mind.
+
+		Garen: Aren't the nerds in Arcane Dynamics' Research and Development lab mostly Evokers?
+		Garen: You could try relieving them of their tokens before your match.
+
+		Cithrin: Don't forget to utilize your re-Venue! 
+		Cithrin: If you have a signal, it will automatically restore your units,
+		Cithrin: and you'll be able to modify the units and actions in your inventory.
+		Cithrin: And respond to my invites on facespace, will you?
+
+		Morgan: So, the first round of the tournament, eh?
+		Temora: It seems so.
+		Morgan: I have a feeling that you're capable of more than you're letting on. 
+		Morgan: Kata may be a professional, but so are you. Act like it.
+
+		Nyoka: Haha! You're the one who couldn't hold her liquor last night!
+		Nyoka: No sign of a hangover, though. It must be the greasy breakfasts you always eat.
+		Nyoka: I mean, look at you!
+
+		Ilias: ...
+		Ilias: ...!
+		Temora: This was one of my better decisions.
+
+		Marlo: This world is inhabited by creatures called evocations.
+		Marlo: For some people, evocations are pets. Others use them for fights.
+		Marlo: Myself... well, I mostly use them for fights.
+
+		Rin: When you level up an evocation, you'll be able to adjust its stats.
+		Rin: Pay attention to which type of action tokens your unit prefers (Attacks or Sp Attacks),
+		Rin: and level accordingly.
+
+		Simon: Evocations have many possible Attributes, like illusionist or knight.
+		Simon: A unit can only use an action token if they share an Attribute.
+
+		Arcane Dynamics R&D
+			UnpaidIntern Lance: Watch out! My parserrokah fluid is enhanced! It's burning my wrist!
+			UnpaidIntern Lance: It's too hot to handle...
+
+			UnpaidIntern Janine: Stand back! I'm on adderall!
+			UnpaidIntern Janine: Losing... focus...
+
+			UnpaidIntern Allen: I have a taste for victory! Not just ramen noodles!
+			UnpaidIntern Allen: I blame it on the sodium.
+
+			UnpaidIntern Mekk: Aeromancers are the greatest. Nothing can beat them!
+			UnpaidIntern Mekk: Don't look at me! I'm invidious!
+
+			UnpaidIntern Tiana: You're Temora, right? You're in the tournament!
+			Temora: That is correct.
+			UnpaidIntern Tiana: Wow. I'm about to get wrecked.
+			UnpaidIntern Tiana: Please don't tell my mentor. 
+
+			UnpaidIntern Lor: My Koraboraba is in the top percentage of Koraborabas.
+			UnpaidIntern Lor: Wait! A friend loaned that to me!
+
+			MiddleMgmt Logan: We're making Arcane Dynamics leaner and more competitive.
+			MiddleMgmt Logan: Time for your impromptu evaluation, Temora!
+			MiddleMgmt Logan: L-let's talk bonuses...
+
+			MiddleMgmt Ross: Look around, Temora. What do you see?
+			Temora: Overworked interns, 
+			Temora: and a manager that would not understand the basics of their work.
+			MiddleMgmt Ross: Back to comm school...
+
+			UnpaidIntern Tiana: I have to warn you, my research has not been approved by the FDA!
+			UnpaidIntern Tiana: I'm sure my research has nothing to do with this rash.
+
+			UnpaidIntern Bighetti: Haha! I just made this awesome vegetable cannon!
+			Temora: Do you interns not have mentors?
+			UnpaidIntern Bighetti: Nice tokens. Can I borrow them? I need to settle a prank war.
+
+			CFO Gaugern: Temora! Funny I run into you on the day I'm touring R&D. 
+			CFO Gaugern: Granted, I'm down here pretty often. I like to keep my parserrokah up-to-date
+			CFO Gaugern: with the most promising fluid formulas.
+			CFO Gaugern: Look familiar?
+			Temora: Yes. That would be the parserrokah fluid I developed in my research.
+			CFO Gaugern: You developed it on company time, which makes it COMPANY research. 
+			CFO Gaugern: Now, show me what it can do!
+			Temora: When you lose to someone while using my research,
+			Temora: make sure you do call it 'company' reseach. Leave my name out of it.
+
+		Hot Gothic
+			Dib: Welcome to Hot Gothic, buy something or don't, whatever. 
+			Necromancers, Undead, Abberation
+
+		Banana In Public
+			Robin: Looking to embrace your wild side?
+			Plants, Beasts, Insects
+
+		The Golden Dragon
+			Bardabos: I can see that you're only interested in the exceptionally rare...
+			Pyromancer, Aquamancer, Geomancer, Aeromancer, Illusionist
+
+		Warmaiden's
+			Adrianne: Nobody beats my steel. Nobody.
+			Knights, Vagrants, Constructs
+
+		Sea World
+			Dolphin: Eeek Eeek!
+			Marine
+
+		Church of St. Keith of the Diocese of the Redeemer
+			Keith IX: Don't forget to buy indulgences on your way out!
+			Clerics, Spirits
+
+
+		Arena
+			Kata: Temora Tengarten of Donnington.
+			Temora: If it is alright with you, I would prefer we skip the introductions.
+			Kata: Ah, she wants a quick and painless end? So be it.
+			Kata: I wager the standard ante: an evocation token of your choosing.
+			Temora: As will I.
+			Kata: Then prepare to lose it!
+
+			Temora: His evocation is so evasive... how is that possible?
+			Temora: Wait a minute! 
+			Temora: His parserrokah fluid is crimson red! Is this blood magic?!
+			Temora: If only I had noticed before the match began,
+			Temora: I could have demanded information when we made our wager.
+			Temora: If I want to discover the secrets of this forbidden art,
+			Temora: I have to battle more Evokers like him. And to do that... 
+			Temora: (facepalm) I have to win this match!
+
+			Kata: I lost... to you?
+			Temora: Despite your best attempts at blood magic, no less.
+			Kata: Tssk...
+
+			Kata: What are you gonna do now? Snitch?
+			Temora: No. I want to know what you know about blood magic. 
+			Temora: How were you able to stabilize the hemo-resonance wave collapse?
+			Kata: Ha! My parserrokah is nothing like yours. It- You know what?
+			Kata: I'll tell you everything. Meet me in the Alley off Merchant's Row tonight.
+			Kata: And bring the token you just won. I have a price.
+
+		Arcane Castle
+		Temora's Room
+			/Temora is pacing
+			Garen: There you are. What happened to your plan to lose?
+			Temora: Kata was using blood magic, and I suspect he might not be the only one.
+			Garen: What?!
+			Temora: Winning his token was the only hope I had 
+			Temora: of offering him something in exchange for information.
+			Temora: I will meet with him tonight, and you will be coming with me.
+			Temora: That is, if you are still eager to prove your effectiveness.
+
+	Aem
+		Sundren Keep Sparring Yard
+			Aem: Commander, I think I've done enough for my first day.
+			Wester: I barely hit you.
+			Aem: I know, but Lord Rin-
+			Wester: It's just Rin. His father is the Lord of Sundren Falls,
+			Wester: and he's very much alive.
+			Aem: Well... Rin took me as his squire to help him with his evoking.
+			Wester: Your point?
+			Aem: I figured I would be learning how to evoke, too.
+			Wester: Look, kid. This isn't Arcane Dynamics.
+			Wester: If you want to protect Rin, you'll do it with a good old fashioned sword.
+			Wester: For now, I've had enough of wailing against a defenseless boy.
+			Wester: Wander around town for all I care. 
+			/Wester walks off
+
+			Aem: If a sword is the only way to protect Rin, then explain why this-
+			Aem: was in the armory?
+			Aem: Too bad I don't have any tokens.
+			/Wester walks back
+
+			Wester: Almost forgot. You get paid at the end of the week.
+			Wester: Here's your first check. Don't spend it all at once.
+			Wester: I should also tell you the main part of Sundren Keep is off-limits.
+			Wester: Don't go in there.
+			Wester: I repeat, do not go in the Sundren Keep Southspire, 
+			Wester: and definately don't go and buy evocation tokens with the money I just gave you.
+
+			Wester: Evokers congregate in the Southspire, which means what I'm currently saying
+			Wester: is completely irrelevant to you.
+
+			Guard: Sorry, sweet summer child. Lord Torridien's evokers like to practice in the Southspire,
+			Guard: and you'd only get in the way. 
+			Guard: Come back when you have a parserrokah and some tokens. Or, you know, never.
+
+			Garen: You're from Donnington, if I remember correctly. 
+			Aem: That's right. It's Aem. You swooped in and took my job.
+			Garen: How rude of me!
+			Garen: Don't worry, Aem. If I win the tournament, I'll give you my autograph. 
+
+			Morgan: You're the one who created 'Arcane Recruiter.' I watched Temora use it this morning.
+			Morgan: You must be proud. Or furious.
+			Aem: Furious at first, but Rin Torridien took me as his squire when he saw her use it. 
+			Morgan: Rin... Torridien? You do realise he's a bastard, and he doesn't take his father's surname?
+			Aem: R-right. I'm still working out the details.
+
+			Knight Demarr: I could easily cut you down with my sword, but I'd much rather battle you!
+			Knight Demarr: Lost... a children's strategy game... time to die...
+
+			Knight Cossandra: Women can be nice, or women can be knights. Guess which I am!
+			Knight Cossandra: At least I get paid more than you.
+
+			WhiteWarden Roy: The White Wardens are the elite protectors of Sundren Falls!
+			Aem: Why are you all just pacing the castle?
+			WhiteWarden Roy: Our pathfinding is dictated by tradition!
+			WhiteWarden Roy: You and your evocations share a powerful bond. 
+			WhiteWarden Roy: Just kidding, they aren't sentient.
+
+			Knight Roland: A peasant in the castle! You're tracking dirt everywhere!
+			Knight Roland: I guess I'm powerless to keep you from trespassing. Carry on.
+
+			Knight Ross: Y- you can see me?!
+			Knight Ross: I'm free of my curse!
+
+			Knight Allayne: You there! What's your name?
+			Aem: Aem Arborling.
+			Knight Allayne: Well, you aren't on the wanted list. 
+			Knight Allayne: But you aren't on the welcome list either!
+			Knight Allayne: Wait, I know why I didn't see you on the list. I can't read!
+
+			WhiteWarden Leon: I am sworn to hold no lands and take no wife.
+			WhiteWarden Leon: But battling drifters like you, all day, every day? That's something, right?
+			WhiteWarden Leon: What am I doing with my life...
+
+			WhiteWarden Marianne: You must fight with the strength of many men to make it this far, squire.
+			WhiteWarden Marianne: Come back here, I'll bite your legs off!
+
+			Commander Wester: Aem! I thought I told you to put aside these evoking whims.
+			Commander Wester: Here you are, wearing a parserrokah, 
+			Commander Wester: standing in direct defiance of myself and your sire.
+			Aem: But sir, I've made it this far-
+			Commander Wester: And no further! Once I defeat you, I'll be hearing no more of this!
+			Commander Wester: Fine. I admit, you've impressed me. I'll turn a blind eye this time.
+			Commander Wester: Rin's match is about to begin, so you ought to head to the Arena.
+
+		Arena
+			/Rin is fighting in the Arena
+			/Aem is standing to the back of the box.
+			Aem: Rin is doing pretty well out there. 
+			Aem: But I don't see why I have to keep an eye on his empty seat.
+			/Jun enters the box
+			Jun: Aha! The bastard Rin has many beverages in arms reach!
+			Jun: But which will he choose to drink?
+			Jun: Just one drop in the right bottle will be all Jun needs
+			Jun: to quench his thirst forever. Gah Ha Ha!
+			Aem: Hey! What are you doing in here? Get out!
+			Jun: Hmm?! The boy seeks to stop Jun? 
+			Aem: Tell me who you are!
+			Jun: Jun.
+			Aem: Right, dumb question. Tell me who you're working for!
+			Jun: The boy seeks a battle, and sets his wager! The boy will lose, and die!
+
+			Jun: Jun is routed, fairly and squarely!
+
+			Aem: Now, who sent you? Why are you here to poison Rin?
+			Jun: Jun will never tell! 
+			Jun: Aaaagghgh!
+			Aem: But, you lost the battle! 
+			Aem: If you don't tell me, the pain isn't going to go away! 
+			Jun: Gaaarrggghh! 
+			Jun: Jun... 
+			Jun: Jun likes the pain! Ghahahaha!
+			/He disappears in a puff of smoke.
+
+	Morgan
+	Sundren Falls Plaza
+		Cithrin: The participants of the next preliminary match will now be chosen!
+		Cithrin: The first contestant is:
+		Cithrin: Morgan Laremore of Birchwood Hall!
+		/Thinking:
+		Morgan: Finally, a chance to make some progress on a day rife with failure.
+		Cithrin: Her opponent: Herric Holzer of Garrington!
+		Morgan: Damn it! One of my own lackeys! 
+		Morgan: Threatening him into submission was a total waste of time.  
+		Morgan: So far, none of my servants have been capable of advancing to the next round.
+		Morgan: I'll have to do everything myself.
+		Morgan: Unless I can find someone who IS capable...
+		Morgan: Congratulations on your first victory, Temora. 
+		Morgan: I'm just thrilled for you, of course!
+		Morgan: But, last night you said you intended to lose. Why the change of heart?
+		Temora: Before this morning, 
+		Temora: I believed I would never have to leave the halls of Arcane Dynamics  
+		Temora: to learn everything the world could teach me. 
+		Temora: But my opponent, he- 
+		Temora: Nevermind. I should not bore you before your match.
+		Temora: I wish you the best of luck.
+		/She leaves
+		Morgan: Kata, that idiot. What did he do?
+		Simon: This is your big moment, Morgan. Do not-
+		Morgan: 'Fail me,' I know. 
+		Morgan: How many matches will I have to win before you stop patronizing me?
+		Simon: You forget yourself, Lady Laremore,
+		Simon: and you forget that I am your patron; I have the right to patronize.
+		Simon: But I can see you are under a lot of stress.
+		Simon: If you're looking for someone to battle before your match,
+		Simon: I hear there's a secret society of Mad Queen supporters in the city.
+		Morgan: What?! Where?
+		Simon: Somewhere along Merchant's Row.
+
+		Simon: The Mad Queen's Coven on Merchant's Row could be dangerous. Be careful.
+
+		Cithrin: Morgan, good afternoon. I hope the city is treating you well?
+		Morgan: Cithrin. How is it you came to be running this tournament?
+		Morgan: I imagined the Arcane Quadrennial would fall on the shoulders of Arcane Dynamics.
+		Cithrin: True, but the Speaker Marlo has distanced himself from its administration.
+		Cithrin: It would look bad otherwise, considering how often he's won. 
+		Cithrin: Cith Bank was happy to step in and blow the tournament way out of proportion!
+
+		Rin: Lady Morgan, the 'secret weapon.' The Emperor will be watching your match, you know.
+		Morgan: What of it? 
+		Rin: Well, Simon did bring you here to make me look incompetent in front of the Emperor,
+		Rin: and both would do anything to deny my father's wish to make me Lord of Sundren Falls.
+		Rin: So despite all that, I will say 'best of luck.'
+		Morgan: Rin, this paranoia is unbecoming. 
+		Morgan: Sure, if anyone said they didn't secretly covet Lordship of this city, they'd be lying,
+		Morgan: but your father has made a very good Imperial lackey. 
+		Morgan: Prove that you'll do the same, and you won't have anything to fear.
+
+		Garen: Among all the contestants, I've been an Evoker for the shortest amount of time.
+		Garen: Does a prodigy such as yourself have any advice?
+		Morgan: Believe in the heart of the cards.
+
+
+		Lo: Morgan Laremore. Allow me to introduce myself.
+		Lo: I am Lo, from the Order of the Immortals. Our order is dedicated
+		Lo: to the cataloging of Aptitudes and the protection of certain secrets.
+		Lo: Do you have a moment?
+		Morgan: No.
+		/Morgan goes to walk around him, but Lo blocks her way.
+		Lo: You might be interested to know of MY Aptitude.
+		Morgan: Unlikely. Now get out of my-
+		Lo: I have the ability to determine the Aptitudes of others.
+		Morgan: Wh- What?! Impossible!
+		Lo: And you have the ability to conjure fire from your fingertips, do you not?
+		Morgan: Ngh...
+		Lo: Do not fret. I am not in the business of revealing private information,
+		Lo: and I'm sure, given your Aptitude's dark history, 
+		Lo: you are indeed intent on keeping it private.
+		Morgan: Then what do you want?
+		Lo: I want to warn you, Lady Morgan. You've heard the rumors, I'm certain,
+		Lo: that the Mad Queen Morkana is returning. These rumors have merit, I'm afraid.
+		Lo: 500 years ago, the Mad Queen stole from our Order the secret to immortality,
+		Lo: and bound her soul to an invocation relic. That relic has been stolen. 
+		Lo: Should you so much as touch this relic, the Mad Queen will be reborn into this time.
+		Lo: If you are indeed Morgan Laremore... I advise you to use caution. 
+		/Lo turns to leave.
+		Morgan: And if I'm not?
+		Lo: What?
+		Morgan: If I'm not Morgan, what would you do if I had already become the Queen?
+		Lo: Then I would meet you in the Arcane Quadrennial Finals.
+		Lo: However, instead of having you wager your rarest token, 
+		Lo: I believe your necklace would do. Good luck.
+		/He leaves
+		Morgan: ...
+
+
+		Doorman: What's the password?
+		Morgan: Open up the door before I burn it, and you, to ashes.
+		Doorman: Is that your best Mad Queen impression?
+		Morgan: No, but this is!
+		Doorman: I've been royally whalloped...
+
+		Mad Queen Coven
+			MadFanatic Ron: We aim to serve Queen Morkana!
+			Morgan: You aren't capable of serving anyone. 
+
+			MadFanatic Jade: Welcome to our sancturary!
+			Morgan: Sanctuary? You think you're safe here? Kha Ha Ha Ha!
+			MadFanatic Jade: Was that an evil laugh? I give it 6/10.
+			Morgan: What?! 6/10?! I'll kill you!
+			MadFanatic Jade: Wow, you're delightfully wicked!
+
+			MadFanatic Wyatt: I still live with my mom, but the Mad Queen will change everything!
+			Morgan: You've got to be kidding me.
+			MadFanatic Wyatt: Hey, t-that was mean!
+
+			MadFanatic Wanda: Why do I love the Mad Queen? Death and hellfire, of course!
+			MadFanatic Wanda: You may be happy now, but the day of reckoning is coming!  
+
+			MadFanatic Lao: We're raising money for an ad campaign!
+			Morgan: Really? How much have you made?
+			MadFanatic Lao: $167!
+			Morgan: I'll be taking it now, then.
+			/Wins exactly $167 from the match.
+			MadFanatic Lao: Oh no! She's going to be so... Mad, I guess.
+
+			MadSeraph Jadon: House Kurruo has squandered the gifts given by Queen Morkana.
+			MadSeraph Jadon: I hope she puts an end to their tyrannical rule.
+			Morgan: You think the Queen will be LESS tyrannical? Allow me to show you otherwise.
+			MadSeraph Jadon: Very impressive!
+
+			MadSeraph Zei: Vagabonds like you will get their cummupance when the Mad Queen returns!
+			MadSeraph Zei: You'll never stop her, whoever-you-are!
+
+			MadFanatic Keagan: Would you like some literature on-
+			Morgan: No.
+			MadFanatic Keagan: Save the date for the potluck!
+
+			MadSeraph Petyr: No one is to enter the Queen's private chambers while she is inside.
+			Morgan: Inside? The Mad Queen?!
+			MadSeraph Petyr: That's what I said.
+			MadSeraph Petyr: Should've just... locked the door...
+
+			/Nyoka has a face mask and cucumbers on the eyes
+			Princess Nyoka: I told you festering parasites not to bother me! Why-
+			/She removes the cucumbers
+			Princess Nyoka: Morgan!
+			/She disappears and reappears in her usual garb
+			Morgan: Princess Nyoka, what the hell are you doing here?
+			Princess Nyoka: Me? What about you?
+			Morgan: This little cult is an embarrasement, and I needed to warm up against someone.
+			Princess Nyoka: A pretty smart plan, but I can do you one better:
+			Princess Nyoka: I told these idiots that I was the Mad Queen! Ahahahahaha!
+			Princess Nyoka: They've been serving me frozen drinks ever since!
+			Morgan: What reason do they have to believe you're the Queen?
+			Princess Nyoka: My Aptitude.
+			/She demonstrates electricity jumping between her fingers
+			Princess Nyoka: All you need to start a fire is a little spark!
+			Princess Nyoka: Anyway, the Mad Queen has good taste. Want a margarita?
+			Morgan: Yes, as a matter of fact, I would.
+			Princess Nyoka: Then battle me for it! Whoever wins gets to be Queen of these nerds!
+			Princess Nyoka: Maybe it was premature to dismiss House Lannister as a load of lucky peasants.
+			Morgan: It's 'House Laremore.'
+			Princess Nyoka: Pretty sure that's what I said.
+			Princess Nyoka: Of course, those were my casual evocations, 
+			Princess Nyoka: not the ones I'm using in the tournament. 
+			Princess Nyoka: I just think they went well with my outfit! 
+
+
+		Arena
+			Herric: I- I'll beat you! I have to beat you!
+			Morgan: Why? Did a masked woman threaten your family?
+			Herric: Wha- How did you- Why would you say a thing like that?!
+			Morgan: Just a guess. But I wouldn't worry too much. 
+			Morgan: Whoever it is, they are probably far too busy to back up their threats.
+			Morgan: ...probably. Depends on the victim, really.
+
+			Herric: What have I done...
+
+			Herric: She said she would burn my eldest son alive if I failed her...
+			Herric: I don't have a son, but still-
+			Morgan: What?! You didn't tell me- 
+			Morgan: I mean, you didn't tell HER that?
+			Herric: She wants me to eliminate her enemies, and I have to protect my family!
+			/He pulls out a knife
+			Herric: I- I don't have a choice! I have to kill you!
+			Morgan: What?!
+			/Herric takes a hit from an arrow. Knights walk onto the sand.
+			Knight: Lady Morgan, it's not safe. Come with us, please.
+
+	Garen
+		Sundren Falls Plaza
+			Knight: ... .. . ... .. 
+			Cithrin: . . .. ... .... ...
+			Knight: ... .. .. . .. ... .... ... ... .. 
+			Cithrin: Critical condition counts as still alive. If no one has died,
+			Cithrin: I see no point in cancelling the day's remaining matches. For now, 
+			Cithrin: focus your investigation on whatever it is Rin's squire was claiming. Understood?
+			Knight: Yes, ma'am!
+
+			Garen: And to think, Temora, that you almost missed out on the fun.
+			Temora: Just focus on your match, Garen. We can no longer afford to lose.
+			Garen: No, not when things are getting as bloody as you say.
+			Garen: I just hope my opponent doesn't also use blood magic. I might not have your luck.
+			Temora: Hmmph. You call it luck?
+			Cithrin: The next contestant is: Pate Pommel of Halfway!
+			Cithrin: His opponent: Garen Driedler of Donnington! 
+			Temora: You can win this match.
+			Garen: Is that so?
+			Garen: When someone ends up writing my autobiography, 
+			Garen: should they leave out this part where you're believing in me?
+			Temora: Yes.
+			Temora: If you wish to practice, I hear your Painted Skull colleagues have followed in your footsteps.
+			Garen: What do you mean?
+			Temora: You mugged me while wearing a parserrokah, so perhaps they learned from your example.
+			Temora: Off to the sewers you go.
+
+			Temora: The Painted Skulls make their nest in the sewers beneath Sundren Falls.
+			Temora: I believe the idiom 'cracking skulls' would be relevant in this context.
+
+			Garen: I'm suprised to see you out and about after an attempt on your life, Lady Morgan.
+			Morgan: I can't afford not to get a glimpse at a potential opponent's strategy.
+			Morgan: Yourself included.
+
+			Marlo: You may be representing Donnington, but you're still part of Arcane Dynamics.
+			Marlo: I wish you the best.
+
+			Ilias: So, you're the neophyte? I wouldn't stress over the tournament.
+			Ilias: No one's expecting much from you, after all.
+
+			Cithrin: It's still only day one and I already need a vacation.
+
+			Sidra: I can't believe that maniac tried to attack Lady Morgan!
+			Sidra: You and Miss Temora need to be careful out there! 
+
+		Painted Skulls Cistern
+			SkullGrunt Liona: Sorry, Garen, but you've been expelled from the Painted Skulls. No entry!
+			SkullGrunt Liona: Breaking and entering, are we? Old habits die hard.
+
+			SkullGrunt Warren: Well, if it isn't Garen, the Arcane Dynamics golden boy.
+			Garen: This is awkward, isn't it? You know me, but I've never heard of you.
+			SkullGrunt Warren: You're pushing your luck by coming here!
+
+			SkullGrunt Pall: You were right! These parserrokahs come in handy. Now hand over your wallet!
+			SkullGrunt Pall: The mugger becomes the muggee...
+
+
+			SkullGrunt Doja: Hey, Garen! I hope you're here to pay me that IOU, you jerk!
+			SkullGrunt Doja: What?! I'm supposed to give you MORE money?!
+
+			Consigliere Taylor: You ditched ME for that Temora Tengarten?! What does she have that I don't?!
+			Garen: Sanity and a job.
+			Consigliere Taylor: We are never, ever, ever, getting back together!
+
+			SkullGrunt Aliza: Witty remark indicating aggression!
+			SkullGrunt Aliza: Softer remark, with hits of humility and an ellipsis...
+
+			SkullGrunt Dax: So, you're an academic type now? Too bad street smarts beat book smarts!
+			SkullGrunt Dax: I forgot. You also have street smarts.
+
+			SkullGrunt Sewull: No one cared who I was until I put on the skull.
+			Garen: I still don't care.
+			SkullGrunt Sewull: You merely adopted the sewer stench. I was born in it!
+
+			Consigliere Jonn: Want to know how I got these scars?
+			Garen: ...
+			Consigliere Jonn: My father was a drinker. One night, he got a little crazier than usual,
+			Consigliere Jonn: so my mother grabs his parserrokah to defend herself.
+			Consigliere Jonn: She evokes some horrendous creation that cuts daddy open from neck to thigh.
+			Consigliere Jonn: Then, she turns to me, and-
+			Garen: They look like acne scars.
+			Consigliere Jonn: How dare you!
+			Consigliere Jonn: Want to know how I got these cigars?
+
+			Garen: Riko, my old friend. I love what you've done with the place.
+			Kingpin Riko: You have a lot of nerve coming back here. What could you possibly hope to accomplish?
+			Garen: I heard the Skulls were so inspired by me that they became Evokers,
+			Garen: and I needed a challenge. Now, do you know where I might find one? 
+			Garen: I'm looking around...
+			Garen: But I don't see a challenge anywhere!
+			Garen: Is there anyone standing behind you? No? Hmm...
+			Kingpin Riko: Very cute, Garen. Don't worry. If you want a challenge, you've come to the right place!
+			Kingpin Riko: I'm glad you moved on from the Painted Skulls. Now get out.
+
+		Arena
+			Garen: You must be Pate. 
+			Pate: And you must be Garen. There's already been a lot of drama during this tournament.
+			Pate: You're not going to try to kill me when you lose, are you?
+			Garen: I won't promise anything. 
+			Garen: But don't worry. I don't intend for you to find out what happens when I lose!
+			Pate: Losing to the rookie, of all people? This is so embarrasing.
+			Garen: I can assure you, there will soon be others with which you can share that feeling.
+
+			Temora: Do you not realize we are on a tight schedule? That took longer than it was supposed to.
+			Garen: I'll take that as a "congratulations."
+			Temora: We have to hurry to the Alley on Merchant's Row.
+			Temora: Now, should the situation... deteriorate...
+			Temora: Be ready to take Kata's parserrokah by force.
+			Garen: What?! How? He'll be wearing it on his arm!
+			Temora: I know. Wait for my signal.
+
+			Temora: Kata, I am suprised you would ante your blood magic parserrokah in a battle.
+			Temora: I beat you once before. How did you forsee this going any differently?
+			Kata: Because you aren't the only one here who brought a friend!
+			/Jun enters behind Temora. He holds a knife to her throat
+			Jun: Jun is... a friend?!
+			Kata: It's an expression, Jun. Don't get carried away.
+			Temora: You idiot! If you kill me during an evoking battle, both of us will die! 
+			Kata: Wrong! There's so much you don't understand about blood magic! This, for instance!
+			/The sigil on the ground turns red and shatters, as do Temora's evocations.
+			Garen: Temora!
+			Kata: One step closer and she dies, rookie!
+			Kata: You put me to shame in front of everyone, Temora. Now you'll pay.
+			/Morkana enters, wearing a mask.
+			Morkana: Keh heh. So, this is blood magic? Kata, your sportsmanship is appalling! 
+			Kata: Your grace! W-what are you doing here?!
+			Morkana: Care to rephrase that? It almost sounded like you were questioning me.
+			Kata: I-I'm sorry! I only wanted to serve you-
+			Morkana: Enough. I told you to defeat Temora or face consequences. 
+			Morkana: Did you have so little faith in yourself that you'd rely on blood magic to get it done?
+			Garen: I'm sorry, who are you?
+			Morkana: My name is Morkana, but you might know me better as 'the Mad Queen.'
+			Morkana: Kha Hahahaha!
+			Garen: You're joking, right? There's no way you're Morkana Kurruo.
+			Morkana: If you need proof, I'd be happy to oblige!
+			/Morkana sets Kata on fire.
+			Kata: Aaaauggggghhh!
+			Temora: My God.... It is you.
+			Morkana: And the pleasure is all mine, Miss Temora!
+			Temora: What do you want from me? And why are you in Sundren Falls?
+			Morkana: I only want what belongs to me: Tlilticoatl the Black Dragon!
+			Temora: Why do you think I would have it?
+			Temora: It is in the posession of your own descendants, House Kurruo. Which means-
+			Temora: Nyoka...!
+			Morkana: Keh Heh. Now you're putting it all together! 
+			Morkana: I know you don't have it, but you can help me. I've seen you fight, and I'm very impressed!
+			Morkana: I only need someone competent to help me win it. Someone unlike our late friend Kata here.
+			Garen: Last time you had the Black Dragon, you decimated entire armies.
+			Garen: We won't let history repeat itself, you lunatic!
+			Morkana: I stopped civil wars before they began, and I'm the lunatic?!
+			Morkana: They should have built a statue of me!
+			Temora: They did. Several hundred, at your command.
+			Temora: Garen is right. We will not be helping you!
+			Morkana: So be it. Jun?
+			Jun: Yes, your majesty? 
+			Morkana: Kill her!
+			/Temora uses her Aptitude to stun Jun. Not sure how this will work visually.
+			Temora: Garen! Grab Kata's parserrokah, and run! In that order!
+			/They flee.
+			Morkana: How interesting. Temora's Aptitude looks... very familiar.
+			Morkana: I think those two could end up being a problem.
+
+Act IV - Bloodletting
+	Morgan arrives at a tavern and watches a play, 'the Dragon Queens,' which tells the story of Morkana's battle and use of the Black Dragon against Tenka Kurruo, Morkana's sister. It dons on her that Tenka may also have made an invocation relic.
+
+	Aem is spying on the assassin, who is meeting with a masked Morgan and another goon. Morgan asks whether the goon has found information on Queen Tenka's vault
+
+	Garen is told to retrieve a sample of human blood to test the new parserrokah. Accidentally mugs Aem.
+
+	Temora goes to fix Garen's mistake and silence Aem after having to fight a haywire evocation. Runs into Rin, who she battles. Is told not to lose the tournament, or face the consequences of practicing blood magic
+
+Act V - Round of 32
+	Aem is woken to news that Rin has gone missing. Takes his place in the tournament, demands information from his opponent. He's working for the Mad Queen. He plots to lure the true Mad Queen to Cith Bank.
+		Painted Skulls Warrens
+		Arcane Dynamics R&D
+	Temora uses her Aptitude in her match, stopping her opponent from doing anything during his turn.
+
+	Garen 
+
+Act VI - Run on the Bank
+	Aem goes to open a bank account in Queen Tenka's name. Cithrin is puzzled, but accepts. Cithrin locks him the Queen's actual vault.
+	Morgan breaks into the bank, battles Cithrin.
+		Morgan: Lady Cithrin, you're just who I wanted to see.
+		Cithrin: Lady Morgan. To what do we owe the pleasure of this intrusion?
+		Morgan: I'm here to make a withdraw.
+		Cithrin: Then Cith Bank would be happy to oblige. A withdraw is hardly a cause for violence.
+		Morgan: On the contrary, my dear magistrate. You see, it isn't my account I wish to withdraw from!
+		Morgan: I recently recieved a notification about bank activity in Queen Tenka Kurruo's name,
+		Morgan: and I'd like to be taken to her vault.
+		Cithrin: And what business do you have with a Queen who has been dead for half a millenium?
+		Morgan: Perhaps you misunderstood me.
+		Morgan: If you noticed that your security detail is presently unconscious,
+		Morgan: you'd realize this is an armed robbery. 
+		Morgan: I'm not here to be interrogated by a peddler of coin. 
+		Cithrin: Tread carefully, Morgan. I'm not intimidated by idle threats.
+		Morgan: Very well.
+		//Morgan evokes some creature
+		Morgan: How is this for an idle threat?!
+		Cithrin: Paltry.
+		//Cithrin reveals a parserrokah
+		Cithrin: I'll make an example of those who would steal from MY bank!
+
+		Morgan: An evoker, eh? It seems I've underestimated you.
+		Morgan: But this actually makes things a lot easier, since I can make a wager.
+		Morgan: If I win, you'll have no choice but to open her vault to me!
+		Cithrin: And if I win, you'll forfeit the tournament and spend the rest of your life in prison,
+		Cithrin: and you can kiss the possibility of winning Tlilticoatl goodbye.
+		Morgan: I- What are you talking about?!
+		Cithrin: Do you honestly expect me to believe that you're aligned with that Simon Cynderon?
+		Cithrin: It's true that he gave you the opportunity to compete, 
+		Cithrin: but you're only here to further your own agenda.
+		Morgan: You conniving little bitch!
+		Morgan: I'll make you regret the day you met me!
+		Cithrin: I already do.
+
+	Temora breaks into the bank, battles Morgan. They find the vault does not contain an invocation relic.
+		Garen: Well, so much for having to take out the guards. It seems someone else beat us to the punch.
+		Temora: Yes, it does. We have to hurry.
+
+		Morgan: You lose, Cithrin. Time to make good on our arrangement.
+		Temora: Not so fast.
+
+		Morgan: Temora Tengarten. What could you possibly be doing here?
+		Temora: I could ask you the same question. 
+		Morgan: And I'd be happy to answer!
+		Morgan: Do you remember that performance of 'The Dragon Queens?' From our third night here in Sundren Falls?
+		Temora: I do.
+		Morgan: That theater troupe suggested that Queen Tenka sealed her soul in an invocation relic,
+		Morgan: in hopes of one day returning to the world, just as Queen Morkana had.
+		Temora: I remember it well.
+		Morgan: Then I'm sure you've heard the rumors that Morkana now walks among us, planning untold devastation!
+		Morgan: Our civilization can't risk having Tenka return as well.
+		Morgan: If her vault does contain an invocation relic, I intend to throw it into the void.
+		Garen: There's only one problem with that plan.
+		Morgan: Oh? And what's that?
+		Garen: Only one of those Queens is considered 'the Mad Queen,' and it isn't Tenka.
+		Morgan: Ha! 'Mad' is such a relative term. Do you think yourself the authority on 500-year-old politics?
+		Garen: Do you?
+		Morgan: I'm sorry Garen, but this discussion is growing tiresome.
+		Morgan: Now it's YOUR turn to tell me why you're here.
+		Garen: We're here to negotiate a loan with Lady Cithrin.
+		Morgan: A loan? What for?
+		Garen: Temora and I intend to open a bed and breakfast. Turns out the Evoker's life is far too stressful for us.
+		Morgan: As always, your bullshittery is unrivaled. But, whatever your reasons, you'll have to wait.
+		Morgan: I'm afraid the magistrate is a bit preoccupied.
+		Morgan: Now, as per our agreement, Lady Cithrin,
+		Morgan: I think it's time you take me to the vault. 
+		Cithrin: Very well.
+		//The vault door closes.
+		Garen: Dammit! It's sealed shut!
+		Temora: Then we will have to unseal it.
+
+		/Animation
+		Cithrin punches at her Bank communicator, and a number of holograms appear in front of her. Morgan waits impatiently. Loud bang. Both of them look at the door, which is slowly being dented.
+		Morgan: Care to speed things up?
+		Cithrin: It's a complicated process.
+		/Cithrin is looking at a Unix system, reminiscient of Jurassic Park. A prompt appears "Advanced Security Countermeasures." She presses "Activate," and the prompt reads "Rebooting System," complete with Dennis Nedry's background. An aperture in the floor opens and several glowing red eyes appear.
+		Cithrin: If I had known you'd let yourself get captured this easily, I would have just dangled an evocation token on a rope from the ceiling.
+		/Evocation drones emerge from the floor, appearing well-armed.
+		Morgan: So you intend to kill me, do you?
+		Cithrin: Precisely.
+		Morgan: In case you've forgotten, you lost our evoking battle. If you fail to take me to Tenka's vault, 
+		Morgan: you'll spend the rest of your life in torment having left our arrangement unfulfilled.
+		Cithrin: Oh, don't worry. I'll take you to it. Even if it means I'll be dragging your corpse there.
+		/The floor begins to descend. The bangs become softer.
+		Cithrin: Any last words, Morgan?
+		Cithrin: Or, should I use your real name? I suppose the situation DOES call for it.
+		Cithrin: Wouldn't you agree, 
+		Cithrin: Queen Morkana Kurruo?
+		/End Animation
+
+		Morgan: Keh heh.
+		Morgan: Haha!
+		Morgan: Khahahahahaha! 
+		Morgan: I suppose I should congratulate you on solving the great mystery of our time.
+		Morgan: Yes, I am the 'Mad Queen,' as my subjects seem to enjoy calling me.
+		Cithrin: I know. I've known since the first day you arrived in Sundren Falls.
+		Morgan: Then what are you waiting for?! Kill me, and you can save the whole world!
+		Morgan: That is, the whole world, minus one! 
+		Cithrin: What do you mean, 'minus one?'
+		Morgan: Ten years ago, a young Morgan Laremore went looking for this:
+		/She holds up her invocation relic: the necklace from the prologue.
+		Morgan: the relic to which my soul is bound.
+		Morgan: Despite what she may have heard about my reign of terror 500 years ago,
+		Morgan: she believed I could guide her. That I could grant her courage.
+		Cithrin: And instead, you took over her life.
+		Morgan: Do you fault her for her innocent curiousity?
+		Morgan: Sure, you could deprive me of this body, but my soul is immortal!
+		Morgan: Poor Morgan is the only who would truly die!
+		Morgan: Kha Hahahaha!
+
+		/Animation
+		Morgan looks at Cithrin. Cithrin's finger trembles above the 'Terminate' button. Loud bangs. Both look up.
+		Nightmare Heart's tendrils have pierced the armored door, and an explosion breaks it open.
+		Morgan takes her opportunity to burn Cithrin to a crisp. 
+		The evocation drones shatter.
+		/End Animation
+
+		Garen: She's dead!
+		Temora: What happened?
+		Morgan: I'm not sure. She was refusing to follow through on our wager, then she said she was in pain, and suddenly-
+		Garen: She spontaneously combusted?
+		Morgan: That's the term, yes. Magic works in mysterious ways.
+		Morgan: Casualties aside, I'm impressed. That door you busted open was thick. 
+		Morgan: It seems you two are pretty adamant about your bed and breakfast.
+		Temora: We are looking for Tenka's invocation relic, just as you are. 
+		Temora: We cannot allow you to throw it into the void.
+		Morgan: Oh? And why is that?
+		Temora: No one knows Tlilticoatl better than the Mad Queen,
+		Temora: and if she is behind these assassination attempts, it is only a matter of time until she acquires it. 
+		Morgan: And I suppose you intend to stop her before that happens?
+		Temora: No. After it happens.
+		Morgan: I would be remiss if I didn't tell you that's a terrible plan. 
+		Morgan: I like you, Temora. I don't want to see you hurt,
+		Morgan: but if you go up against the Black Dragon, you don't have a chance. Tlilticoatl has no equal.
+		Temora: No, I suppose it does not. But it did.
+		Garen: The last Speaker-King bestowed the Black Dragon on Queen Morkana,
+		Garen: to rule during what should have been a brief interregnum.
+		Garen: But her sister, Queen Tenka, was given Iztacoatl the White Dragon.
+		Morgan: I suppose you are a history buff after all, so I'm sure you know the rest of the story.
+		Morgan: Instead of battling Queen Morkana with dignity, 
+		Morgan: Queen Tenka gave her priceless family heirloom to a lowly advisor to throw into the void.
+		Temora: She knew her sister well, and did not want to risk her getting her hands on both of the Dragons.
+		Morgan: I know. I've seen 'The Dragon Queens' so many times, I've practically lived it myself. 
+		Morgan: Why are you telling me all this?
+		Temora: We have reason to believe that Iztacoatl is not truly gone,
+		Temora: and we need Queen Tenka to help us bring it back.
+		Morgan: That- That can't be!
+		Morgan: That's impossible!
+		Morgan: Why?! What's your reason to believe something like that?!
+		Garen: Sorry, sister. We're operating on a purely need-to-know basis.
+		Morgan: Then you won't have any help from me. 
+		Morgan: I draw the line at two resurrected Queens.
+		Garen: Not one?
+		Morgan: Shut up. 
+		Compy: WARNING. WARNING. UNAUTHORIZED LEVEL 5 VAULT ACCESS DETECTED. 
+		Compy: MAGISTRATE CITHRIN, PLEASE INPUT SECURITY CREDENTIALS IMMEDIATELY.
+		Garen: Well, it seems our security credentials have gone up in smoke. 
+		Garen: Along with our hopes of remaining alive.
+		Temora: Garen, take out the security drones!
+		Garen: Super. And what the hell, pray tell, will you be doing?
+		Temora: Morgan.
+		Morgan: Temora.
+		Temora: I believe there is a civil way to resolve our differences?
+		Morgan: Ha! I didn't think you had it in you to ask.
+		Morgan: If it's a battle you want, it's a battle you'll get!
+		Morgan: If I win, you'll tell me everything you know about the White Dragon.
+		Temora: And if I win, you will hand over Tenka's invocation relic without being difficult.
+		Garen: And if either of you win, you won't disclose the fact that we all broke into a maximum security bank,
+		Garen: or that we are at least partially responsible for the death of its magistrate?
+		Morgan & Temora: Sounds fair.
+
+		Garen: One drone down!
+		DRONE: REEVALUATING THREAT LEVEL
+		DRONE: COMPETENCE = HIGH
+		Garen: It is? 
+		Garen: That's the nicest thing anyone's ever said to me.
+		DRONE: INITIALIZING FAIL-SAFE SECURITY PROTOCOL IN TEN
+		DRONE: NINE
+		DRONE: <EXCEPTION THROWN>
+		DRONE: <cithrin.utils.TypeError: STRING 'eighgt' CANNOT BE CAST TO TYPE INTEGER>
+		DRONE: TWO-ONE-ZERO!
+		DRONE: CENTRAL LIFT MAGLOCK DISENGAGED
+		DRONE: @MagistrateCithrin: 'Enjoy your flight, moron(s)'
+		DRONE: @MagistrateCithrin: '#yolo'
+		DRONE: @MagistrateCithrin: '#blessed'
+		/Lift gears stop turning and the platform enters free-fall. Morgan and Temora continue battling in mid air
+
+		Morgan: It seems I was right about you, Temora. I will-
+		Garen: Save it! Everyone hold on to something!
+		/Loud bangs and the twisting of metal
+
+		Temora: I cannot believe it. 
+		Garen: Believe what?
+		Temora: That the vault was empty.
+		Garen: Well, Aem was in it. And since Cithrin wasn't in a position to come back and let him out,
+		Garen: I suppose you could say you saved his life?
+		Temora: Then it was all for nothing.
+		Garen: Well, not ALL for nothing.
+		Temora: Is that... Cithrin's hairpin?
+		Garen: Isn't it brilliant? Quite a heavy ruby. I'd be suprised if her neck wasn't constantly cramped.
+		Temora: Unbelieveable. I thought you had given up your 'criminal past.'
+		Garen: Are you kidding me? You're gonna try to take high road on this one?
+		Garen: You asked me to help you BREAK INTO A BANK.
+		Temora: You have a generous salary, Garen. You should not have to steal anything.
+		Garen: I know, but... something about it seemed to call out to me.
+		Garen: At least now we have something to give the Mad Queen when she takes over the world again.
+		Temora: Red and white. Those are indeed the colors of House Kurruo. 
+		Garen: See? I already have a back-up plan. Step one: total capitulation.
+		Temora: And step two?
+		Garen: I was only half-kidding about that bed and breakfast.
+
+Act VI - Round of 16
+
+Unmasked
+
+Act VII - Quarterfinals
+
+
+
+Act VIII - Semifinals
+
+Battle of the Falls
+
+Act IV - Final Round
