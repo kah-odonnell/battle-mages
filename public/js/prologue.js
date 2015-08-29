@@ -23,12 +23,8 @@ function init() {
 	h = stage.canvas.height;
 
 	var manifest = [
-		{src:"../sprites/thief_70.png", id:"thief"},
-		{src:"../sprites/messenger_70.png", id:"messenger"},
-		{src:"../sprites/guard_70.png", id:"egyptian"},
 		{src:"../sprites/knight_92.png", id:"knight"},
 
-		{src:"../imgs/tiles/city.png", id:"city"},
 		{src:"../imgs/tiles/spaceTileLarge.png", id:"spaceTile"},
 		{src:"../imgs/tiles/blackTile.png", id:"blackTile"},
 		{src:"../imgs/tiles/templereversewall1.png", id:"templereversewall1"},
@@ -46,7 +42,6 @@ function init() {
 		{src:"../imgs/tiles/templefrontcornerR.png", id:"templefrontcornerR"},
 		{src:"../imgs/tiles/templerightwall1.png", id:"templerightwall1"},
 		{src:"../imgs/tiles/snowtile1.png", id:"snowtile1"},
-		{src:"../imgs/tiles/snowtileN.png", id:"snowtileN"},
 
 		{src:"../imgs/dialogs/spacebar.png", id:"spacebarIcon"},
 		{src:"../imgs/dialogs/dialogbox.png", id:"dialogbox"},
@@ -58,7 +53,7 @@ function init() {
 		{src:"../imgs/battles/gui/rockbutton.png", id:"rockbutton"},
 		{src:"../imgs/battles/gui/scissorsbutton.png", id:"scissorsbutton"},
 
-		{src:"../imgs/battles/units/darkmagician.png", id:"darkmagician"},
+		{src:"../imgs/battles/units/placeholder.png", id:"placeholder"},
 
 		{src:"../imgs/battles/backgrounds/battlebkgd1.png", id:"battlebkgd1"},
 	];
