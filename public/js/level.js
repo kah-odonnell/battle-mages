@@ -24,6 +24,7 @@
 				currentmap["maptiles"], 
 				currentmap["entrances"],
 				currentmap["exits"],
+				currentmap["footprints"],
 				this);
 			this.getNPCs(currentmap["mapnpcs"], i)
 			var initialize = currentmap["entrances"]["initialize"];
@@ -32,13 +33,17 @@
 			}
 		}
 		this.currentmap = 0;
-		player = new Player(12, 13);
-		map = this.maplist[0];
-		map.addChild(player);
+		map = this.maplist[this.currentmap];
 		this.addChild(map);
 	}
+	Level.prototype.initPlayer =function() {
+		var player = new Player(12, 13);
+		map = this.maplist[this.currentmap];
+		map.addChild(player);
+		return player;
+	}
 	Level.prototype.addDialog = function(dialoglog) {
-		dialog1 = new Dialog(dialoglog, this);
+		var dialog1 = new Dialog(dialoglog, this);
 		this.addChild(dialog1);
 		this.setChildIndex(dialog1, this.getNumChildren()-1);
 		this.currentdialog = dialog1;	
@@ -148,6 +153,8 @@
 				if (map.entrances[route]["direction"] == "south") player.spriteDirection = player.FACING.DOWN; 
 				if (offsetX != 0) player.scaleX = -offsetX;
 				player.setIdle();
+				var mapchange = true;
+				player.makeFootprints(mapchange);
 				map.addChild(player);
 
 				g.addChildAt(map, g.getChildIndex(g.oldMap) + 1);				

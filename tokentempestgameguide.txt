@@ -1,0 +1,58 @@
+Battle Start
+Rock Paper Scissors
+BOTH: Initial Draw 7
+P1: Evoking Stage
+	Header1 - Evoking Stage
+	Player can evoke or revoke as many units as desired.
+P1: Action Stage
+	Header1 - Action Stage
+	Player can double click a Token in the hand to lock/unlock it.
+	Player can drag a Token to a unit to activate it. 
+	Player can click a Token or a Unit to reveal it in the Intel Pane.
+
+	Player uses an attack action token
+	- evaluate what units can be targeted -
+	? Player selects a target
+	Attack is conducted
+	? Damage is dealt
+P1: End Stage
+	End Stage effects are resolved.
+	Condition effects are resolved. 
+	Unlocked Tokens are returned to the library. 
+	Player draws Tokens until 7 are in hand.
+
+Ren Mei - {Health: 60/80} {Counters: Mana Tap/Diffusion/Mirror Force}
+
+Mana Tap
+targets
+	none
+triggers
+	this unit is targeted for attack
+conditions
+	attacker.mana > target.mana
+costs
+	none
+effects
+	this unit gains 1 Mana
+
+Diffusion
+targets
+	1 player unit
+triggers
+	target unit is targeted for attack
+conditions
+	player has 2 or more Tokens
+	this unit.mana >= attack.cost
+costs
+	this unit.mana -= attack.cost
+	consume 2 Tokens (player choice)	
+effects 
+	negate attack
+
+Mirror Force
+targets
+	none
+triggers
+	this unit takes damage from an attack
+conditions 
+	attacker.mana > target.mana

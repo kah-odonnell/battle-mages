@@ -5,7 +5,7 @@
  * storing information on walls and other boundaries,
  * and creating an InteractPrompt (Level.activeprompt) when the player approaches an exit
  *
- * Constructor takes 7 objects:
+ * Constructor takes 8 objects:
  *
  * 		// Titles are displayed for a few seconds on init
  * 		title: "Water Temple"
@@ -44,6 +44,13 @@
  *				"name": "Temple Interior",} 
  *		}
  *
+		"footprints": {
+			"footprintColor": '#D3EAEA',
+			"footprintMax": 30,
+			"footprintDelay": 2500,
+			"footprintColorIdle": '#C5D8D8',
+			"footprintDelayIdle": 5000,
+		},
  *		levelobject: the level instance
  *
  * A Map is initialized by Level.initialize(),
@@ -51,22 +58,23 @@
  *
 **/
 (function (window) {
-	var Map = function Map(title, subtitle, array, tileData, entrances, exits, levelobject){
+	var Map = function Map(title, subtitle, array, tileData, entrances, exits, footprints, levelobject){
 		this.hostlevel = levelobject;
 		this.INTERACTABLE = {
 			DOOR: {value: 0},
 			WALKOUT: {value: 1},
 			NPC: {value: 2},	
 		}
-		this.initialize(title, subtitle, array, tileData, entrances, exits);
+		this.initialize(title, subtitle, array, tileData, entrances, exits, footprints);
 	}
 	var m = Map.prototype = new createjs.Container();
 	m.Container_initialize = m.initialize;
-	m.initialize = function(title, subtitle, array, tileData, entrances, exits){
+	m.initialize = function(title, subtitle, array, tileData, entrances, exits, footprints){
 		this.Container_initialize();
 		this.array = array;
 		this.entrances = entrances;
 		this.exits = exits;
+		this.footprints = footprints;
 		this.alarm = false;
 		this.x = 0;
 		this.tileData = tileData;
@@ -105,7 +113,9 @@
 			return true;
 		}
 		else {
-			if (player.x == x) this.checkExit(tileX, tileY);
+			if (player !== null) {
+				if (player.x == x) this.checkExit(tileX, tileY);				
+			}
 			return false;
 		}
 	}
@@ -162,8 +172,9 @@
 							loader.getResult(tileData[tileNo.toString()])
 						);
 						newTile.x = x*tileX;
-						newTile.y = y*tileY + 40;
+						newTile.y = y*tileY + tileY;
 						newTile.regY = newTile.getBounds().height;
+						if (newTile.getBounds().width > 80) newTile.regX = tileX;
 						//The y and regY offset give walls a higher z-index than floors
 						this.addChild(newTile);
 						newTile.cache(0,0,newTile.getBounds().width, newTile.regY);
@@ -209,19 +220,17 @@
 			}
 		}
 		//There are transparent gaps between tiles; fill them with the color of the foundation tile
-		if (tileData[0] == "snowtile1") {
-			var color = '#FFFFFF'
-			var shape = new createjs.Shape();
-			shape.graphics.beginFill(color).drawRect(0, 0, mapWidth, mapHeight);
-			shape.regY = 0;
-			shape.y = 0;
-			alphaBackground.addChildAt(shape);
-			/* Is a lot of small things worse than one big thing? yes
-			var city = new createjs.Bitmap(loader.getResult("city"));
-			alphaBackground.addChild(city);
-			*/
-			this.addChild(alphaBackground);
-		}
+		var color = '#FFFFFF'
+		var shape = new createjs.Shape();
+		shape.graphics.beginFill(color).drawRect(0, 0, mapWidth, mapHeight);
+		shape.regY = 0;
+		shape.y = 0;
+		alphaBackground.addChildAt(shape);
+		/* Is a lot of small things worse than one big thing? yes
+		var city = new createjs.Bitmap(loader.getResult("city"));
+		alphaBackground.addChild(city);
+		*/
+		this.addChild(alphaBackground);
 		alphaBackground.cache(0,0, mapWidth, mapHeight)
 	}
 
@@ -235,6 +244,7 @@
 		var currentY = Math.round(this.y);
 		var goalX = tileX*40 - canvas.width/2 + currentX;
 		var goalY = tileY*40 - Math.floor(canvas.height/40)*20 + currentY;
+		//Make goalX and goalY products of 20
 		var moveDistX = 0;
 		var moveDistY = 0;
 		var overlap = 0;
@@ -254,7 +264,8 @@
 				break;
 			}
 		}
-		while ((goalY - moveDistY >= 0) && (this.getBounds().height - 40 > canvas.height + moveDistY)) {
+		var defaultHeight = this.tileData.defaultHeight;
+		while ((goalY - moveDistY >= 0) && (this.getBounds().height - defaultHeight > canvas.height + moveDistY)) {
 			if (currentY > goalY) {
 				moveDistY -= 20;
 			}

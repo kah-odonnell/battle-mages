@@ -4,6 +4,7 @@ var stage, w, h, loader;
 var player;
 var map;
 var level;
+var mouseX, mouseY;
 
 var sortFunction = function(obj1, obj2, options) {
     if (obj1.y > obj2.y) { return 1; }
@@ -13,6 +14,13 @@ var sortFunction = function(obj1, obj2, options) {
 function signOf(number) {
 	return number?number<0?-1:1:0
 }
+
+function getMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    mouseX = evt.clientX - rect.left
+    mouseY = evt.clientY - rect.top
+}
+window.addEventListener('mousemove', getMousePos, false);
 
 function init() {
 	stage = new createjs.Stage("canvas");
@@ -24,6 +32,8 @@ function init() {
 
 	var manifest = [
 		{src:"../sprites/knight_92.png", id:"knight"},
+		{src:"../sprites/audrey_92.png", id:"audrey"},
+		{src:"../sprites/audrey_p_92.png", id:"audreyparserrokah"},
 
 		{src:"../imgs/tiles/spaceTileLarge.png", id:"spaceTile"},
 		{src:"../imgs/tiles/blackTile.png", id:"blackTile"},
@@ -43,6 +53,23 @@ function init() {
 		{src:"../imgs/tiles/templerightwall1.png", id:"templerightwall1"},
 		{src:"../imgs/tiles/snowtile1.png", id:"snowtile1"},
 
+		{src:"../imgs/tiles/grasstile1.png", id:"grasstile1"},
+		{src:"../imgs/tiles/grasstile2.png", id:"grasstile2"},
+		//{src:"../imgs/tiles/forest_reversewall1.png", id:"forest_reversewall1"},
+		//{src:"../imgs/tiles/forest_reversebottomleft.png", id:"forest_reversebottomleft"},
+		//{src:"../imgs/tiles/forest_reversebottomright.png", id:"forest_reversebottomright"},
+		{src:"../imgs/tiles/forest_reversetopright.png", id:"forest_reversetopright"},
+		{src:"../imgs/tiles/forest_reversetopleft.png", id:"forest_reversetopleft"},
+		{src:"../imgs/tiles/forest_backwall0.png", id:"forest_backwall0"},
+		{src:"../imgs/tiles/forest_backwall1.png", id:"forest_backwall1"},
+		//{src:"../imgs/tiles/forest_backwalldoor.png", id:"forest_backwalldoor"},
+		{src:"../imgs/tiles/forest_backcornerL.png", id:"forest_backcornerL"},
+		//{src:"../imgs/tiles/forest_frontcornerL.png", id:"forest_frontcornerL"},
+		{src:"../imgs/tiles/forest_leftwall0.png", id:"forest_leftwall0"},
+		{src:"../imgs/tiles/forest_backcornerR.png", id:"forest_backcornerR"},
+		//{src:"../imgs/tiles/forest_frontcornerR.png", id:"forest_frontcornerR"},
+		{src:"../imgs/tiles/forest_rightwall0.png", id:"forest_rightwall0"},
+
 		{src:"../imgs/dialogs/spacebar.png", id:"spacebarIcon"},
 		{src:"../imgs/dialogs/dialogbox.png", id:"dialogbox"},
 		{src:"../imgs/dialogs/dialogarrow.png", id:"dialogarrow"},
@@ -52,8 +79,17 @@ function init() {
 		{src:"../imgs/battles/gui/paperbutton.png", id:"paperbutton"},
 		{src:"../imgs/battles/gui/rockbutton.png", id:"rockbutton"},
 		{src:"../imgs/battles/gui/scissorsbutton.png", id:"scissorsbutton"},
+		{src:"../imgs/battles/gui/cancel.png", id:"cancelbutton"},
 
-		{src:"../imgs/battles/units/placeholder.png", id:"placeholder"},
+		{src:"../imgs/battles/units/renmei.png", id:"renmei"},
+		{src:"../imgs/battles/units/token_renmei.png", id:"token_renmei"},
+
+		{src:"../imgs/battles/actions/arcanechain.png", id:"arcanechain"},
+		{src:"../imgs/battles/actions/small_arcanechain.png", id:"small_arcanechain"},
+		{src:"../imgs/battles/actions/neurolyse.png", id:"neurolyse"},
+		{src:"../imgs/battles/actions/small_neurolyse.png", id:"small_neurolyse"},
+		{src:"../imgs/battles/actions/mirrorforce.png", id:"mirrorforce"},
+		{src:"../imgs/battles/actions/small_mirrorforce.png", id:"small_mirrorforce"},
 
 		{src:"../imgs/battles/backgrounds/battlebkgd1.png", id:"battlebkgd1"},
 	];
@@ -73,6 +109,7 @@ function handleComplete() {
 	document.getElementById("loader").className = "";
 
 	level = new Level(level1maps);
+	player = level.initPlayer()
 	map = level.maplist[0];
 	stage.addChild(level);
 	createjs.Ticker.setFPS(60);
@@ -103,10 +140,10 @@ function isEmpty(obj) {
 var Key = {
 	_pressed: {},
 
-	LEFT: 37,
-	UP: 38,
-	RIGHT: 39,
-	DOWN: 40,
+	LEFT: 65,
+	UP: 87,
+	RIGHT: 68,
+	DOWN: 83,
 	SPACE: 32,
 	  
 	isDown: function(keyCode) {

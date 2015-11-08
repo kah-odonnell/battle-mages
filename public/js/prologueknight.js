@@ -421,8 +421,12 @@
 			if (c >= 30) {
 				this.chase();
 			} else {
-				this.setIdle();
+		 		this.setIdle();
 				level.addDialog(this.battleStartDialog);
+				var g = this;
+				setTimeout(function(){
+					player.faceDirection(g);
+				}, 250)
 			}
 		} else {
 			this.setIdle();

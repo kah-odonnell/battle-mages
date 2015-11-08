@@ -16,7 +16,7 @@
 			this.moodRange[key].talkingSprites = moodData[key]["talkingSprites"];
 			this.moodRange[key].isAnimated = moodData[key]["isAnimated"];
 			this.moodRange[key].regX = moodData[key]["regX"];
-			this.moodRange[key].regY = moodData[key]["regY"];
+			this.moodRange[key].yOffset = moodData[key]["yOffset"];
 			this.moodList.push(key);
 		}
 		this.activeMood = initData["mood"];
@@ -38,7 +38,8 @@
 			var img = new createjs.Bitmap(loader.getResult(currentMood.silentSprites[i]));
 			this.charChildren.push(img);
 		}
-		this.regY = currentMood.regY;
+		this.regY = this.charChildren[0].getBounds().y;
+		this.y += currentMood.yOffset;
 		this.regX = currentMood.regX;
 
 		this.addChild(this.charChildren[0]);

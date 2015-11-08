@@ -110,7 +110,7 @@
 			}
 		}
 
-		if (this.direction == "south") {
+		if (this.direction == "north") {
 			for (var i = 0; i <= this.viewDist; i++) {
 				if (map.tileFloor(this.array[this.tileY][this.tileX - i])) {
 					this.active.push([this.tileX-i, this.tileY])

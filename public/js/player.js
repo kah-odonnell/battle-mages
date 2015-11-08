@@ -16,9 +16,9 @@
 		this.xVelocity = 3;
 		this.yVelocity = 2.5;
 
+		this.footprintData = level.maplist[level.currentmap].footprints;
 		this.footprintCounter = 0;
 		this.footprintArray = []
-		this.maxFootprints = 25;
 		this.hasIdleFootprints = false;
 		this.FACING = {
 			SIDE: {xFootWidth: 10, yFootWidth: 1, xOffset: 0, yOffset: 1, movingOffset: 5},
@@ -26,6 +26,8 @@
 			DOWN: {xFootWidth: 6, yFootWidth: 0, xOffset: 3, yOffset: 0, movingOffset: 0}
 		}
 		this.spriteDirection = this.FACING.SIDE;
+		this.currentAnimation = "";
+		this.doubleKeys = false;
 
 		this.isMoving = false;
 		this.isMovingX = false;
@@ -35,37 +37,40 @@
 	p.Container_initialize = p.initialize;
 	Player.prototype.initialize = function(){
 		p.Container_initialize();
+		var scale = 2;
 		var data = new createjs.SpriteSheet({
-			"images": [loader.getResult("knight")],
+			"images": [loader.getResult("audreyparserrokah")],
 			"frames": {
-				"width": 100, 
-				"height": 92, 
-				"count": 36, 
-				"regX": 46, 
-				"regY": 92
+				"width": 50*scale, 
+				"height": 46*scale, 
+				"count": 41, 
+				"regX": 28*scale, 
+				"regY": 46*scale
 			},
 			// define two animations, run (loops, 1.5x speed) and jump (returns to run):
 			"animations": {
-				"idleSide": [0, 1, "idleSide", .05], 
-				"idleUp": [25, 25, "idleUp", .05], 
-				"idleDown": [12, 14, "idleDown", .05], 
-				"runSide": [2, 10, "runSide", 1],
-				"runUp": [26, 35, "runUp", 4],
-				"runDown": [15, 24, "runDown", 4]
+				"idleSide": [0, 4, true, .05], 
+				"idleUp": [30, 30, true, .05], 
+				"idleDown": [15, 19, true, .05], 
+				"runSide": [5, 13, true, 1],
+				"runUp": [31, 40, true, 1.5],
+				"runDown": [20, 29, true, 1.5]
 			},
 			"framerate": 10
 		});
-		this.idleSide = new createjs.Sprite(data, "idleSide");
-		this.idleUp = new createjs.Sprite(data, "idleUp");
-		this.idleDown = new createjs.Sprite(data, "idleDown");
-		this.runSide = new createjs.Sprite(data, "runSide");
-		this.runUp = new createjs.Sprite(data, "runUp");
-		this.runDown = new createjs.Sprite(data, "runDown");
-		this.addChild(this.idleSide);
+		this.sprite = new createjs.Sprite(data);
+		this.addChild(this.sprite);
 	}
 	Player.prototype.tick = function() {
 		this.tileX = Math.floor(this.x/40);
 		this.tileY = Math.floor(this.y/40);
+		//Checking for these key combinations before changing certain sprites prevents sprite lockup
+		if (Key.isDown(Key.UP) && Key.isDown(Key.LEFT)) this.doubleKeys = true;
+		else if (Key.isDown(Key.UP) && Key.isDown(Key.RIGHT)) this.doubleKeys = true;
+		else if (Key.isDown(Key.DOWN) && Key.isDown(Key.LEFT)) this.doubleKeys = true;
+		else if (Key.isDown(Key.DOWN) && Key.isDown(Key.RIGHT)) this.doubleKeys = true;
+		else this.doubleKeys = false;
+		//Handle movement of sprite
 		if (!(map.alarm)) {
 		 	if (Key.isDown(Key.UP)) this.moveUp();
 		 	if (Key.isDown(Key.DOWN)) this.moveDown();
@@ -75,7 +80,7 @@
 		} else {
 			this.setIdle();
 		}
-
+		//Do footprints on an interval
 		if (this.footprintCounter == 0) {
 			this.footprintCounter++;
 		}
@@ -85,38 +90,45 @@
 		else {
 			this.footprintCounter++;			
 		}
-		if (this.footprintArray.length > this.maxFootprints) {
+		if (this.footprintArray.length > this.footprintData.footprintMax) {
 			map.removeChild(this.footprintArray[0]);
 			this.footprintArray.shift()					
 		}
+		if (this.footprintCounter % 12 == 0) {
+			this.hasIdleFootprints = false;
+		}
 		this.makeFootprints();
 	}
-	Player.prototype.makeFootprints = function(){
+	Player.prototype.faceDirection = function(obj) {
+		if (obj.spriteDirection == obj.FACING.SIDE) {
+			this.spriteDirection = this.FACING.SIDE;
+			if (obj.x < this.x)	this.scaleX = 1;
+			if (obj.x > this.x)	this.scaleX = -1;
+		}
+		if (obj.spriteDirection == obj.FACING.UP) {
+			this.spriteDirection = this.FACING.DOWN;
+		}
+		if (obj.spriteDirection == obj.FACING.DOWN) {
+			this.spriteDirection = this.FACING.UP;
+		}
+		this.setIdle();
+	}
+	Player.prototype.makeFootprints = function(mapchange){
 		var footprintInterval = 5;
+
+		//if moving, attempt to create a footprint
 		if (this.isMoving) {
+			//every 'footprintInterval' number of ticks, make a new footprint
 			if (this.footprintCounter % footprintInterval == 0) {
-				var color = '#D3EAEA'
+				var color = this.footprintData.footprintColor;
+				var duration = this.footprintData.footprintDelay;
+
 				var shape = new createjs.Shape();
 				shape.graphics.beginFill(color).drawCircle(0, 0, 4);
 				shape.regY = -6
-				//Determine x and y coords of footprints through random chance
+				//if footprintCounter is an even multiple of footprintInterval, the created footprint will be offset south
+				//set X and Y of the south footprint (West/East determined mathematically)
 				if (this.footprintCounter % (2*footprintInterval) == 0){
-					shape.x = (
-						this.x + 
-						this.scaleX*(
-							this.spriteDirection.xFootWidth/4 + 1 + 
-							this.xVelocity/2 + 
-							this.spriteDirection.xOffset -
-							this.isMovingX*(this.spriteDirection.movingOffset + 2)
-						)
-					);
-					shape.y = (
-						this.y + 
-						this.spriteDirection.yFootWidth + 
-						shape.regY + 
-						this.spriteDirection.yOffset/2
-					);
-				} else {
 					shape.x = (
 						this.x + 
 						this.scaleX*(
@@ -127,7 +139,25 @@
 						)
 					);
 					shape.y = (
-						this.y + 
+						this.y - 1 + 
+						this.spriteDirection.yFootWidth + 
+						shape.regY + 
+						this.spriteDirection.yOffset/2
+					);
+				//else: if footprintCounter is an odd multiple of footprintInterval, the created footprint will be offset north
+				//set X and Y of the north footprint (West/East determined mathematically)
+				} else {
+					shape.x = (
+						this.x + 
+						this.scaleX*(
+							this.spriteDirection.xFootWidth/4 + 1 + 
+							this.xVelocity/2 + 
+							this.spriteDirection.xOffset -
+							this.isMovingX*(this.spriteDirection.movingOffset + 2)
+						)
+					);
+					shape.y = (
+						this.y - 1 + 
 						shape.regY - 
 						this.spriteDirection.yOffset
 					);
@@ -138,112 +168,178 @@
 				createjs.Tween.get(
 					this.footprintArray[this.footprintArray.length - 1]
 				).to(
-					{alpha:0,visible:false},2500
+					{alpha:0,visible:false}, duration
 				);
 
 				map.addChild(this.footprintArray[this.footprintArray.length - 1])
 			}					
 		} 
-		if (!(this.isMoving) && !(this.hasIdleFootprints)) {
-			var color = '#C5D8D8'
+		//if "idle" footprints havent been generated since this object became idle, create both footprints
+		if ((!(this.isMoving) && !(this.hasIdleFootprints)) || mapchange) {
+			var color = this.footprintData.footprintColorIdle;
+			var duration = this.footprintData.footprintDelayIdle;
+
+			//south footprint appearance
 			var shape1 = new createjs.Shape();
 			shape1.graphics.beginFill(color).drawCircle(0, 0, 4);
 			shape1.regY = -4
-			shape1.x = (
-				this.x + 
-				this.scaleX*(
+			//south footprint - X and Y Position
+			if (this.spriteDirection == this.FACING.SIDE) {
+				shape1.x = this.x + this.scaleX*(
+					this.spriteDirection.xFootWidth/4 + 4 + 
+					this.xVelocity/2 + 
+					this.spriteDirection.xOffset
+				)
+				shape1.y = (
+					this.y - 2 +
+					this.spriteDirection.yFootWidth + 
+					shape1.regY + 
+					this.spriteDirection.yOffset/2
+				);
+			}
+			else {
+				shape1.x = this.x + this.scaleX*(
 					this.spriteDirection.xFootWidth/4 + 1 + 
 					this.xVelocity/2 + 
 					this.spriteDirection.xOffset
 				)
-			);
-			shape1.y = (
-				this.y + 
-				this.spriteDirection.yFootWidth + 
-				shape1.regY + 
-				this.spriteDirection.yOffset/2
-			);
+				shape1.y = (
+					this.y - 1 + 
+					this.spriteDirection.yFootWidth + 
+					shape1.regY + 
+					this.spriteDirection.yOffset/2
+				);
+			}
+			//Add south footprint to our footprintArray and begin to fade out
 			this.footprintArray.push(shape1);
 			createjs.Tween.get(
 				this.footprintArray[this.footprintArray.length - 1]
 			).to(
-				{alpha:0,visible:false},5000
+				{alpha:0,visible:false}, duration
 			);
+			//Add south footprint to map container
 			map.addChild(this.footprintArray[this.footprintArray.length - 1])
 
+			//north footprint appearance
 			var shape2 = new createjs.Shape();
 			shape2.graphics.beginFill(color).drawCircle(0, 0, 4);
 			shape2.regY = -5;
-			shape2.x = (
-				this.x + 
-				this.scaleX*(
+			//north footprint - X Position
+			if (this.spriteDirection == this.FACING.SIDE) {
+				shape2.x = this.x + this.scaleX*(
+					this.spriteDirection.xFootWidth/4 - 6 + 
+					this.xVelocity/2 + 
+					this.spriteDirection.xOffset
+				)
+			}
+			else {
+				shape2.x = this.x + this.scaleX*(
 					this.spriteDirection.xFootWidth/4 - 7 + 
 					this.xVelocity/2 + 
 					this.spriteDirection.xOffset
 				)
-			);
+			}
+			//north footprint - Y Position
 			shape2.y = (
-				this.y + 
+				this.y - 1 + 
 				shape2.regY - 
 				this.spriteDirection.yOffset
 			);
-
+			//Add north footprint to our footprintArray and begin to fade out
 			this.footprintArray.push(shape2);
 			createjs.Tween.get(
 				this.footprintArray[this.footprintArray.length - 1]
 			).to(
-				{alpha:0,visible:false},5000
+				{alpha:0,visible:false}, duration
 			);
+			//Add north footprint to map container
 			map.addChild(this.footprintArray[this.footprintArray.length - 1])
-
 			this.hasIdleFootprints = true;
+
+			if (mapchange) {
+				for (var i = 0; i < 4; i++) {
+					var shape3 = new createjs.Shape();
+					shape3.graphics.beginFill(color).drawCircle(0, 0, 4);
+					shape3.regY = -4
+					shape3.x = shape1.x;
+					shape3.y = shape1.y;
+
+					this.footprintArray.push(shape3);
+					createjs.Tween.get(
+						this.footprintArray[this.footprintArray.length - 1]
+					).to(
+						{alpha:0,visible:false}, duration
+					);
+					map.addChild(this.footprintArray[this.footprintArray.length - 1])
+
+					var shape4 = new createjs.Shape();
+					shape4.graphics.beginFill(color).drawCircle(0, 0, 4);
+					shape4.regY = -5
+					shape4.x = shape2.x;
+					shape4.y = shape2.y;
+
+					this.footprintArray.push(shape4);
+					createjs.Tween.get(
+						this.footprintArray[this.footprintArray.length - 1]
+					).to(
+						{alpha:0,visible:false}, duration
+					);
+					map.addChild(this.footprintArray[this.footprintArray.length - 1])
+				}
+			}
 		}
 	}
 	Player.prototype.setIdle = function() {
 		this.isMoving = false;
 		this.isMovingX = false;
-		this.removeChild(this.runSide);
-		this.removeChild(this.runUp);
-		this.removeChild(this.runDown);
 		if (this.spriteDirection == this.FACING.SIDE) {
-			this.addChild(this.idleSide);
-			this.removeChild(this.idleUp);
-			this.removeChild(this.idleDown);
+			var anim = "idleSide";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.UP) {
-			this.removeChild(this.idleSide);
-			this.addChild(this.idleUp);
-			this.removeChild(this.idleDown);
+			var anim = "idleUp";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.DOWN) {
-			this.removeChild(this.idleSide);
-			this.removeChild(this.idleUp);
-			this.addChild(this.idleDown);
+			var anim = "idleDown";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 	}
 	Player.prototype.setRun = function() {
 		this.isMoving = true;
 		this.hasIdleFootprints = false;
-		this.removeChild(this.idleSide);
-		this.removeChild(this.idleUp);
-		this.removeChild(this.idleDown);
 		if (this.spriteDirection == this.FACING.SIDE) {
 			this.isMovingX = true;
-			this.addChild(this.runSide);
-			this.removeChild(this.runUp);
-			this.removeChild(this.runDown);
+			var anim = "runSide";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.UP) {
-			this.isMovingX = false;
-			this.removeChild(this.runSide);
-			this.addChild(this.runUp);
-			this.removeChild(this.runDown);
+			var anim = "runUp";
+			if ((this.currentAnimation != anim) && (!this.doubleKeys)) {
+				this.isMovingX = false;
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.DOWN) {
-			this.isMovingX = false;
-			this.removeChild(this.runSide);
-			this.removeChild(this.runUp);
-			this.addChild(this.runDown);
+			var anim = "runDown";
+			if ((this.currentAnimation != anim) && (!this.doubleKeys)) {
+				this.isMovingX = false;
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 	}
 	Player.prototype.moveLeft = function() {
@@ -315,7 +411,8 @@
 			this.y += this.yVelocity;
 			this.setRun();
 			//map needs to move up when player gets to the bottom of map
-			if ((local.y > canvas.height-180) && (map.getBounds().height - 40 > canvas.height - map.y)) {
+			var defaultHeight = level.maplist[level.currentmap].tileData.defaultHeight;
+			if ((local.y > canvas.height-180) && (map.getBounds().height - defaultHeight > canvas.height - map.y)) {
 				map.y -= this.yVelocity;
 			}			
 		}

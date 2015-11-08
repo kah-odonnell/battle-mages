@@ -1,4 +1,3 @@
-
 var level1maps = [
 	{
 		"title": "The Mad Queen's Sepulcher",
@@ -23,6 +22,8 @@ var level1maps = [
 			[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 		],  
 		"maptiles": {
+			"defaultHeight": 40,
+
 			"999": "spaceTile",
 
 			"99": "blackTile",
@@ -60,6 +61,13 @@ var level1maps = [
 				"isDoor": true,
 				"name": "Temple Interior",} 
 		},
+		"footprints": {
+			"footprintColor": '#D3EAEA',
+			"footprintMax": 30,
+			"footprintDelay": 2500,
+			"footprintColorIdle": '#C5D8D8',
+			"footprintDelayIdle": 5000,
+		},
 		"mapnpcs": [
 			{"name": "Jeff", 
 			"type": "prologueknight", 
@@ -92,7 +100,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 370,}
+							"yOffset": 0,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -100,7 +108,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 270,}
+							"yOffset": 15,}
 						},
 					"initialize": 
 						{"Jeff": 
@@ -141,7 +149,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 370,}
+							"yOffset": 0,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -149,7 +157,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 270,}
+							"yOffset": 15,}
 						},
 					"initialize": 
 						{"Jeff": 
@@ -179,7 +187,7 @@ var level1maps = [
 						{"xPosition": 650,},
 					}
 				},
-				["Jeff","Hey! You're not supposed to be back here! I call hacks! "], 
+				["Jeff","I'm a knight in shining armor, but it turns out the ladies only want knights with tested metal. So how about a battle? "], 
 				{"event": 
 					{"battleinit": "Jeff", }
 				}, ],
@@ -193,7 +201,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 370,}
+							"yOffset": 0,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -201,7 +209,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 270,}
+							"yOffset": 15,}
 						},
 					"initialize": 
 						{"Jeff": 
@@ -232,7 +240,7 @@ var level1maps = [
 					}
 				},
 				["Jeff","Good luck on your quest to screw with the game. "], ],
-			},
+			},/*
 			{"name": "Tom", 
 			"type": "prologueknight", 
 			"personality": "faceLeft", 
@@ -259,7 +267,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 370,}
+							"yOffset": 370,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -267,7 +275,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 270,}
+							"yOffset": 270,}
 						},
 					"initialize": 
 						{"Tom": 
@@ -308,7 +316,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 370,}
+							"yOffset": 370,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -316,7 +324,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 270,}
+							"yOffset": 270,}
 						},
 					"initialize": 
 						{"Tom": 
@@ -361,7 +369,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 370,}
+							"yOffset": 370,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -369,7 +377,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"regY": 270,}
+							"yOffset": 270,}
 						},
 					"initialize": 
 						{"Tom": 
@@ -400,7 +408,7 @@ var level1maps = [
 					}
 				},
 				["Tom","Don't you know modifying client-side javascript is a felony? "], ],
-			},
+			},*/
 		] },
 	{
 		"title": "The Mad Queen's Sepulcher",
@@ -408,40 +416,45 @@ var level1maps = [
 		"maparray": [
 			[99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99],
 			[99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99, 99],
-			[99, 99, 99, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 99, 99, 99],
-			[99, 99, 99, 99, 99, 99, 99, 99, 99, 10, 10, 99, 99, 99, 99, 99, 99, 99, 99, 99],
+			[99, 99, 83, 82, 82, 82, 81, 81, 99, 99, 99, 99, 99, 99, 99, 81, 81, 86, 99, 99],
+			[99, 99, 85, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 10, 10, 10, 10, 88, 99, 99],
+			[99, 99, 85, 11, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 10, 10, 10, 88, 99, 99],
+			[99, 99, 85, 10, 10, 10, 11, 11, 10, 10, 10, 11, 11, 11, 10, 10, 10, 88, 99, 99],
+			[99, 99, 85, 10, 10, 10, 11, 11, 10, 10, 10, 10, 10, 11, 10, 10, 10, 88, 99, 99],
+			[99, 99, 85, 10, 10, 10, 11, 10, 10, 10, 10, 10, 10, 10, 11, 10, 88, 88, 99, 99],
+			[99, 99, 85, 11, 10, 10, 10, 10, 11, 10, 10, 10, 10, 10, 11, 10, 10, 88, 99, 99],
+			[99, 99, 85, 10, 10, 10, 10, 10, 11, 10, 10, 10, 10, 10, 10, 10, 88, 88, 99, 99],
+			[99, 99, 85, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 88, 99, 99],
+			[99, 99, 99, 99, 99, 99, 99, 99, 94, 10, 10, 95, 99, 99, 99, 99, 99, 99, 99, 99],
+			[99, 99, 99, 99, 99, 99, 99, 99, 94, 10, 10, 95, 99, 99, 99, 99, 99, 99, 99, 99],
 			[99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99],
-		],  
+		],
 		"maptiles": {
+			"defaultHeight": 280,
+
 			"999": "spaceTile",
 
-			"99": "blackTile",
-			"91": "templereversewall1",
-			"92": "templereversebottomleft",
-			"93": "templereversebottomright",
-			"94": "templereversetopright",
-			"95": "templereversetopleft",
+			"99": "forest_backwall0",
+			"91": "forest_reversewall1",
+			"92": "forest_reversebottomleft",
+			"93": "forest_reversebottomright",
+			"94": "forest_reversetopright",
+			"95": "forest_reversetopleft",
 
 			"0": "snowtile1",
 
-			"81": "templebackwall0",
-			"82": "templebackwall1",
-			"83": "templebackcornerL",
-			"84": "templefrontcornerL",
-			"85": "templeleftwall1",
-			"86": "templebackcornerR",
-			"87": "templefrontcornerR",
-			"88": "templerightwall1",
-			"89": "templebackwalldoor",
+			"81": "forest_backwall0",
+			"82": "forest_backwall1",
+			"83": "forest_backcornerL",
+			"84": "forest_frontcornerL",
+			"85": "forest_leftwall0",
+			"86": "forest_backcornerR",
+			"87": "forest_frontcornerR",
+			"88": "forest_rightwall0",
+			"89": "forest_backwalldoor",
 
-			"10": "snowtile1",
+			"10": "grasstile1",
+			"11": "grasstile2",
 			"19": "snowtileN",
 		},
 		"entrances": {
@@ -450,26 +463,45 @@ var level1maps = [
 		"exits": {
 			"sideDoorA": {
 				"x": 9, 
-				"y": 11, 
+				"y": 13, 
 				"isDoor": false,
 				"name": "Temple Exterior",
-				"set": ["sideDoorB"]  },
+				"set": ["sideDoorB", "sideDoorC", "sideDoorD"] },
 			"sideDoorB": {
 				"x": 10, 
-				"y": 11, 
+				"y": 13, 
 				"isDoor": false,
 				"name": "Temple Exterior", 
-				"set": ["sideDoorA"] },
+				"set": ["sideDoorA", "sideDoorC", "sideDoorD"] },
 			"sideDoorC": {
+				"x": 9, 
+				"y": 12, 
+				"isDoor": false,
+				"name": "Temple Exterior",
+				"set": ["sideDoorA", "sideDoorB", "sideDoorD"]  },
+			"sideDoorD": {
+				"x": 10, 
+				"y": 12, 
+				"isDoor": false,
+				"name": "Temple Exterior", 
+				"set": ["sideDoorA", "sideDoorB", "sideDoorC"] },
+			"sideDoorE": {
 				"x": 16, 
 				"y": 13, 
 				"isDoor": false,
 				"name": "Temple Sexterior", },
-			"sideDoorD": {
+			"sideDoorF": {
 				"x": 17, 
 				"y": 7, 
 				"isDoor": false,
 				"name": "Temple Sasdasdexterior", },
+		},
+		"footprints": {
+			"footprintColor": '#004C00',
+			"footprintMax": 30,
+			"footprintDelay": 350,
+			"footprintColorIdle": '#004C00',
+			"footprintDelayIdle": 1000,
 		},
 		"mapnpcs": [],
 	}

@@ -62,10 +62,11 @@
 		this.speakertext = new createjs.Text(" ", "26px crazycreation", "#000000");
 		this.textline1 = new createjs.Text(" ", "26px crazycreation", "#000000");
 		this.textline2 = new createjs.Text(" ", "26px crazycreation", "#000000");
-		this.speakertext.y = 25;
+		this.boxY = 335;
+		this.speakertext.y = this.boxY + 15;
+		this.textline1.y = this.boxY + 60;
+		this.textline2.y = this.boxY + 85;
 		this.speakertext.x = 350;
-		this.textline1.y = 75;
-		this.textline2.y = 95;
 		this.textline1.x = 100;
 		this.textline2.x = 100;
 		this.textline1.textBaseline = "alphabetic";
@@ -81,21 +82,21 @@
 	Dialog.prototype = new createjs.Container();
 	Dialog.prototype.initialize = function(){
 		this.x = 0;
-		this.y = 292;
+		this.y = 0;
 
 		var box = new createjs.Bitmap(loader.getResult("dialogbox"));
-		box.y = 300;
+		box.y = 1000;
 		this.addChild(box);		
 		this.box = box;
 
 		var arrow = new createjs.Bitmap(loader.getResult("dialogarrow"));
-		arrow.y = -16;
+		arrow.y = this.boxY - 16;
 		arrow.x = this.script[0]["dialogsetup"]["initialize"][this.currentspeaker.charName]["xPosition"];
 		this.addChild(arrow);
 		this.arrow = arrow;
 
 		this.delay(1000);
-		createjs.Tween.get(box, {loop: false}).to({y:0},1000,createjs.Ease.getPowInOut(4));
+		createjs.Tween.get(box, {loop: false}).to({y:this.boxY},1000,createjs.Ease.getPowInOut(4));
 		this.hostlevel.paused = true;
 
 		this.addChild(this.speakertext);
@@ -146,7 +147,7 @@
 		}
 		this.textline3 = new createjs.Text("", "26px crazycreation", "#000000");
 		this.textline3.isVisible = false;
-		var lineMaxWidth = canvas.width - 200;
+		var lineMaxWidth = canvas.width - 250;
 		this.textline3.text = line;
 		if (this.textline3.getBounds().width > lineMaxWidth) {
 			this.textline3.text = " ";
@@ -264,8 +265,8 @@
 	Dialog.prototype.closelog = function() {
 		this.speakertext.text = " ";
 		this.delay(1000);
-		createjs.Tween.get(this.box, {loop: false}).to({y:300},1000,createjs.Ease.getPowInOut(4));
-		createjs.Tween.get(this.arrow, {loop: false}).to({y:300},1000,createjs.Ease.getPowInOut(4));
+		createjs.Tween.get(this.box, {loop: false}).to({y:1000},1000,createjs.Ease.getPowInOut(4));
+		createjs.Tween.get(this.arrow, {loop: false}).to({y:1000},1000,createjs.Ease.getPowInOut(4));
 		this.closing = true;
 		for (var key in this.characters) {
 			var x = this.characters[key].x;

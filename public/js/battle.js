@@ -5,6 +5,12 @@
 		var turnPlayer = null;
 		var battlePlayer = new BattlePlayer(player);
 		var battleNPC = new BattleNPC(initiator);
+		var STATE = {
+			RPS: {string: "RPS"},
+			EVOKING: {string: "evoking"},
+			ACTION: {string: "action"},
+		}
+		var BATTLESTATE = STATE.RPS;
 		this.initialize = function() {
 			this.battleStage = battleStage;
 			var g = this;
@@ -13,8 +19,29 @@
 				level.addChild(g.battleStage);
 			}, 1000);
 		}
-		this.battleStart = function() {
-			battleStage.buildRockPaperScissors();
+		this.getPlayer = function() {
+			return battlePlayer;
+		}
+		this.getNPC = function() {
+			return battleNPC;
+		}
+		this.getBattleState = function() {
+			return BATTLESTATE.string;
+		}
+		this.setBattleState = function(string) {
+			if (string == "evoking") {
+				BATTLESTATE = STATE.EVOKING;
+				battleStage.newDirectionPane("Evoking Stage")
+				battleStage.newActionPane("evoking");
+			} 
+			if (string == "action") {
+				BATTLESTATE = STATE.ACTION;
+				battleStage.newDirectionPane("Action Stage")
+				battleStage.newActionPane("hand");
+			}
+		}
+		this.encounterStart = function() {
+
 		}
 		this.changeDisplay = function() {
 			battleStage.changeDisplay(battlePlayer, battleNPC);
@@ -23,10 +50,32 @@
 			var outcome = null
 			console.log(choice)
 			turnPlayer = battlePlayer;
-			this.doEvokeStep();
+			battlePlayer.newHand();
+			this.setBattleState("evoking")
 		}
-		this.doEvokeStep = function() {
-			if (turnPlayer == battlePlayer) battleStage.buildEvokePane();
+		this.evoke = function(unit) {
+			if (unit.owner == battlePlayer) {
+				unit.evoke();
+				battleStage.evoke(unit);
+				if (BATTLESTATE == STATE.EVOKING) {
+					battleStage.newActionPane("evoking");
+				}
+			}
+			else if (unit.owner == battleNPC) {
+				battleNPC.activeUnits.push(unit);
+			}
+		}
+		this.revoke = function(unit) {
+			if (unit.owner == battlePlayer) {
+				unit.revoke();
+				battleStage.revoke(unit);
+				if (BATTLESTATE == STATE.EVOKING) {
+					battleStage.newActionPane("evoking");
+				}
+			}
+			else if (unit.owner == battleNPC) {
+				battleNPC.activeUnits.push(unit);
+			}
 		}
 		this.tick = function() {
 			battleStage.tick();
