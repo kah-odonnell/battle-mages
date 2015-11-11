@@ -1,9 +1,9 @@
 extends layout
 
 block scripts
-  script(src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.4/mootools-yui-compressed.js")
-  script(src="https://code.createjs.com/createjs-2015.05.21.min.js")
-  script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
+  script(src="js/src/mootools-yui-compressed.js")
+  script(src="js/src/createjs-2015.05.21.min.js")
+  script(src="js/src/jquery.min.js")
   script(src="js/battle.js")
   script(src="js/battlenpc.js")
   script(src="js/battleplayer.js")
@@ -14,7 +14,6 @@ block scripts
   script(src="js/dialog.js")
   script(src="js/dialogchar.js")
   script(src="js/dialogdata.js")
-  script(src="js/guard.js")
   script(src="js/interactprompt.js")
   script(src="js/level.js")
   script(src="js/leveldata.js")
@@ -26,14 +25,27 @@ block scripts
   script(src="js/scanner.js")
   script(src="js/tokendictionary.js")
 
-
-
-
 block content
-  body(bgcolor="#000000" onload="init();")
+
+  body(bgcolor="#000000" onload="init();", style="font-family: crazycreation;")
     div(id="loader" class="loader")
+
     div(class="canvasHolder" style="text-align: center;")
       canvas(id="canvas" width="800" height="450")
-    div(style="text-align: center; width: 800px; margin: 0 auto; font-size: 18px")
-      div(id="data", style="text-align: right;, font-family: crazycreation;")
+
+    div(style="text-align: center; width: 800px; margin: 0 auto; font-size: 18px;")
+      div(id="instructions", style="float: left; color: #FFFFFF; font-size: 22px; ") 
+        | WASD to Move, SPACE to Interact
+
+      div(id="FPSdata", style="text-align: right;")
+
+      div(id="space", style="clear: left; height: 50px;")
+
+      p(id="update", style="color: #FFFFFF; font-size: 26px; text-align: left; padding-left: 110px; padding-right: 110px;") 
+        | This is a technical demo demonstrating some out-of-battle mechanics. The battle system (and by extension the bulk of gameplay) is a work in progess. Developed and animated by Kyle O'Donnell.
+
+      div(id="update", style="color: #FFFFFF; font-size: 26px; text-align: left; padding-left: 110px; padding-right: 110px;")
+        p
+          | &lt;Name of Game TBD&gt; makes use of several tools in the open source #[a(target="_blank", href="https://github.com/CreateJS") CreateJS] suite.
+
     div(id="guard")

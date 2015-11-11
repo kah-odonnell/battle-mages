@@ -50,7 +50,8 @@ var level1maps = [
 
 		},
 		"entrances": {
-			"initialize": {"x": 12, "y": 4,}, 
+			//"initialize": {"x": 12, "y": 4,}, 
+			"initialize": {"x": 12, "y": 13,}, 
 			"sideDoorA": {"x": 24, "y": 11, "direction": "south", "offset": null},
 			"sideDoorB": {"x": 24, "y": 11, "direction": "south", "offset": null},
 		},
@@ -100,7 +101,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 0,}
+							"yOffset": -80,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -135,7 +136,7 @@ var level1maps = [
 					{"Morgan": 
 						{"xPosition": 150,},
 					"Jeff": 
-						{"xPosition": 650,},
+						{"xPosition": 510,},
 					}
 				},
 				["Jeff","Hey there. "], ],
@@ -149,7 +150,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 0,}
+							"yOffset": -80,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -184,7 +185,7 @@ var level1maps = [
 					{"Morgan": 
 						{"xPosition": 150,},
 					"Jeff": 
-						{"xPosition": 650,},
+						{"xPosition": 510,},
 					}
 				},
 				["Jeff","I'm a knight in shining armor, but it turns out the ladies only want knights with tested metal. So how about a battle? "], 
@@ -240,7 +241,7 @@ var level1maps = [
 					}
 				},
 				["Jeff","Good luck on your quest to screw with the game. "], ],
-			},/*
+			},
 			{"name": "Tom", 
 			"type": "prologueknight", 
 			"personality": "faceLeft", 
@@ -267,7 +268,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 370,}
+							"yOffset": -80,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -275,7 +276,7 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 270,}
+							"yOffset": 15,}
 						},
 					"initialize": 
 						{"Tom": 
@@ -302,7 +303,7 @@ var level1maps = [
 					{"Morgan": 
 						{"xPosition": 150,},
 					"Tom": 
-						{"xPosition": 650,},
+						{"xPosition": 510,},
 					}
 				},
 				["Tom","Hey there. "], ],
@@ -408,7 +409,7 @@ var level1maps = [
 					}
 				},
 				["Tom","Don't you know modifying client-side javascript is a felony? "], ],
-			},*/
+			},
 		] },
 	{
 		"title": "The Mad Queen's Sepulcher",
@@ -499,10 +500,73 @@ var level1maps = [
 		"footprints": {
 			"footprintColor": '#004C00',
 			"footprintMax": 30,
-			"footprintDelay": 350,
+			"footprintDelay": 250,
 			"footprintColorIdle": '#004C00',
 			"footprintDelayIdle": 1000,
 		},
-		"mapnpcs": [],
+		"mapnpcs": [/*
+			{"name": "Jeff", 
+			"type": "prologueknight", 
+			"personality": "faceRight", 
+			"path": [
+				[10, 4], 
+				"pause",
+			],
+			"interactDialog": [
+				{"dialogsetup": 
+					{"characters":
+						["Jeff","Morgan"],
+					"Jeff":
+						{"neutral": 
+							//Some dialog sprites are more than static animations with mouth movements.
+							//There will need to be one set of sprites for when the character is both speaking and emoting
+							//And one for when the character is finished speaking but still emoting
+							//if a mood is not animated, (isAnimated = false), the renderer will still attempt
+							//to cycle through talkingSprites while the character's line is being delivered
+							{"silentSprites": ["knight1"],
+							"talkingSprites": ["knight1"],
+							"isAnimated": false,
+							"regX": 100,
+							"yOffset": -80,}
+						},
+					"Morgan": 
+						{"neutral": 
+							{"silentSprites": ["morganprologue"],
+							"talkingSprites": ["morganprologue"],
+							"isAnimated": false,
+							"regX": 100,
+							"yOffset": 15,}
+						},
+					"initialize": 
+						{"Jeff": 
+							{"xPosition": 1000,
+							"yPosition": 0,
+							"facing": "left",
+							"mood": "neutral",},
+						"Morgan": 
+							{"xPosition": -200,
+							"yPosition": 0,		
+							"facing": "right",
+							"mood": "neutral",},
+						"background":
+							{"xPosition": 0,
+							"yPosition": 0,
+							"hasBackground": false,
+							"isAnimated": false,
+							"animationqueue": null,},
+						"openingline": 2,
+						},
+					}
+				},
+				{"transition": 
+					{"Morgan": 
+						{"xPosition": 150,},
+					"Jeff": 
+						{"xPosition": 510,},
+					}
+				},
+				["Jeff","Hey there. "], 
+			]},
+		*/]
 	}
 ]

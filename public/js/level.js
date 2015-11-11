@@ -29,7 +29,7 @@
 			this.getNPCs(currentmap["mapnpcs"], i)
 			var initialize = currentmap["entrances"]["initialize"];
 			if (!(initialize === undefined)) {
-				this.maplist[i].centerOn(initialize["x"],initialize["y"])				
+				this.maplist[i].centerOn(initialize["x"],initialize["y"], 0)				
 			}
 		}
 		this.currentmap = 0;
@@ -40,6 +40,8 @@
 		var player = new Player(12, 13);
 		map = this.maplist[this.currentmap];
 		map.addChild(player);
+		//map.centerOn(player.tileX, player.tileY, 3000); 
+		//centerOn should only be done by MapEvents post map-init
 		return player;
 	}
 	Level.prototype.addDialog = function(dialoglog) {

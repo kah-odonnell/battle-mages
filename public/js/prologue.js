@@ -31,9 +31,9 @@ function init() {
 	h = stage.canvas.height;
 
 	var manifest = [
-		{src:"../sprites/knight_92.png", id:"knight"},
-		{src:"../sprites/audrey_92.png", id:"audrey"},
-		{src:"../sprites/audrey_p_92.png", id:"audreyparserrokah"},
+		{src:"../imgs/sprites/knight_92.png", id:"knight"},
+		{src:"../imgs/sprites/audrey_92.png", id:"audrey"},
+		{src:"../imgs/sprites/audrey_p_92.png", id:"audreyparserrokah"},
 
 		{src:"../imgs/tiles/spaceTileLarge.png", id:"spaceTile"},
 		{src:"../imgs/tiles/blackTile.png", id:"blackTile"},
@@ -110,7 +110,6 @@ function handleComplete() {
 
 	level = new Level(level1maps);
 	player = level.initPlayer()
-	map = level.maplist[0];
 	stage.addChild(level);
 	createjs.Ticker.setFPS(60);
 	createjs.Ticker.addEventListener("tick", tick);
@@ -130,7 +129,7 @@ function tick(event) {
 	if (Math.floor(createjs.Ticker.getMeasuredFPS()) < 55) {
 		color1 = "#FF0000"
 	}
-	$("#data").css("color",color1).html(fps);
+	$("#FPSdata").css("color",color1).html(fps);
 }
 
 function isEmpty(obj) {

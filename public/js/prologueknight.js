@@ -40,7 +40,7 @@
 		this.x = (path[0][0]*40) + 20;
 		this.y = (path[0][1]*40) + 20;
 
-		this.isHostile = true;
+		this.isHostile = false;
 		this.isBeaten = false;
 		this.hasPaused = false;
 		this.path = path;

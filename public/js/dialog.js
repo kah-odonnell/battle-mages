@@ -4,10 +4,11 @@
  * 
  * A Dialog is a rendering of a nasty list:
  *	[	
- *		// First, we declare each character that appears in the script, 
+ *		// First, we declare each character that will appear in the script, 
  *		// and for each declared, create a DialogChar container
  *		// then initialize it by setting its x/y position and orientation
- *		// We must also declare on which element of this list the dialog starts (openingline)
+ *		// We must also declare on which element of this list the dialog truly starts (the openingline),
+ *		// as some elements in the script are not lines- they are stage directions (events/transitions)
  *
  *	 	{"dialogsetup": { 
  *		 	"characters": ["Temora", "Morgan"]},
@@ -35,6 +36,8 @@
  *
 **/
 	function Dialog(dialoglog, levelobject){
+		this.canvasBounds = {width: 800, height: 450};
+
 		this.hostlevel = levelobject;
 		this.script = this.parselog(dialoglog);
 		this.setupdata = dialoglog[0]["dialogsetup"];
@@ -66,7 +69,7 @@
 		this.speakertext.y = this.boxY + 15;
 		this.textline1.y = this.boxY + 60;
 		this.textline2.y = this.boxY + 85;
-		this.speakertext.x = 350;
+		this.speakertext.x = this.canvasBounds.width/2 - this.speakertext.getBounds().width/2;
 		this.textline1.x = 100;
 		this.textline2.x = 100;
 		this.textline1.textBaseline = "alphabetic";
@@ -222,8 +225,9 @@
 		}
 		if (Array.isArray(this.script[this.currentline])){
 			this.currentspeaker = this.characters[this.script[this.currentline][0]];
-			if (previousspeaker != this.currentspeaker) {
+			if (previousspeaker != this.currentspeaker) { 
 				this.speakertext.text = this.currentspeaker.charName;
+				this.speakertext.x = this.boxBounds.width/2 - this.speakertext.getBounds().width/2;
 				if (this.currentspeaker.x < canvas.width/2) {
 					this.setleft();
 				}
@@ -251,12 +255,10 @@
 	}
 	Dialog.prototype.setleft = function() {
 		this.speakertext.text = this.script[this.currentline][0];
-		this.speakertext.x = 200;
 		createjs.Tween.get(this.arrow, {loop: false}).to({x:150},500,createjs.Ease.getPowInOut(4));
 	}
 	Dialog.prototype.setright = function() {
-		this.speakertext.text = this.script[this.currentline][0];
-		this.speakertext.x = 600 - this.speakertext.getBounds().width;
+		this.speakertext.text = this.script[this.currentline][0];w
 		createjs.Tween.get(this.arrow, {loop: false}).to({x:600},500,createjs.Ease.getPowInOut(4));
 	}
 	Dialog.prototype.setboth = function() {
