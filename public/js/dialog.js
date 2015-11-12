@@ -61,6 +61,7 @@
 		this.endtime = Number.POSITIVE_INFINITY;
 		this.closing = false;
 		this.starting = true;
+		this.speechpause = false;
 
 		this.speakertext = new createjs.Text(" ", "26px crazycreation", "#000000");
 		this.textline1 = new createjs.Text(" ", "26px crazycreation", "#000000");
@@ -116,24 +117,34 @@
 		 	}
 		 	isOnDialog = Array.isArray(this.script[this.currentline]);
 			if ((createjs.Ticker.getTime() > this.endtime) && (!this.closing) && (isOnDialog)) {
-				if (createjs.Ticker.getTicks() % this.textspeed == 0){
-					this.updateText();
+				if (createjs.Ticker.getTicks() % this.textspeed == 0) {
+					var currentcharacter = this.script[this.currentline][1][this.currentcharacter-1]
+					var punctuation = [",", ".", "?", ";", ":", "!"];
+					var isPunctuation = punctuation.contains(currentcharacter);
+					this.isPunctuation = isPunctuation;
+					console.log(currentcharacter + " | " + isPunctuation);
+					var shouldspeak = (!(isPunctuation) && !(this.speechpause))
+					if (shouldspeak) this.updateText();
+					else {
+						var pausetime = 1150;
+						if (currentcharacter == ",") pausetime = 500;
+						if (this.speechpause == false) {
+							this.speechpause = true;
+							this.updateText();
+						}
+						console.log(this.speechpause)
+						if (this.speechpause) {
+							var g = this;
+							setTimeout(function() {
+								g.speechpause = false;
+							}, pausetime);		
+						}			
+					}
 				}
 			} 			
  		} else {
  			this.handleTransition();
  		}
- 		/*
-	 	if ((createjs.Ticker.getTime() > this.endtime) && (this.closing)) {
-	 		for (var key in this.characters) {
-	 			this.removeChild(this.characters[key]);
-	 		}
-			this.hostlevel.currentdialog = null;
-	 		this.hostlevel.removeChild(this);
-	 		this.hostlevel.paused = false;
-	 		this.hostlevel.unpause();	 			
-		}
-		*/
 	}
 	Dialog.prototype.updateText = function() {
 		var line = this.script[this.currentline][1];

@@ -238,8 +238,6 @@
 		if (tweenTime === undefined) {
 			tweenTime = 0;
 		}
-		//0
-		//12*40 - 400 + 20 = 100
 		var currentX = Math.round(this.x);
 		var currentY = Math.round(this.y);
 		var goalX = tileX*40 - canvas.width/2 + currentX;
@@ -255,7 +253,6 @@
 		}
 		//So long as we dont try to move the map to an X > 0 or more than the furthest left shift:
 		while ((goalX - moveDistX >= 0) && (this.getBounds().width - overlap > canvas.width + moveDistX)) {
-			console.log("goal Tile:" + tileX + " | " + goalX + " , " + moveDistX);
 			if (currentX > goalX) {
 				moveDistX -= 20;
 			}
@@ -276,7 +273,6 @@
 				break;
 			}
 		}
-		console.log("RUNNING");
 		var newX = currentX - moveDistX;
 		var newY = currentY - moveDistY;
 		createjs.Tween.get(this, {loop: false}).to({x:newX,y:newY},tweenTime,createjs.Ease.getPowInOut(4));

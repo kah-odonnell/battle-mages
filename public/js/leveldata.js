@@ -139,7 +139,7 @@ var level1maps = [
 						{"xPosition": 510,},
 					}
 				},
-				["Jeff","Hey there. "], ],
+				["Jeff","Yeah, you beat me. Please stop rubbing it in my face. I might be in a suit of metal, but underneath is a man with feelings. "], ],
 			"battleStartDialog": [
 				{"dialogsetup": 
 					{"characters":
@@ -242,7 +242,7 @@ var level1maps = [
 				},
 				["Jeff","Good luck on your quest to screw with the game. "], ],
 			},
-			{"name": "Tom", 
+			{"name": "Rosa", 
 			"type": "prologueknight", 
 			"personality": "faceLeft", 
 			"path": [
@@ -261,8 +261,8 @@ var level1maps = [
 			"interactDialog": [
 				{"dialogsetup": 
 					{"characters":
-						["Tom","Morgan"],
-					"Tom":
+						["Rosa","Morgan"],
+					"Rosa":
 						{"neutral": 
 							{"silentSprites": ["knight1"],
 							"talkingSprites": ["knight1"],
@@ -279,7 +279,7 @@ var level1maps = [
 							"yOffset": 15,}
 						},
 					"initialize": 
-						{"Tom": 
+						{"Rosa": 
 							{"xPosition": 1000,
 							"yPosition": 0,
 							"facing": "left",
@@ -302,15 +302,15 @@ var level1maps = [
 				{"transition": 
 					{"Morgan": 
 						{"xPosition": 150,},
-					"Tom": 
+					"Rosa": 
 						{"xPosition": 510,},
 					}
 				},
-				["Tom","Hey there. "], ],
+				["Rosa","There are two types of women in this world. Women who are nice, and women who are knights. My advice? Take up the sword. "], ],
 			"battleStartDialog": [
 				{"dialogsetup": 
 					{"characters":
-						["Tom","Morgan"],
+						["Rosa","Morgan"],
 					"Tom":
 						{"neutral": 
 							{"silentSprites": ["knight1"],

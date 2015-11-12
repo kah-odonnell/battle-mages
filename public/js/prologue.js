@@ -5,6 +5,7 @@ var player;
 var map;
 var level;
 var mouseX, mouseY;
+var loader, loadBar;
 
 var sortFunction = function(obj1, obj2, options) {
     if (obj1.y > obj2.y) { return 1; }
@@ -29,6 +30,12 @@ function init() {
 	// grab canvas width and height for later calculations
 	w = stage.canvas.width;
 	h = stage.canvas.height;
+
+	loadBar = new createjs.Text("Loading | 0%", "36px crazycreation", "#FFFFFF");
+	var d = loadBar.getBounds()
+	loadBar.x = w/2 - d.width/2;
+	loadBar.y = h/2 - d.height/2;
+	stage.addChild(loadBar);
 
 	var manifest = [
 		{src:"../imgs/sprites/knight_92.png", id:"knight"},
@@ -102,14 +109,16 @@ function init() {
 }
 
 function handleProgress(event) {
-	//console.log(event.loaded);
+	var progress = Math.ceil(loader.progress*100);
+	loadBar.text = "Loading | " + progress + "%";
+	console.log(progress);
 }
 
 function handleComplete() {
 	document.getElementById("loader").className = "";
-
+	stage.removeChild(loadBar);
 	level = new Level(level1maps);
-	player = level.initPlayer()
+	player = level.initPlayer();
 	stage.addChild(level);
 	createjs.Ticker.setFPS(60);
 	createjs.Ticker.addEventListener("tick", tick);
