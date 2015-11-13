@@ -127,16 +127,18 @@
 					else {
 						var pausetime = 250;
 						if (currentcharacter == ",") pausetime = 100;
-						if (currentcharacter == "?") pausetime = 1000;
+						if (currentcharacter == "?") pausetime = 250;
 						if (this.speechpause == false) {
 							this.speechpause = true;
-							this.updateText();
 						}
 						console.log(this.speechpause)
 						var g = this;
-						setTimeout(function() {
-							g.speechpause = false;
-						}, pausetime);					
+						if (isPunctuation) {
+							g.updateText();
+							setTimeout(function() {
+								g.speechpause = false;
+							}, pausetime);					
+						}
 					}
 				}
 			} 			

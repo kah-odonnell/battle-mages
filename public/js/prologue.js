@@ -22,6 +22,9 @@ function getMousePos(evt) {
     mouseY = evt.clientY - rect.top
 }
 window.addEventListener('mousemove', getMousePos, false);
+window.onkeydown = function(e) { 
+  return !(e.keyCode == 32);
+};
 
 function init() {
 	stage = new createjs.Stage("canvas");
@@ -167,4 +170,7 @@ var Key = {
 	}
 };
 window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
-window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
+window.addEventListener('keydown', function(event) { 
+	event.preventDefault();
+	Key.onKeydown(event); 
+}, false);
