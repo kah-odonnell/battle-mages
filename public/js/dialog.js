@@ -121,24 +121,22 @@
 					var currentcharacter = this.script[this.currentline][1][this.currentcharacter-1]
 					var punctuation = [",", ".", "?", ";", ":", "!"];
 					var isPunctuation = punctuation.contains(currentcharacter);
-					this.isPunctuation = isPunctuation;
 					console.log(currentcharacter + " | " + isPunctuation);
 					var shouldspeak = (!(isPunctuation) && !(this.speechpause))
 					if (shouldspeak) this.updateText();
 					else {
-						var pausetime = 1150;
-						if (currentcharacter == ",") pausetime = 500;
+						var pausetime = 250;
+						if (currentcharacter == ",") pausetime = 100;
+						if (currentcharacter == "?") pausetime = 1000;
 						if (this.speechpause == false) {
 							this.speechpause = true;
 							this.updateText();
 						}
 						console.log(this.speechpause)
-						if (this.speechpause) {
-							var g = this;
-							setTimeout(function() {
-								g.speechpause = false;
-							}, pausetime);		
-						}			
+						var g = this;
+						setTimeout(function() {
+							g.speechpause = false;
+						}, pausetime);					
 					}
 				}
 			} 			
