@@ -12,6 +12,10 @@ var sortFunction = function(obj1, obj2, options) {
     if (obj1.y < obj2.y) { return -1; }
     return 0;
 }
+function distanceFormula(x1, x2, y1, y2) {
+	var d = Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2))
+	return d;
+}
 function signOf(number) {
 	return number?number<0?-1:1:0
 }
@@ -86,6 +90,9 @@ function init() {
 		{src:"../imgs/dialogs/knight1.png", id:"knight1"},
 		{src:"../imgs/dialogs/morganprologue.png", id:"morganprologue"},
 
+		{src:"../imgs/battles/gui/healthbar.png", id:"healthbar"},
+		{src:"../imgs/battles/gui/healthempty.png", id:"healthempty"},
+		{src:"../imgs/battles/gui/mana.png", id:"mana"},
 		{src:"../imgs/battles/gui/paperbutton.png", id:"paperbutton"},
 		{src:"../imgs/battles/gui/rockbutton.png", id:"rockbutton"},
 		{src:"../imgs/battles/gui/scissorsbutton.png", id:"scissorsbutton"},
@@ -93,6 +100,8 @@ function init() {
 
 		{src:"../imgs/battles/units/renmei.png", id:"renmei"},
 		{src:"../imgs/battles/units/token_renmei.png", id:"token_renmei"},
+		{src:"../imgs/battles/units/ao.png", id:"ao"},
+		{src:"../imgs/battles/units/token_ao.png", id:"token_ao"},
 
 		{src:"../imgs/battles/actions/arcanechain.png", id:"arcanechain"},
 		{src:"../imgs/battles/actions/small_arcanechain.png", id:"small_arcanechain"},
@@ -114,10 +123,13 @@ function init() {
 function handleProgress(event) {
 	var progress = Math.ceil(loader.progress*100);
 	loadBar.text = "Loading | " + progress + "%";
-	console.log(progress);
+	stage.update(event);
 }
 
 function handleComplete() {
+	var progress = Math.ceil(loader.progress*100);
+	loadBar.text = "Loading | " + progress + "%";
+	stage.update(event);
 	document.getElementById("loader").className = "";
 	stage.removeChild(loadBar);
 	level = new Level(level1maps);

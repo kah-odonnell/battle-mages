@@ -121,17 +121,14 @@
 					var currentcharacter = this.script[this.currentline][1][this.currentcharacter-1]
 					var punctuation = [",", ".", "?", ";", ":", "!"];
 					var isPunctuation = punctuation.contains(currentcharacter);
-					console.log(currentcharacter + " | " + isPunctuation);
 					var shouldspeak = (!(isPunctuation) && !(this.speechpause))
 					if (shouldspeak) this.updateText();
 					else {
 						var pausetime = 250;
 						if (currentcharacter == ",") pausetime = 100;
-						if (currentcharacter == "?") pausetime = 250;
 						if (this.speechpause == false) {
 							this.speechpause = true;
 						}
-						console.log(this.speechpause)
 						var g = this;
 						if (isPunctuation) {
 							g.updateText();

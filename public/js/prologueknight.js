@@ -40,7 +40,7 @@
 		this.x = (path[0][0]*40) + 20;
 		this.y = (path[0][1]*40) + 20;
 
-		this.isHostile = false;
+		this.isHostile = true;
 		this.isBeaten = false;
 		this.hasPaused = false;
 		this.path = path;
@@ -424,9 +424,7 @@
 		 		this.setIdle();
 				level.addDialog(this.battleStartDialog);
 				var g = this;
-				setTimeout(function(){
-					player.faceDirection(g);
-				}, 250)
+				player.faceDirection(g);
 			}
 		} else {
 			this.setIdle();

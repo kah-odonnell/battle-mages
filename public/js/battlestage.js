@@ -77,7 +77,7 @@
 		this.newDirectionPane(message);
 	}
 	BattleStage.prototype.setUpActionPane = function() {
-		var color = '#808080'
+		var color = '#FFFFFF'
 		var bordercolor = '#000000'
 		var paneBodyBox = new createjs.Shape();
 		paneBodyBox.graphics.beginStroke(bordercolor);
@@ -90,7 +90,7 @@
 		this.actionPaneActive.addChild(buttonContainer);
 	}
 	BattleStage.prototype.setUpInfoPane = function() {
-		var color = '#808080'
+		var color = '#FFFFFF'
 		var bordercolor = '#000000'
 		var paneBodyBox = new createjs.Shape();
 		paneBodyBox.graphics.beginStroke(bordercolor);
@@ -121,30 +121,55 @@
 			this.actionPaneActive.y -= 36;
 			this.actionPane.addChild(this.actionPaneActive);
 
-			var player = level.activebattle.getPlayer();
-			if (player.activeUnits.length > 0) {
-				var continueButton = new BattleButton(true, "continue")
-				continueButton.x = 700;
-				continueButton.y = -18;
-				this.actionPaneButton = continueButton;
-				this.actionPane.addChild(this.actionPaneButton);
+			if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Evoking")) {
+				var activeUnits = this.bc.getActiveUnits("blue", false);
+				if (activeUnits.length > 0) {
+					var continueButton = new BattleButton(true, "continue")
+					continueButton.x = 700;
+					continueButton.y = -18;
+					this.actionPaneButton = continueButton;
+					this.actionPane.addChild(this.actionPaneButton);
+				}
 			}
 		}
-		if (type == "hand") {
+		if (type == "action") {
 			this.actionPane.removeChild(this.actionPaneActive);
 			this.actionPane.removeChild(this.actionPaneButton);
 			this.actionPaneActive = this.buildHandPane();
 			this.actionPaneActive.y -= 36;
 			this.actionPane.addChild(this.actionPaneActive);
 
-			var player = level.activebattle.getPlayer();
-			if (player.activeUnits.length > 0) {
-				var continueButton = new BattleButton(true, "continue")
-				continueButton.x = 700;
-				continueButton.y = -18;
-				this.actionPaneButton = continueButton;
-				this.actionPane.addChild(this.actionPaneButton);
+			if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Action")) {
+				var activeUnits = this.bc.getActiveUnits("blue", false);
+				if (activeUnits.length > 0) {
+					var continueButton = new BattleButton(true, "continue")
+					continueButton.x = 700;
+					continueButton.y = -18;
+					this.actionPaneButton = continueButton;
+					this.actionPane.addChild(this.actionPaneButton);
+				}
 			}
+		}
+	}
+	//called by bc.awaitInputTarget() when some data requires player to select a target
+	//this function generates the buttons that:
+	// 1) save a target's unique_id to a memory
+	// 2) call chain.finalizeData(), which attempts to collect the inputs saved to memory
+	//    if it doesnt have input for every target it needs, it calls newActionPaneTarget again 
+	//
+	//tag: "target_a", "target_b", etc.
+	//spec: this.bc.chain.TARGET.OPPONENT_ALL
+	//data: the data that must be finalized before it can be added to chain
+	BattleStage.prototype.newActionPaneTarget = function(tag, spec, data) {
+		if (tag == "target_a") {
+			var action_id = data.action_unique_id;		
+			var action = this.bc.getTokenByUniqueId(action_id);
+			this.newDirectionPane("Select a Target for " + action.name);
+			this.actionPane.removeChild(this.actionPaneActive);
+			this.actionPane.removeChild(this.actionPaneButton);
+			this.actionPaneActive = this.buildTargetPane(tag, spec, data);
+			this.actionPaneActive.y -= 36;
+			this.actionPane.addChild(this.actionPaneActive);
 		}
 	}
 	BattleStage.prototype.newInfoPane = function(type, obj) {
@@ -179,21 +204,20 @@
 	}
 	BattleStage.prototype.buildUnitStatsPane = function(unit) {
 		var masterContainer = new createjs.Container();
-		var player = level.activebattle.getPlayer();
-		var uniticon = new BattleButton(true, "info_unit", unit);
+		var uniticon = new BattleButton(true, "unit_token", unit);
 		uniticon.x += 4;
 		uniticon.y += 4;
 		masterContainer.addChild(uniticon);
 
 		var thumbnailbox = new createjs.Container();
 		// Create the title text to be displayed
-		var message = unit.unitName + ", " + unit.unitTitle;
+		var message = unit.name + ", " + unit.title;
 		nametext = new createjs.Text(message, "32px crazycreation", "#000000");
 		nametext.x = uniticon.x + uniticon.getBounds().width + 8;
 		var message2 = "";
-		for (var i = 0; i < unit.unitAttributes.length; i++) {
-			message2 = message2 + unit.unitAttributes[i];
-			if (i != unit.unitAttributes.length - 1) {
+		for (var i = 0; i < unit.attributes.length; i++) {
+			message2 = message2 + unit.attributes[i].string;
+			if (i != unit.attributes.length - 1) {
 				message2 = message2 + ", "
 			}
 		}
@@ -209,18 +233,17 @@
 	}
 	BattleStage.prototype.buildActionInfoPane = function(action) {
 		var masterContainer = new createjs.Container();
-		var player = level.activebattle.getPlayer();
 		var actionicon = new BattleButton(true, "action_info", action);
 		actionicon.x += 4;
 		actionicon.y += 4;
 		masterContainer.addChild(actionicon);
 
 		var thumbnailbox = new createjs.Container();
-		var message = action.actionName;
-		nametext = new createjs.Text(message, "32px crazycreation", "#000000");
+		var message = action.name;
+		var nametext = new createjs.Text(message, "32px crazycreation", "#000000");
 		nametext.x = actionicon.x + actionicon.getBounds().width + 8;
 
-		var message2 = action.actionAttribute + " " + action.actionType;
+		var message2 = action.attribute.string + " " + action.type.string;
 		attributetext = new createjs.Text(message2, "26px crazycreation", "#000000");
 		attributetext.x = actionicon.x + actionicon.getBounds().width + 8;
 		attributetext.y = nametext.y + nametext.getBounds().height;
@@ -235,19 +258,11 @@
 	}
 	BattleStage.prototype.buildEvokePane = function() {
 		var buttons = [];
-		var player = level.activebattle.getPlayer();
-		var playerUnits = player.units;
+		var playerUnits = this.bc.getAllUnits("blue", false);
 		for (var i = 0; i < playerUnits.length; i++) {
-			var isActive = false;
-			for (var j = 0; j < player.activeUnits.length; j++){
-				if (playerUnits[i] == player.activeUnits[j]) {
-					var isActive = true;
-					break;
-				}
-			}
-			if (!(isActive)) buttons.push(new BattleButton(true, "unitevoke", playerUnits[i]));
-			else if (isActive) buttons.push(new BattleButton(true, "unitrevoke", playerUnits[i]));
-
+			var unit = playerUnits[i]
+			if (!(unit.is_active)) buttons.push(new BattleButton(true, "unitevoke", playerUnits[i]));
+			else if (unit.is_active) buttons.push(new BattleButton(true, "unitrevoke", playerUnits[i]));
 		}
 		var buttonContainer = new createjs.Container();
 		for (var i = 0; i < buttons.length; i++) {
@@ -265,8 +280,9 @@
 		var buttonContainer = new createjs.Container();
 		var buttons = [];
 		var player = level.activebattle.getPlayer();
-		for (var i = 0; i < player.getHand().length; i++) {
-			var hand = player.getHand();
+
+		var hand = this.bc.getHand("blue");
+		for (var i = 0; i < hand.length; i++) {
 			buttons.push(new BattleButton(true, "action_hand", hand[i]));
 		}
 		for (var i = 0; i < buttons.length; i++) {
@@ -281,46 +297,87 @@
 		buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;
 		return buttonContainer;
 	}
-	BattleStage.prototype.evoke = function(unit) {
+	//buildTargetPane("target_a", this.bc.chain.TARGET.OPPONENT_ALL);
+	BattleStage.prototype.buildTargetPane = function(tag, spec, data) {
+		var buttonContainer = new createjs.Container();
+		var buttons = [];
 		var player = level.activebattle.getPlayer();
-		var npc = level.activebattle.getNPC();
-		if (unit.owner == player) {
-			this.addChild(unit);
-			this.rearrangeUnits(unit.owner);
+
+		var targets = this.bc.chain.getPossibleTargets(spec, "blue");
+		for (var i = 0; i < targets.length; i++) {
+			buttons.push(new BattleButton(true, "unit_target", targets[i], tag, data));
 		}
-	}
-	BattleStage.prototype.revoke = function(unit) {
-		var player = level.activebattle.getPlayer();
-		var npc = level.activebattle.getNPC();
-		if (unit.owner == player) {
-			this.removeChild(unit);
-			this.rearrangeUnits(unit.owner);
+		for (var i = 0; i < buttons.length; i++) {
+			var bcWidth = 0;
+			var currentButton = buttons[i];
+			if (buttonContainer.getBounds() != null) {
+				bcWidth = buttonContainer.getBounds().width + 8;
+			}
+			currentButton.x = bcWidth;
+			buttonContainer.addChild(currentButton);
 		}
+		buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;
+		return buttonContainer;
 	}
-	BattleStage.prototype.rearrangeUnits = function(evoker) {
-		var player = level.activebattle.getPlayer();
-		var npc = level.activebattle.getNPC();
+	BattleStage.prototype.evoke = function(bcunit) {
+		var unit = bcunit.guiUnit;
+		this.fieldPane.addChild(unit);
+		this.rearrangeUnits(bcunit.owner);
+	}
+	BattleStage.prototype.revoke = function(bcunit) {
+		var unit = bcunit.guiUnit;
+		this.fieldPane.removeChild(unit);
+		this.rearrangeUnits(bcunit.owner);
+	}
+	BattleStage.prototype.rearrangeUnits = function(red_blue) {
+		var units;
+		var owner;
 		var spacing = 75;
-		if (evoker == player) {
-			if (evoker.activeUnits.length == 1) {
-				for (var i = 0; i < evoker.activeUnits.length; i++) {
-					evoker.activeUnits[i].x = evoker.x + 75;
-					evoker.activeUnits[i].y = evoker.y;
+		if (red_blue == "red") {
+			units = this.bc.getActiveUnits("red", false);	
+			owner = level.activebattle.getNPC();
+			if (units.length == 1) {
+				for (var i = 0; i < units.length; i++) {
+					units[i].guiUnit.x = owner.x - 75;
+					units[i].guiUnit.y = owner.y;
 				}
 			}
-			else if (evoker.activeUnits.length == 2) {
-				for (var i = 0; i < evoker.activeUnits.length; i++) {
-					evoker.activeUnits[i].x = evoker.x + (75 + spacing/2) - spacing*(i);
-					evoker.activeUnits[i].y = evoker.y - 25 + 50*(i);
+			else if (units.length == 2) {
+				for (var i = 0; i < units.length; i++) {
+					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i);
+					units[i].guiUnit.y = owner.y - 25 + 50*(i);
 				}				
 			}
-			else if (evoker.activeUnits.length == 3) {
-				for (var i = 0; i < evoker.activeUnits.length; i++) {
-					evoker.activeUnits[i].x = evoker.x + (75 + spacing) - spacing*(i);
-					evoker.activeUnits[i].y = evoker.y - 50 + 50*(i);
+			else if (units.length == 3) {
+				for (var i = 0; i < units.length; i++) {
+					units[i].guiUnit.x = owner.x - (75 + spacing) + spacing*(i);
+					units[i].guiUnit.y = owner.y - 50 + 50*(i);
+				}				
+			}	
+		} 
+		else if (red_blue == "blue"){
+			units = this.bc.getActiveUnits("blue", false);	
+			owner = level.activebattle.getPlayer();
+			if (units.length == 1) {
+				for (var i = 0; i < units.length; i++) {
+					units[i].guiUnit.x = owner.x + 75;
+					units[i].guiUnit.y = owner.y;
+				}
+			}
+			else if (units.length == 2) {
+				for (var i = 0; i < units.length; i++) {
+					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i);
+					units[i].guiUnit.y = owner.y - 25 + 50*(i);
+				}				
+			}
+			else if (units.length == 3) {
+				for (var i = 0; i < units.length; i++) {
+					units[i].guiUnit.x = owner.x + (75 + spacing) - spacing*(i);
+					units[i].guiUnit.y = owner.y - 50 + 50*(i);
 				}				
 			}
 		}
+		this.fieldPane.sortChildren(sortFunction);
 	}
 	BattleStage.prototype.tick = function() {
 
