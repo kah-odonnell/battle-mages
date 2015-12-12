@@ -16,17 +16,29 @@
 	BattleControllerUnit.prototype.getMana = function() {
 		return this.mana;
 	}
+	BattleControllerUnit.prototype.attack = function(target, power) {
+		var final_unit_attack = this.raw_attack*(1+.5*this.stage_attack);
+		var final_target_defense = target.raw_defense*(1+.5*target.stage_defense);
+		var random = 1;
+		var damage = ((2*this.level+10)/250)*(final_unit_attack/final_target_defense)*(power*100)*random;
+		target.current_health -= damage;
+		if (target.current_health <= 0) this.bc.destroy(target);
+	}
 	BattleControllerUnit.prototype.setCurrentHealth = function() {
-		return this.base_stat_health;
+		var health = Math.floor(2*this.base_stat_health*(this.level/100)) + this.level + 10;
+		return health;
 	}
 	BattleControllerUnit.prototype.setCurrentAttack = function() {
-		return this.base_stat_attack;
+		var attack = Math.floor(2*this.base_stat_attack*(this.level/100)) + 5;
+		return attack;
 	}
 	BattleControllerUnit.prototype.setCurrentDefense = function() {
-		return this.base_stat_defense;
+		var defense = Math.floor(2*this.base_stat_defense*(this.level/100)) + 5;
+		return defense;
 	}
 	BattleControllerUnit.prototype.setCurrentLuck = function() {
-		return this.base_stat_luck;
+		var luck = Math.floor(2*this.base_stat_luck*(this.level/100)) + 5;
+		return luck;
 	}
 	BattleControllerUnit.prototype.createUniqueId = function() {
 		var id = "";

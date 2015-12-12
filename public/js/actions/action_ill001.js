@@ -1,11 +1,5 @@
 (function (window) {
 	var ActionILL001 = function(battleController, owner) {
-		this.LOCATION = {
-			DECK: {string: "Deck"},
-			HAND: {string: "Hand"},
-			UNIT: {string: "Unit"},
-			CHAIN: {string: "Chain"},
-		}
 		this.bc = battleController;
 		this.initialize(owner);
 	}
@@ -20,9 +14,12 @@
 		this.attribute = this.bc.ATTRIBUTE.ILLUSIONIST;
 		this.type = this.bc.TYPE.ATTACK;
 		this.cost_mana = 1;
-		this.description = "Damage target opponent's unit for 1.0x Attack.";
+		this.description = "Damage target opponent's unit for 1.0x power.";
 		this.token_img = "neurolyse";
 		this.mini_img = "small_neurolyse";
+
+		this.is_resolved = false;
+		this.can_resolve = true;
 	}
 	/* ~~~~~~~~~ TRIGGER (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is a counter, and it is currently 'prepared' (in use) by a unit,
@@ -72,8 +69,8 @@
 	}
 	ActionILL001.prototype.use = function(unit) {
 		var t = this.canUse(unit)
-		console.log("Using " + this.name + " | " + t);
 		if (t) {
+			this.is_resolved = false;
 			var data = this.getUseData(unit);
 			this.bc.chain.finalizeData(data);
 		}
@@ -82,8 +79,19 @@
 	//if this Action Token is currently being resolved on the chain, 
 	//this Action Token's eventData (or ACTIVATE if counter) is replaced by this data. 
 	//The changed chain is rebroadcast so additional counters can be triggered
-	ActionILL001.prototype.getResolveData = function() {
-		return null;
+	ActionILL001.prototype.getResolveData = function(unit) {
+		use = {
+			unit_unique_id: unit.unique_id,
+			action_unique_id: this.unique_id,
+			target_a: this.bc.chain.TARGET.OPPONENT_ALL,
+			//random_a: this.bc.chain.RANDOM_UNIT.OPPONENT_ALL,
+			attack_damage: {
+				main: "target_a",
+				main_power: 1.0,
+				//"random_a": .4,
+			}
+		}
+		return use;
 	}
 	ActionILL001.prototype.canResolve = function() {
 		return false;

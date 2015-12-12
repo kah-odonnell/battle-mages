@@ -144,7 +144,6 @@
 				g.bc.chain.short_term[action_id][mem_tag] = target_user_id;
 				g.bc.blue_done = true;
 				g.bc.chain.finalizeData(data);
-				console.log(unit)
 			});
 		}
 	}

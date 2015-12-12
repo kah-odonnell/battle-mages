@@ -32,15 +32,18 @@
 
 	}
 	BattleUnitGui.prototype.updateStatusPane = function() {
-		var percent = this.bcunit.current_health/this.bcunit.current_max_health;
+		var percent = this.bcunit.current_health/this.bcunit.raw_max_health;
 		this.healthempty.scaleX = 1 - percent;
 
+		this.status_pane.removeChild(this.manabox);
+		this.manabox = new createjs.Container();
 		for (var i = 0; i < this.bcunit.mana; i++) {
 			var mana = new createjs.Bitmap(loader.getResult("mana"));
 			mana.x = 20*i;
 			mana.y = 8;
-			this.status_pane.addChild(mana);
+			this.manabox.addChild(mana);
 		}
+		this.status_pane.addChild(this.manabox);
 	}
 	BattleUnitGui.prototype.greyOut = function() {
 		this.image.uncache();

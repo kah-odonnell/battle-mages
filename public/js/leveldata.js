@@ -139,7 +139,8 @@ var level1maps = [
 						{"xPosition": 510,},
 					}
 				},
-				["Jeff","Yeah, you beat me. Please stop rubbing it in my face. I might be in a suit of metal, but underneath is a man with feelings. "], ],
+				["Jeff","Yeah, you beat me. Please stop rubbing it in my face. I might be in a suit of metal, but underneath is a man with feelings. "],
+			 ],
 			"battleStartDialog": [
 				{"dialogsetup": 
 					{"characters":
@@ -202,7 +203,7 @@ var level1maps = [
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 0,}
+							"yOffset": -80,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -237,10 +238,10 @@ var level1maps = [
 					{"Morgan": 
 						{"xPosition": 150,},
 					"Jeff": 
-						{"xPosition": 650,},
+						{"xPosition": 510,},
 					}
 				},
-				["Jeff","Good luck on your quest to screw with the game. "], ],
+				["Jeff","In my defense, I was poorly programmed. "], ],
 			},
 			{"name": "Rosa", 
 			"type": "prologueknight", 
@@ -311,13 +312,13 @@ var level1maps = [
 				{"dialogsetup": 
 					{"characters":
 						["Rosa","Morgan"],
-					"Tom":
+					"Rosa":
 						{"neutral": 
 							{"silentSprites": ["knight1"],
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 370,}
+							"yOffset": -80,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -325,10 +326,10 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 270,}
+							"yOffset": 15,}
 						},
 					"initialize": 
-						{"Tom": 
+						{"Rosa": 
 							{"xPosition": 1000,
 							"yPosition": 0,
 							"facing": "left",
@@ -351,26 +352,25 @@ var level1maps = [
 				{"transition": 
 					{"Morgan": 
 						{"xPosition": 150,},
-					"Tom": 
-						{"xPosition": 650,},
+					"Rosa": 
+						{"xPosition": 510,},
 					}
 				},
-				["Tom","You're editing the game files so you can battle us? "], 
-				["Tom","Does your mother know her innocent child is in fact a dangerous rapscallion? "],
+				["Rosa","There are two types of women in this world: women who are nice, and women who are knights! "], 
 				{"event": 
-					{"battleinit": "Tom", }
+					{"battleinit": "Rosa", }
 				}, ],
 			"battleEndDialog": [
 				{"dialogsetup": 
 					{"characters":
-						["Tom","Morgan"],
-					"Tom":
+						["Rosa","Morgan"],
+					"Rosa":
 						{"neutral": 
 							{"silentSprites": ["knight1"],
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 370,}
+							"yOffset": -80,}
 						},
 					"Morgan": 
 						{"neutral": 
@@ -378,10 +378,10 @@ var level1maps = [
 							"talkingSprites": ["morganprologue"],
 							"isAnimated": false,
 							"regX": 100,
-							"yOffset": 270,}
+							"yOffset": 15,}
 						},
 					"initialize": 
-						{"Tom": 
+						{"Rosa": 
 							{"xPosition": 1000,
 							"yPosition": 0,
 							"facing": "left",
@@ -404,11 +404,11 @@ var level1maps = [
 				{"transition": 
 					{"Morgan": 
 						{"xPosition": 150,},
-					"Tom": 
-						{"xPosition": 650,},
+					"Rosa": 
+						{"xPosition": 510,},
 					}
 				},
-				["Tom","Don't you know modifying client-side javascript is a felony? "], ],
+				["Rosa","I lost? Should've just used my sword. "], ],
 			},
 		] },
 	{

@@ -20,11 +20,11 @@
 		this.token_img = "token_renmei";
 
 		this.mana = 0;
-		this.current_max_health = this.setCurrentHealth();
-		this.current_health = this.current_max_health;
-		this.current_attack = this.setCurrentAttack();
-		this.current_defense = this.setCurrentDefense();
-		this.current_luck = this.setCurrentLuck();
+		this.raw_max_health = this.setCurrentHealth();
+		this.current_health = this.raw_max_health;
+		this.raw_attack = this.setCurrentAttack();
+		this.raw_defense = this.setCurrentDefense();
+		this.raw_luck = this.setCurrentLuck();
 
 		this.stage_health = 0;
 		this.stage_attack = 0;

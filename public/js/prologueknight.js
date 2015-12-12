@@ -423,8 +423,6 @@
 			} else {
 		 		this.setIdle();
 				level.addDialog(this.battleStartDialog);
-				var g = this;
-				player.faceDirection(g);
 			}
 		} else {
 			this.setIdle();

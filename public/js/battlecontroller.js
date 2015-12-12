@@ -31,6 +31,12 @@
 			SKILL: {string: "Skill"},
 			COUNTER: {string: "Counter"},
 		}
+		this.LOCATION = {
+			DECK: {string: "Deck"},
+			HAND: {string: "Hand"},
+			UNIT: {string: "Unit"},
+			CHAIN: {string: "Chain"},
+		}
 		this.gui = battleStage;
 		this.gui.bc = this;
 		this.initialize();
@@ -42,6 +48,9 @@
 		this.blueUnits = this.setUnits(blueDeckJSON.units, "blue");
 		this.redUnits = this.setUnits(redDeckJSON.units, "red");
 
+		this.blueDestroyed = [];
+		this.redDestroyed = []
+
 		this.blueActions = this.setActions(blueDeckJSON.actions, "blue");
 		this.redActions = this.setActions(redDeckJSON.actions, "red");
 
@@ -50,6 +59,8 @@
 
 		this.createUniqueIds();
 
+		this.blueHand = [];
+		this.redHand = [];
 		this.blueHand = this.newBlueHand();
 		this.redHand = this.newRedHand();
 		this.chain = new BattleControllerChain(this);
@@ -58,6 +69,9 @@
 		this.setBattleStage(this.STAGE.RPS);
 	}
 	BattleController.prototype.updateStage = function() {
+		console.log(this.blueHand)
+		if (this.getBattleStage == "Action") this.newActionPane("action");
+		else if (this.getBattleStage == "Evoking") this.newActionPane("evoking");
 		var units = this.getAllUnits("all", true);
 		for (var i = 0; i < units.length; i++) {
 			units[i].guiUnit.updateStatusPane();
@@ -78,6 +92,23 @@
 					units[i].increaseMana(1);
 				}
 			}				
+		}
+	}
+	BattleController.prototype.destroy = function(unit) {
+		if (unit.owner == "red") {
+			var i = this.redUnits.indexOf(unit);
+			this.redDestroyed.push(unit);
+			this.redUnits.splice(i, 1);
+		}
+		if (unit.owner == "blue") {
+			var i = this.blueUnits.indexOf(unit);
+			this.blueDestroyed.push(unit);
+			this.blueUnits.splice(i, 1);
+		}
+		unit.guiUnit.removeAllChildren();
+		this.gui.rearrangeUnits(unit.owner);
+		if (this.getAllUnits("red", false).length < 1) {
+			level.activebattle.initEndDialog();
 		}
 	}
 	BattleController.prototype.createUniqueIds = function() {
@@ -227,12 +258,46 @@
 		}
 		return units;
 	}
+	BattleController.prototype.getEvokeableUnits = function(red_blue_all, minions) {
+		//returns list of all active units and minions
+		var units = []
+		if (red_blue_all == "red" || red_blue_all == "all") {
+			var collection = this.redUnits;
+			for (var i = 0; i < collection.length; i++) {
+				if (minions == true) {
+					if (!(collection[i].is_active)) {
+						units.push(collection[i]);
+					}
+				} else {
+					if (!(collection[i].is_active) && (!collection[i].is_minion)) {
+						units.push(collection[i]);
+					}
+				}
+			}
+		}
+		if (red_blue_all == "blue" || red_blue_all == "all") {
+			var collection = this.blueUnits;
+			for (var i = 0; i < collection.length; i++) {
+				if (minions == true) {
+					if (!(collection[i].is_active)) {
+						units.push(collection[i]);
+					}
+				} else {
+					if (!(collection[i].is_active) && (!collection[i].is_minion)) {
+						units.push(collection[i]);
+					}
+				}
+			}
+		}
+		return units;
+	}
 	BattleController.prototype.setActions = function(action_id_list, owner) {
 		var actions = [];
 		for (var i = 0; i < action_id_list.length; i++) {
 			if ("ILL001" === action_id_list[i]) {
 				var action = new ActionILL001(this, owner);
 				actions.push(action);
+				action.location = this.LOCATION.DECK;
 			}
 		}
 		return actions;
@@ -247,45 +312,65 @@
 		if (red_blue == "blue") {
 			return this.blueHand;
 		}
-		else if (red_blue = "red") {
+		else if (red_blue == "red") {
 			return this.redHand;
 		}
 	}
 	BattleController.prototype.newRedHand = function() {
+		for (var i = 0; i < this.redHand.length; i++) {
+			var token = this.redHand[i];
+			token.location = this.LOCATION.DECK;
+		}
 		var hand = [];
 		var actions = this.redActions;
 		while (hand.length < 4) {
 			var numtoadd = Math.floor(Math.random() * actions.length);
 			var tokentoadd = actions[numtoadd];
 			var canAdd = true;
-			for (var j = 0; j < hand.length; j++) {
-				if (hand[j] == tokentoadd) {
-					canAdd = false;
-				}
+			if (tokentoadd.location == this.LOCATION.HAND) {
+				canAdd = false;
 			}
 			if (canAdd) {
 				hand.push(tokentoadd)
+				tokentoadd.location = this.LOCATION.HAND;
 			}
 		}
 		return hand;
 	}
 	BattleController.prototype.newBlueHand = function() {
+		for (var i = 0; i < this.blueHand.length; i++) {
+			var token = this.blueHand[i];
+			token.location = this.LOCATION.DECK;
+		}
 		var hand = [];
 		var actions = this.blueActions;
+		console.log(actions)
 		while (hand.length < 4) {
 			var numtoadd = Math.floor(Math.random() * actions.length);
 			var tokentoadd = actions[numtoadd];
 			var canAdd = true;
-			for (var j = 0; j < hand.length; j++) {
-				if (hand[j] == tokentoadd) {
-					canAdd = false;
-				}
+			if (tokentoadd.location == this.LOCATION.HAND) {
+				canAdd = false;
 			}
 			if (canAdd) {
 				hand.push(tokentoadd)
+				tokentoadd.location = this.LOCATION.HAND;
 			}
 		}
 		return hand;
+	}
+	BattleController.prototype.removeFromHand = function(action) {
+		var hand = [];
+		if (action.owner == "red") hand = this.redHand;
+		else if (action.owner == "blue") hand = this.blueHand;	
+		for (var i = 0; i < hand.length; i++) {
+			var token = hand[i];
+			if (token == action) {
+				if (action.owner == "red") this.redHand.splice(i, 1);
+				else if (action.owner == "blue") this.blueHand.splice(i, 1);
+				action.location == this.LOCATION.DECK;
+			}
+		}
 	}
 	BattleController.prototype.evoke = function(bcunit) {
 		if ((bcunit.owner == "blue") && (this.getBattleStage() == "Evoking")) {
@@ -442,6 +527,7 @@
 		}, 0);			
 	}
 	BattleController.prototype.resetActionPane = function() {
+		this.updateStage();
 		if (this.getBattleStage() == "Evoking") {
 			this.gui.newActionPane("evoking");
 			this.gui.newDirectionPane("Evoking Stage");
@@ -476,7 +562,7 @@
 			var bc = this;
 			setTimeout(function() {
 				bc.ai.doEvokingStageAI();
-			}, 500);
+			}, 1000);
 		}
 	}
 	//this function is called when battlestage is set to ACTION
@@ -491,6 +577,7 @@
 	//it is the responsibility of BattleButton (blue's turn) or BattleAI
 	//to advance the game from the Action Stage
 	BattleController.prototype.doActionStage = function() {
+		this.chain.resolveChain();
 		if (this.turnPlayer == "blue") {
 			this.gui.newActionPane("action");
 		} 
@@ -498,18 +585,18 @@
 			var bc = this;
 			setTimeout(function() {
 				bc.ai.doActionStageAI();
-			}, 500);
+			}, 1000);
 		}
 	}
 	BattleController.prototype.doEndStage = function() {
 		this.gui.newDirectionPane("End Stage");
 		if (this.turnPlayer == "blue") {
-			this.newBlueHand();
-			this.gui.newActionPane("action")
+			this.blueHand = this.newBlueHand();
+			this.gui.newActionPane("action");
 			this.turnPlayer = "red";
 		}
 		else {
-			this.newRedHand();
+			this.redHand = this.newRedHand();
 			this.turnPlayer = "blue";
 		}
 		var bc = this;

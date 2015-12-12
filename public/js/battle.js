@@ -33,8 +33,9 @@
 			initiator.isBeaten = true;
 			initiator.setIdle();
 			map.alarm = false;
-			level.activebattle = null;
-		 	level.addDialog(initiator.battleEndDialog)	
+		 	level.addDialog(initiator.battleEndDialog);	
+		 	this.battleStage.removeAllChildren();
+		 	level.activebattle = null;
 		}
 	}
 	window.Battle = Battle;

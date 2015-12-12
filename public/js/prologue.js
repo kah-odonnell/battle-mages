@@ -126,7 +126,7 @@ function handleProgress(event) {
 	stage.update(event);
 }
 
-function handleComplete() {
+function handleComplete(event) {
 	var progress = Math.ceil(loader.progress*100);
 	loadBar.text = "Loading | " + progress + "%";
 	stage.update(event);

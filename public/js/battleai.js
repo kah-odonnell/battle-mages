@@ -22,20 +22,27 @@
 		}
 		this.doEvokingStageAI = function() {
 			var active = bc.getActiveUnits("red", false);
-			if (active.length == 0) {
-				this.evokeRandom();
-			} else if (active.length == 1) {
-				this.evokeRandom();
-			} else {
-				evoking_satisfied = true;
-			}
+			var evokeable = bc.getEvokeableUnits("red", false);
+			if (evokeable.length > 0) {
+				if (active.length == 0) {
+					this.evokeRandom();
+				} else if (active.length == 1) {
+					this.evokeRandom();
+				} else {
+					evoking_satisfied = true;
+				}
 
-			if (!evoking_satisfied) {
-			
+				if (!evoking_satisfied) {
+				
+				} else {
+					evoking_satisfied = false;
+					bc.setBattleStage(bc.STAGE.ACTION);						
+				}				
 			} else {
 				evoking_satisfied = false;
 				bc.setBattleStage(bc.STAGE.ACTION);						
 			}
+
 		}
 		this.doActionStageAI = function() {
 			action_satisfied = true;

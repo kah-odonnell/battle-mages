@@ -248,11 +248,34 @@
 		attributetext.x = actionicon.x + actionicon.getBounds().width + 8;
 		attributetext.y = nametext.y + nametext.getBounds().height;
 
+		var manabox = new createjs.Container();
+		for (var i = 0; i < action.cost_mana; i++) {
+			var mana = new createjs.Bitmap(loader.getResult("mana"));
+			mana.x = 20*i;
+			manabox.addChild(mana);
+		}
+		manabox.x = actionicon.x + actionicon.getBounds().width + 4;
+		manabox.y = attributetext.y + attributetext.getBounds().height + 4;
+
 		thumbnailbox.addChild(nametext);
 		thumbnailbox.addChild(attributetext);
-		thumbnailbox.y = (actionicon.getBounds().height)/2 - thumbnailbox.getBounds().height/2;
+		thumbnailbox.addChild(manabox);
+		thumbnailbox.x = 0;
+		thumbnailbox.y = (
+			(actionicon.getBounds().height)/2 - 
+			thumbnailbox.getBounds().height/2 + 
+			(manabox.getBounds().height + 4)/2
+		);
+
+		var desc = action.description;
+		var descbox = new createjs.Container();
+		var desctext = new createjs.Text(desc, "26px crazycreation", "#000000");
+		descbox.addChild(desctext);
+		descbox.x = actionicon.x + actionicon.getBounds().width/2;
+		descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 8;
 
 		masterContainer.addChild(thumbnailbox);
+		masterContainer.addChild(descbox);
 
 		return masterContainer;
 	}
@@ -279,7 +302,6 @@
 	BattleStage.prototype.buildHandPane = function() {
 		var buttonContainer = new createjs.Container();
 		var buttons = [];
-		var player = level.activebattle.getPlayer();
 
 		var hand = this.bc.getHand("blue");
 		for (var i = 0; i < hand.length; i++) {
@@ -294,14 +316,17 @@
 			currentButton.x = bcWidth;
 			buttonContainer.addChild(currentButton);
 		}
-		buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;
+		var b = buttonContainer.getBounds();
+		var offset;
+		if (b != null) offset = b.width/2;
+		else offset = 0;
+		buttonContainer.x = canvas.width/2 - offset;
 		return buttonContainer;
 	}
 	//buildTargetPane("target_a", this.bc.chain.TARGET.OPPONENT_ALL);
 	BattleStage.prototype.buildTargetPane = function(tag, spec, data) {
 		var buttonContainer = new createjs.Container();
 		var buttons = [];
-		var player = level.activebattle.getPlayer();
 
 		var targets = this.bc.chain.getPossibleTargets(spec, "blue");
 		for (var i = 0; i < targets.length; i++) {
@@ -338,9 +363,9 @@
 			owner = level.activebattle.getNPC();
 			if (units.length == 1) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - 75;
-					units[i].guiUnit.y = owner.y;
-				}
+					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i);
+					units[i].guiUnit.y = owner.y - 25 + 50*(i);
+				}				
 			}
 			else if (units.length == 2) {
 				for (var i = 0; i < units.length; i++) {
@@ -360,9 +385,9 @@
 			owner = level.activebattle.getPlayer();
 			if (units.length == 1) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + 75;
-					units[i].guiUnit.y = owner.y;
-				}
+					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i);
+					units[i].guiUnit.y = owner.y - 25 + 50*(i);
+				}		
 			}
 			else if (units.length == 2) {
 				for (var i = 0; i < units.length; i++) {

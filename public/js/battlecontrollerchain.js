@@ -32,6 +32,8 @@
 	//called by A) BattleControllerAction.use()/.activate()
 	// or B) BattleButton/BattleAI
 	// or C) this.resolveChain();
+	//
+	//new token effects must be added to this function
 	BattleControllerChain.prototype.finalizeData = function(data) {
 		var action_id = data.action_unique_id;
 		var unit_id = data.unit_unique_id;
@@ -45,7 +47,7 @@
 			memory = this.short_term[action_id];
 		}
 		if ("target_a" in data) {
-			var tag = "target_a"
+			var tag = "target_a";
 			if (!(tag in memory)) {
 				var spec = data[tag] //this.TARGET.OPPONENT_ALL
 				if (owner == "blue") this.bc.red_done = true;
@@ -61,9 +63,27 @@
 		this.addToChain(data)
 	}
 	//gives/takes mana from units, inflicts damage, etc.
+	//new token effects must be added to this function
 	BattleControllerChain.prototype.processData = function(data) {
+		var action_id = data.action_unique_id;
+		var unit_id = data.unit_unique_id;
+		var unit = this.bc.getTokenByUniqueId(unit_id);
+		var owner = unit.owner;
+		var action = this.bc.getTokenByUniqueId(action_id);
+		this.bc.removeFromHand(action);
+		var memory = this.short_term[action_id];
+		if ("cost_mana" in data) {
+			var tag = "target_a";
+			unit.mana -= data["cost_mana"];
+		}
+		if ("attack_damage" in data) {
+			var tag = data["attack_damage"].main;
+			var power = data["attack_damage"].main_power;
+			var id = data[tag]
+			var main_unit = this.bc.getTokenByUniqueId(id);
+			unit.attack(main_unit, power);
+		}
 		this.bc.resetActionPane();
-		this.cleanShortTermData();
 	}
 	BattleControllerChain.prototype.cleanShortTermData = function() {
 		this.short_term = {};
@@ -75,6 +95,7 @@
 	BattleControllerChain.prototype.addToChain = function(data) {
 		this.chain.push(data);
 		this.processData(data);
+		var action = this.bc.getTokenByUniqueId(data.action_unique_id);
 		//determine whether we should wait for inputs
 		var red_l = this.getTriggeredCounters("red").length;
 		var blue_l = this.getTriggeredCounters("blue").length;
@@ -94,14 +115,35 @@
 	//unresolved tokens return their getUseData() (from chain, after data is finalized)
 	//resolved tokens return their getResolveData() (from chain, after data is finalized)
 	BattleControllerChain.prototype.getChain = function() {
-		return [];
+		return this.chain;
 	}
 	//replaces data of the most recently added but unresolved item on the chain
 	//with its finalized getResolveData() data
-	//returns a list of dictionaries of Action Tokens
+	//
+	//called by BattleController.doEvokingStage/doActionStage()
+	//finds the most recently added data (whose action is_resolved = false), removes it
+	//and runs this.finalizeData(action.getResolveData(unit))
+	//if everything on the chain is resolved, wipe it and short_term
 	BattleControllerChain.prototype.resolveChain = function() {
-		return this.chain;
+		for (var i = 0; i < this.chain.length; i++) {
+			var mr_action_id = this.chain[this.chain.length - 1 - i].action_unique_id;
+			var mr_unit_id = this.chain[this.chain.length - 1 - i].unit_unique_id;
+			var mr_action = this.bc.getTokenByUniqueId(mr_action_id);
+			var mr_unit;
+			if (!(mr_action.is_resolved)) {
+				mr_unit = this.bc.getTokenByUniqueId(mr_unit_id);
+				var incomplete_data = mr_action.getResolveData(mr_unit);
+				mr_action.is_resolved = true;
+				this.finalizeData(incomplete_data);
+				return true;
+			} else {
+
+			}
+		}
+		this.chain = [];
+		this.short_term = {};
 	}
+	//new token effects must be added to this function
 	BattleControllerChain.prototype.isPossible = function(data) {
 		var unit = this.bc.getTokenByUniqueId(data.unit_unique_id);
 		var action = this.bc.getTokenByUniqueId(data.action_unique_id);
@@ -109,7 +151,8 @@
 			return false;
 		}
 		if ("cost_mana" in data) {
-			if (unit.getMana() < data["cost_mana"]) {
+			var effective_cost = data["cost_mana"]
+			if (unit.getMana() < effective_cost) {
 				return false;
 			}
 		}

@@ -8,7 +8,7 @@ var player1library = {
 }
 
 var player2library = {
-	units: ["001","002","001"],
+	units: ["001","002"],
 	actions: [
 		"ILL001","ILL001","ILL001","ILL001","ILL001",
 		"ILL001","ILL001","ILL001","ILL001","ILL001",
