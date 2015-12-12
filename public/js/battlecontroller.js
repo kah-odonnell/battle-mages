@@ -69,7 +69,6 @@
 		this.setBattleStage(this.STAGE.RPS);
 	}
 	BattleController.prototype.updateStage = function() {
-		console.log(this.blueHand)
 		if (this.getBattleStage == "Action") this.newActionPane("action");
 		else if (this.getBattleStage == "Evoking") this.newActionPane("evoking");
 		var units = this.getAllUnits("all", true);
@@ -344,7 +343,6 @@
 		}
 		var hand = [];
 		var actions = this.blueActions;
-		console.log(actions)
 		while (hand.length < 4) {
 			var numtoadd = Math.floor(Math.random() * actions.length);
 			var tokentoadd = actions[numtoadd];
