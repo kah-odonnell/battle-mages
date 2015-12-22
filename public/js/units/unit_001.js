@@ -20,6 +20,7 @@
 		this.token_img = "token_renmei";
 
 		this.mana = 0;
+		this.counters = [];
 		this.raw_max_health = this.setCurrentHealth();
 		this.current_health = this.raw_max_health;
 		this.raw_attack = this.setCurrentAttack();

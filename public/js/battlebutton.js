@@ -26,6 +26,7 @@
 		else if (type == "unitrevoke") this.initUnitButton(unit);
 		else if (type == "action_info") this.initActionHandButton(unit);
 		else if (type == "action_hand") this.initActionHandButton(unit);
+		else if (type == "counter_activate") this.initActionHandButton(unit);
 		else if (type == "unit_token") this.initUnitTokenButton(unit);
 		else if (type == "unit_target") this.initUnitTokenButton(unit);
 		this.addChild(this.buttonChild);
@@ -144,6 +145,15 @@
 				g.bc.chain.short_term[action_id][mem_tag] = target_user_id;
 				g.bc.blue_done = true;
 				g.bc.chain.finalizeData(data);
+			});
+		}
+		if (type == "counter_activate") {
+			//in this case, unit is the target
+			var g = this;
+			this.on("click", function(event) {
+				level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+				var unit_c = g.bc.chain.getCounterUnit("blue", action);
+				action.activate(unit_c);
 			});
 		}
 	}

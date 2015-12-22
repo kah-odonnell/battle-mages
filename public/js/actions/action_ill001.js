@@ -54,26 +54,10 @@
 		use = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
-			cost_mana: this.cost_mana,
+			change_mana: 0-this.cost_mana,
 			target_a: this.bc.chain.TARGET.OPPONENT_ALL,
 		}
 		return use;
-	}
-	ActionILL001.prototype.canUse = function(unit) {
-		data = this.getUseData(unit);
-		if (data != null) {
-			return this.bc.chain.isPossible(data);
-		} else {
-			return false;
-		}
-	}
-	ActionILL001.prototype.use = function(unit) {
-		var t = this.canUse(unit)
-		if (t) {
-			this.is_resolved = false;
-			var data = this.getUseData(unit);
-			this.bc.chain.finalizeData(data);
-		}
 	}
 	/* ~~~~~~~~~ RESOLVE ~~~~~~~~~~~~ */
 	//if this Action Token is currently being resolved on the chain, 
@@ -93,11 +77,21 @@
 		}
 		return use;
 	}
-	ActionILL001.prototype.canResolve = function() {
-		return false;
+	ActionILL001.prototype.canResolve = function(unit) {
+		data = this.getResolveData(unit);
+		if ((data != null) && this.can_resolve) {
+			return this.bc.chain.isPossible(data);
+		} else {
+			return false;
+		}
 	}
-	ActionILL001.prototype.resolve = function() {
-
+	ActionILL001.prototype.resolve = function(unit) {
+		var t = this.canResolve(unit)
+		if (t) {
+			this.is_resolved = true;
+			var data = this.getResolveData(unit);
+			this.bc.chain.finalizeData(data);
+		}		
 	}
 	window.ActionILL001 = ActionILL001;
 } (window));

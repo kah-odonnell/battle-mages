@@ -39,11 +39,21 @@
 	BattleControllerAction.prototype.getUseData = function() {
 		return null;
 	}
-	BattleControllerAction.prototype.canUse = function() {
-		return false;
+	BattleControllerAction.prototype.canUse = function(unit) {
+		data = this.getUseData(unit);
+		if (data != null) {
+			return this.bc.chain.isPossible(data);
+		} else {
+			return false;
+		}
 	}
-	BattleControllerAction.prototype.use = function() {
-		
+	BattleControllerAction.prototype.use = function(unit) {
+		var t = this.canUse(unit)
+		if (t) {
+			this.is_resolved = false;
+			var data = this.getUseData(unit);
+			this.bc.chain.finalizeData(data);
+		}		
 	}
 	/* ~~~~~~~~~ RESOLVE ~~~~~~~~~~~~ */
 	//if this Action Token is currently being resolved on the chain, 

@@ -4,6 +4,11 @@
 		var action_satisfied = false;
 		var counter_satisfied = false;
 		var bc = bc;
+		this.isTurn = function() {
+			if (bc.turnPlayer == "red") return true;
+			else if (bc.turnPlayer == "blue") return false;
+			else console.log("wtf")
+		}
 		this.evokeRandom = function() {
 			var units = bc.getAllUnits("red", false);
 			var active_units = bc.getActiveUnits("red", false);
@@ -21,58 +26,80 @@
 			}
 		}
 		this.doEvokingStageAI = function() {
-			var active = bc.getActiveUnits("red", false);
-			var evokeable = bc.getEvokeableUnits("red", false);
-			if (evokeable.length > 0) {
-				if (active.length == 0) {
-					this.evokeRandom();
-				} else if (active.length == 1) {
-					this.evokeRandom();
+			if (!this.isTurn) return false;
+			if (evoking_satisfied == true) {
+				bc.setBattleStage(bc.STAGE.ACTION);						
+			}
+			else if (evoking_satisfied == false) {
+				var active = bc.getActiveUnits("red", false);
+				var evokeable = bc.getEvokeableUnits("red", false);
+				if (evokeable.length > 0) {
+					if (active.length == 0) {
+						this.evokeRandom();
+						if (evokeable.length > 1) evoking_satisfied = false;
+						else evoking_satisfied = true;
+					} else if (active.length == 1) {
+						this.evokeRandom();
+						evoking_satisfied = true;
+					} else {
+						evoking_satisfied = true;
+					}	
 				} else {
 					evoking_satisfied = true;
 				}
-
-				if (!evoking_satisfied) {
-				
-				} else {
-					evoking_satisfied = false;
-					bc.setBattleStage(bc.STAGE.ACTION);						
-				}				
-			} else {
-				evoking_satisfied = false;
-				bc.setBattleStage(bc.STAGE.ACTION);						
 			}
-
 		}
 		this.doActionStageAI = function() {
-			action_satisfied = true;
+			if (!this.isTurn) return false;
+			var did_action = this.selectAction();
+			if (did_action) {
 
-			if (!action_satisfied) {
-				
-			} else {
-				action_satisfied = false;
+			} 
+			else if (bc.chain.chain.length == 0) {
 				bc.setBattleStage(bc.STAGE.END);
+			} else {
+				bc.doActionStage();
 			}
 		}
+		this.selectAction = function() {
+			var hand = bc.getHand("red")
+			if (hand.length > 0) {
+				var j = Math.floor(Math.random() * (hand.length - 1))
+				var action = hand[j];
+				var units = bc.getActiveUnits("red", true);
+				for (var i = 0; i < units.length; i++) {
+					var unit = units[i];
+					console.log(unit.name);
+					if (action.canUse(unit)) {
+						console.log("can use " + action.name)
+						action.use(unit);
+						return true;
+					} 
+				}
+			}
+			return false;		
+		}
 		this.selectCounters = function() {
-			counter_satisfied = false;
 			var counters = bc.chain.getTriggeredCounters("red")
-			counter_satisfied = true;
-
-			if (!counter_satisfied) {
-				bc.red_done = false;
-				bc.awaitInput("counter", "red");
+			if (counters.length > 0) {
+				var j = Math.floor(Math.random() * (counters.length - 1))
+				var counter = counters[j];
+				var unit = bc.chain.getCounterUnit("red", counter);
+				counter.activate(unit);
 			} else {
-				counter_satisfied = false;
 				bc.red_done = true;
-				bc.awaitInput("counter", "red");
+				bc.awaitInputCounter("red");		
 			}
 		}
 		//selectTarget("target_a", bc.chain.TARGET.OPPONENT_ALL, data)
 		this.selectTarget = function(tag, spec, data) {
 			var user_unit_id = data.unit_unique_id;
-			var target_user_id = "kdhf892u48jcnsjkf8933g3g";
-			bc.chain.short_term[user_unit_id][tag] = target_user_id;
+			var action_id = data.action_unique_id;
+			var targets = bc.chain.getPossibleTargets(spec, "red");
+			var j = Math.floor(Math.random() * (targets.length - 1))
+			var target = targets[j];
+			var target_user_id = target.unique_id;
+			bc.chain.short_term[action_id][tag] = target_user_id;
 			bc.red_done = true;
 			bc.chain.finalizeData(data);
 		}

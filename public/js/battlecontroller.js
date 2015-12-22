@@ -293,10 +293,16 @@
 	BattleController.prototype.setActions = function(action_id_list, owner) {
 		var actions = [];
 		for (var i = 0; i < action_id_list.length; i++) {
+			var action = null;
 			if ("ILL001" === action_id_list[i]) {
-				var action = new ActionILL001(this, owner);
+				action = new ActionILL001(this, owner);
+			}
+			if ("ILL002" === action_id_list[i]) {
+				action = new ActionILL002(this, owner);
+			}
+			if (action != null) {
 				actions.push(action);
-				action.location = this.LOCATION.DECK;
+				action.location = this.LOCATION.DECK;				
 			}
 		}
 		return actions;
@@ -386,25 +392,6 @@
 			}
 		}
 	}
-	BattleController.prototype.revoke = function(bcunit) {
-		bcunit.revoke();
-		this.gui.revoke(bcunit);
-		if (this.getBattleStage() == "Evoking") {
-			this.doEvokingStage();
-		}
-	}
-	BattleController.prototype.getChain = function() {
-
-	}
-	BattleController.prototype.addToChain = function() {
-
-	}
-	//resolveChain() runs BattleControllerAction.resolve() on 
-	//the unresolved item most recently added to the chain
-	//all counters are then pinged to react to the new getChain()
-	BattleController.prototype.resolveChain = function() {
-
-	}
 	BattleController.prototype.getOtherPlayer = function(red_blue) {
 		if (red_blue == "blue") return "red";
 		else if (red_blue == "red") return "blue";
@@ -431,69 +418,65 @@
 	BattleController.prototype.awaitInputCounter = function(red_blue) {
 		this.acceptingInput = false;
 		var bc = this;
+		console.log(red_blue + "|r:" + bc.red_done + "|b:" + bc.blue_done);
 		setTimeout(function() {
 			var stage = bc.getBattleStage();
 			if ((red_blue == "blue") && (bc.red_done) && (bc.blue_done)) {
 				//blue did something, and no one has a response
-				if (bc.chain.getChain().length == 0) {
-					bc.acceptingInput = true;
-					if (stage == "Evoking") {
-						bc.doEvokingStage();
-					}
-					else if (stage == "Action") {
-						bc.doActionStage()
-					};
-				} else {
-					bc.chain.resolveChain();
+				bc.acceptingInput = true;
+				if (stage == "Evoking") {
+					bc.doEvokingStage();
+				}
+				else if (stage == "Action") {
+					bc.doActionStage()
 				}
 			}
 			else if ((red_blue == "blue") && (bc.red_done) && (!bc.blue_done)) {
 				//blue did something, and only blue might respond
 				bc.acceptingInput = true;
-				bc.gui.newActionPane("counter");
+				bc.gui.newActionPaneCounter();
 				//hitting continue/counter button sets blue_done = true;
 				//and calls awaitInput("blue")
 			}
 			else if ((red_blue == "blue") && (!bc.red_done) && (bc.blue_done)) {
 				//blue did something, and only red might respond
+				bc.acceptingInput = true;
 				bc.ai.selectCounters();
 				//ai sets red_done = true and calls awaitInput("red")
 			}
 			else if ((red_blue == "blue") && (!bc.red_done) && (!bc.blue_done)) {
 				//blue did something, either might respond but red has priority
+				bc.acceptingInput = true;
 				bc.ai.selectCounters();
 				//ai sets red_done = true and calls awaitInput("red")
 			}
 			else if ((red_blue == "red") && (bc.red_done) && (bc.blue_done)) {
 				//red did something and noone has a response
-				if (bc.chain.getChain().length == 0) {
-					bc.acceptingInput = true;
-					if (stage == "Evoking") {
-						bc.doEvokingStage();
-					}
-					else if (stage == "Action") {
-						bc.doActionStage()
-					};
-				} else {
-					bc.chain.resolveChain();
+				bc.acceptingInput = true;
+				if (stage == "Evoking") {
+					bc.doEvokingStage();
+				}
+				else if (stage == "Action") {
+					bc.doActionStage()
 				}
 			}
 			else if ((red_blue == "red") && (bc.red_done) && (!bc.blue_done)) {
 				//red did something, and only blue might respond
 				bc.acceptingInput = true;
-				bc.gui.newActionPane("counter");
+				bc.gui.newActionPaneCounter();
 				//hitting continue/counter button sets blue_done = true;
 				//and calls awaitInput("blue")
 			}
 			else if ((red_blue == "red") && (!bc.red_done) && (bc.blue_done)) {
 				//red did something, and only red might respond
+				bc.acceptingInput = true;
 				bc.ai.selectCounters();
 				//ai sets red_done = true and calls awaitInput("red")
 			}
 			else if ((red_blue == "red") && (!bc.red_done) && (!bc.blue_done)) {
 				//red did something, either might respond but blue has priority
 				bc.acceptingInput = true;
-				bc.gui.newActionPane("counter");
+				bc.gui.newActionPaneCounter();
 				//hitting continue/counter button sets blue_done = true;
 				//and calls awaitInput("blue")
 			}
@@ -519,8 +502,8 @@
 			else if ((red_blue == "red") && (!bc.red_done)) {
 				//red added a skill requiring a target to the chain
 				//red must respond
-				bc.ai.selectTarget(tag, spec, data); 
 				bc.acceptingInput = true;
+				bc.ai.selectTarget(tag, spec, data); 
 			}
 		}, 0);			
 	}
@@ -574,35 +557,46 @@
 	//
 	//it is the responsibility of BattleButton (blue's turn) or BattleAI
 	//to advance the game from the Action Stage
+	//adding anything to the chain, be it a resolve effect or otherwise,
+	//should eventually come back to this function.
 	BattleController.prototype.doActionStage = function() {
-		this.chain.resolveChain();
-		if (this.turnPlayer == "blue") {
-			this.gui.newActionPane("action");
-		} 
-		else if (this.turnPlayer == "red") {
-			var bc = this;
-			setTimeout(function() {
-				bc.ai.doActionStageAI();
-			}, 1000);
+		console.log(this.chain.chain);
+		if (this.chain.chain.length == 0) {
+			if (this.turnPlayer == "blue") {
+				this.gui.newActionPane("action");
+			} 
+			else if (this.turnPlayer == "red") {
+				var bc = this;
+				setTimeout(function() {
+					bc.ai.doActionStageAI();
+				}, 1000);
+			}
+		} else {
+			this.chain.resolveChain();
 		}
+
 	}
 	BattleController.prototype.doEndStage = function() {
 		this.gui.newDirectionPane("End Stage");
 		if (this.turnPlayer == "blue") {
 			this.blueHand = this.newBlueHand();
 			this.gui.newActionPane("action");
-			this.turnPlayer = "red";
+			var bc = this;
+			setTimeout(function() {
+				bc.turnPlayer = "red";
+				bc.setBattleStage(bc.STAGE.START);
+			}, 1000);
 		}
-		else {
+		else if (this.turnPlayer == "red") {
 			this.redHand = this.newRedHand();
-			this.turnPlayer = "blue";
+			var bc = this;
+			setTimeout(function() {
+				bc.turnPlayer = "blue";
+				bc.setBattleStage(bc.STAGE.START);
+			}, 1000);
+		} else {
+			console.log("doEndStage doesn't know whose turn it is")
 		}
-		var bc = this;
-		setTimeout(function() {
-			bc.setBattleStage(bc.STAGE.START)
-		}, 1000);
-	}
-	BattleController.prototype.doSelectTarget = function() {
 
 	}
 	BattleController.prototype.doRockPaperScissors = function(string) {

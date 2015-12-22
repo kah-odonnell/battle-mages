@@ -2,6 +2,13 @@
 	var BattleControllerUnit = function() {
 
 	};
+	BattleControllerUnit.prototype.removeCounter = function(action) {
+		var i = this.counters.indexOf(action);
+		this.counters.splice(i, 1);
+	}
+	BattleControllerUnit.prototype.addCounter = function(action) {
+		this.counters.push(action);
+	}
 	BattleControllerUnit.prototype.increaseMana = function() {
 		this.mana++;
 	}
@@ -15,6 +22,9 @@
 	}
 	BattleControllerUnit.prototype.getMana = function() {
 		return this.mana;
+	}
+	BattleControllerUnit.prototype.changeMana = function(value) {
+		this.mana += value; //1, -1, etc. 
 	}
 	BattleControllerUnit.prototype.attack = function(target, power) {
 		var final_unit_attack = this.raw_attack*(1+.5*this.stage_attack);

@@ -172,6 +172,14 @@
 			this.actionPane.addChild(this.actionPaneActive);
 		}
 	}
+	BattleStage.prototype.newActionPaneCounter = function() {
+		this.newDirectionPane("Activate a Counter");
+		this.actionPane.removeChild(this.actionPaneActive);
+		this.actionPane.removeChild(this.actionPaneButton);
+		this.actionPaneActive = this.buildCounterPane();
+		this.actionPaneActive.y -= 36;
+		this.actionPane.addChild(this.actionPaneActive);
+	}
 	BattleStage.prototype.newInfoPane = function(type, obj) {
 		if (type == "unit_stats") {
 			this.infoPane.removeChild(this.infoPaneActive);
@@ -256,23 +264,103 @@
 		}
 		manabox.x = actionicon.x + actionicon.getBounds().width + 4;
 		manabox.y = attributetext.y + attributetext.getBounds().height + 4;
-
 		thumbnailbox.addChild(nametext);
 		thumbnailbox.addChild(attributetext);
 		thumbnailbox.addChild(manabox);
 		thumbnailbox.x = 0;
-		thumbnailbox.y = (
-			(actionicon.getBounds().height)/2 - 
-			thumbnailbox.getBounds().height/2 + 
-			(manabox.getBounds().height + 4)/2
-		);
-
+		//if this token doesn't have mana, we must remove the y offset
+		if (manabox.getBounds() != null) {
+			thumbnailbox.y = (
+				(actionicon.getBounds().height)/2 - 
+				thumbnailbox.getBounds().height/2 + 
+				(manabox.getBounds().height + 4)/2
+			);			
+		} else {
+			thumbnailbox.y = (
+				(actionicon.getBounds().height)/2 - 
+				thumbnailbox.getBounds().height/2
+			);			
+		}
+		//centering objects in a pane. offset should be set at xOffset
+		//text to be centered - desc;
 		var desc = action.description;
+		var desc1_max = desc.length; //the index of the last character that can fit
+		var desc2_max = desc.length; //these values are reset later on.
 		var descbox = new createjs.Container();
-		var desctext = new createjs.Text(desc, "26px crazycreation", "#000000");
-		descbox.addChild(desctext);
-		descbox.x = actionicon.x + actionicon.getBounds().width/2;
-		descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 8;
+		var desctext1 = new createjs.Text("", "26px crazycreation", "#000000");
+		var desctext2 = new createjs.Text("", "26px crazycreation", "#000000");
+		var desctext3 = new createjs.Text("", "26px crazycreation", "#000000");
+		descbox.addChild(desctext1);
+		descbox.addChild(desctext2);
+		descbox.addChild(desctext3);
+		var xOffset = actionicon.x + actionicon.getBounds().width/2
+		var rightEdge = canvas.width - xOffset - xOffset - xOffset - xOffset;
+		descbox.x = xOffset;
+		desctext1.text = desc;
+		desctext2.text = "";
+		desctext3.text = ""; //the text changes below
+		var word_i;
+		if (desctext1.getBounds().width > rightEdge) {
+			desctext1.text = " ";
+			var word_list = desc.split(" ");
+			var num_char = 0;
+			var best_size = 0;
+			for (var i = 0; i < word_list.length; i++) {
+				desctext1.text = desctext1.text + word_list[i]
+				num_char += word_list[i].length + 1;
+				var bounds = desctext1.getBounds();
+				if ((bounds.width > best_size) && (bounds.width < rightEdge)) {
+					best_size = num_char;
+				}
+				if (bounds.width > rightEdge) {
+					word_i = i;
+					break;
+				}
+			}
+			desc1_max = best_size;
+		}
+		if (desctext1.getBounds().width > rightEdge) {
+			desctext2.text = " ";
+			var word_list = desc.split(" ");
+			var num_char = 0;
+			var best_size = 0;
+			for (var i = word_i; i < word_list.length; i++) {
+				desctext2.text = desctext2.text + word_list[i]
+				num_char += word_list[i].length + 1;
+				var bounds = desctext2.getBounds();
+				if ((bounds.width > best_size) && (bounds.width < rightEdge)) {
+					best_size = num_char;
+				}
+				if (bounds.width > rightEdge) {
+					break;
+				}
+			}
+			desc2_max = best_size + desc1_max;
+		}
+		for (var i = 0; i < desc.length + 1; i++) {
+			if (i < desc1_max) {
+				desctext1.text = desc.slice(0, i);
+			} 
+			else if ((i >= desc1_max) && (i < desc2_max)){
+				desctext2.text = desc.slice(desc1_max, i);
+			} else {
+				desctext3.text = desc.slice(desc2_max, i)
+			}
+		}
+		var bounds1 = desctext1.getBounds();
+		var bounds2 = desctext2.getBounds();
+		if (bounds1 != null) {
+			desctext2.y = desctext1.y + desctext1.getBounds().height + 2;
+		}
+		if (bounds2 != null) {
+			desctext3.y = desctext2.y + desctext2.getBounds().height + 2;	
+		}
+
+		if (manabox.getBounds() != null) {
+			descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 8;	
+		} else {
+			descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 22 + 8;
+		}
 
 		masterContainer.addChild(thumbnailbox);
 		masterContainer.addChild(descbox);
@@ -286,6 +374,25 @@
 			var unit = playerUnits[i]
 			if (!(unit.is_active)) buttons.push(new BattleButton(true, "unitevoke", playerUnits[i]));
 			else if (unit.is_active) buttons.push(new BattleButton(true, "unitrevoke", playerUnits[i]));
+		}
+		var buttonContainer = new createjs.Container();
+		for (var i = 0; i < buttons.length; i++) {
+			var bcWidth = 0;
+			var currentButton = buttons[i];
+			if (buttonContainer.getBounds() != null) bcWidth = buttonContainer.getBounds().width + 8;
+			currentButton.x = bcWidth;
+			buttonContainer.addChild(currentButton);
+		}
+		buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;
+
+		return buttonContainer;
+	}
+	BattleStage.prototype.buildCounterPane = function() {
+		var buttons = [];
+		var playerUnits = this.bc.getAllUnits("blue", false);
+		var counters = this.bc.chain.getTriggeredCounters("blue");
+		for (var i = 0; i < counters.length; i++) {
+			buttons.push(new BattleButton(true, "counter_activate", counters[i]));
 		}
 		var buttonContainer = new createjs.Container();
 		for (var i = 0; i < buttons.length; i++) {

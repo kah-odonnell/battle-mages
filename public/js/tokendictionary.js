@@ -1,21 +1,21 @@
 var player1library = {
 	units: ["001","002","001"],
 	actions: [
-		"ILL001","ILL001","ILL001","ILL001","ILL001",
-		"ILL001","ILL001","ILL001","ILL001","ILL001",
-		"ILL001","ILL001","ILL001","ILL001","ILL001",
+		"ILL001","ILL001","ILL001","ILL002","ILL002",
+		"ILL001","ILL001","ILL001","ILL002","ILL002",
+		"ILL001","ILL001","ILL002","ILL002","ILL002",
 	]
 }
 
 var player2library = {
 	units: ["001","002"],
 	actions: [
-		"ILL001","ILL001","ILL001","ILL001","ILL001",
-		"ILL001","ILL001","ILL001","ILL001","ILL001",
-		"ILL001","ILL001","ILL001","ILL001","ILL001",
+		"ILL001","ILL001","ILL001","ILL002","ILL002",
+		"ILL001","ILL001","ILL001","ILL002","ILL002",
+		"ILL001","ILL001","ILL002","ILL002","ILL002",
 	]
 }
-
+/*
 var player1library2 = {
 	units: ["001","001","001"],
 	actions: [
@@ -33,3 +33,4 @@ var player2library2 = {
 		"ILL005","ILL006","ILL007","ILL008","ILL009",
 	]
 }
+*/

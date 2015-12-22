@@ -21,10 +21,13 @@ function signOf(number) {
 }
 
 function getMousePos(evt) {
-    var rect = canvas.getBoundingClientRect();
-    mouseX = evt.clientX - rect.left
-    mouseY = evt.clientY - rect.top
+	if (canvas != undefined) {
+		var rect = canvas.getBoundingClientRect();
+		mouseX = evt.clientX - rect.left
+		mouseY = evt.clientY - rect.top
+	}
 }
+
 window.addEventListener('mousemove', getMousePos, false);
 window.onkeydown = function(e) { 
   return !(e.keyCode == 32);
