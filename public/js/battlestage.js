@@ -470,19 +470,19 @@
 			owner = level.activebattle.getNPC();
 			if (units.length == 1) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i);
+					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
 					units[i].guiUnit.y = owner.y - 25 + 50*(i);
 				}				
 			}
 			else if (units.length == 2) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i);
+					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
 					units[i].guiUnit.y = owner.y - 25 + 50*(i);
 				}				
 			}
 			else if (units.length == 3) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - (75 + spacing) + spacing*(i);
+					units[i].guiUnit.x = owner.x - (75 + spacing) + spacing*(i) - 25;
 					units[i].guiUnit.y = owner.y - 50 + 50*(i);
 				}				
 			}	
@@ -492,19 +492,19 @@
 			owner = level.activebattle.getPlayer();
 			if (units.length == 1) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i);
+					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
 					units[i].guiUnit.y = owner.y - 25 + 50*(i);
 				}		
 			}
 			else if (units.length == 2) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i);
+					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
 					units[i].guiUnit.y = owner.y - 25 + 50*(i);
 				}				
 			}
 			else if (units.length == 3) {
 				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + (75 + spacing) - spacing*(i);
+					units[i].guiUnit.x = owner.x + (75 + spacing) - spacing*(i) + 25;
 					units[i].guiUnit.y = owner.y - 50 + 50*(i);
 				}				
 			}

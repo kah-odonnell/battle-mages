@@ -8,6 +8,9 @@
 		this.Container_initialize();
 		this.bcunit = bcunit;
 		this.img_name = img_name;
+		this.num_tokens_active = 0;
+		this.active_tokens = [];
+		this.active_token_imgs = [];
 
 		this.image = new createjs.Bitmap(loader.getResult(img_name));
 		this.addChild(this.image);
@@ -30,6 +33,55 @@
 	}
 	BattleUnitGui.prototype.tick = function() {
 
+	}
+	//this game is getting out of hand, fast. anyway...
+	//useToken creates a mini token image infront of a unit
+	//the x position of this token depends on how many tokens are in use by this unit
+	BattleUnitGui.prototype.useToken = function(action) {
+		var token = new createjs.Bitmap(loader.getResult(action.mini_img));
+		this.active_tokens.push(action);
+		this.active_token_imgs.push(token);
+		this.addChild(token);
+		token.x = 75;
+		token.y = this.getBounds().height/2 - token.getBounds().height/2;
+		token.x += this.num_tokens_active * 10;
+		token.on("click", function(evt) {
+			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+		});
+		this.num_tokens_active++;
+	}
+	BattleUnitGui.prototype.resolveToken = function(action) {
+		var l = this.active_tokens.indexOf(action);
+		var img = this.active_token_imgs[l];
+		var token = this.active_tokens[l];
+		var coords = {x: img.x, y: img.y};
+		this.active_tokens.slice(l, 1);
+		this.active_token_imgs.slice(l, 1);
+		this.removeChild(img);
+		var imagename = token.mini_img;
+		var image = new createjs.Bitmap(loader.getResult(imagename));
+		var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
+		image.filters = [
+		    new createjs.ColorMatrixFilter(matrix)
+		];
+		var bounds = image.getBounds();
+		image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
+		this.active_token_imgs.push(image);
+		this.active_tokens.push(token);
+		this.addChild(image);
+		image.x = coords.x;
+		image.y = coords.y;
+		image.on("click", function(evt) {
+			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+		});
+	}
+	BattleUnitGui.prototype.removeAllTokens = function() {
+		for (var i = 0; i < this.active_token_imgs.length; i++) {
+			this.removeChild(this.active_token_imgs[i]);
+		}
+		this.num_tokens_active = 0;
+		this.active_tokens = [];
+		this.active_token_imgs = [];
 	}
 	BattleUnitGui.prototype.updateStatusPane = function() {
 		var percent = this.bcunit.current_health/this.bcunit.raw_max_health;

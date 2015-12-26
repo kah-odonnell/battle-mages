@@ -13,7 +13,7 @@
 
 		this.makeSprites();
 		this.setIdle();
-		this.x = canvas.width - 100;
+		this.x = canvas.width - 75;
 		this.y = 175;
 	}
 	BattleNPC.prototype.tick = function() {

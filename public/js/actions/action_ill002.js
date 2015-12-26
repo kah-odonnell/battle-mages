@@ -24,9 +24,12 @@
 	/* ~~~~~~~~~ TRIGGER (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is a counter, and it is currently 'prepared' (in use) by a unit,
 	//this data will be compared to the data on the chain to determine whether it can be triggered
+	//TRIGGER DATA is used to match the data on the chain! 
+	//Nothing about this data should be about this token's effects!
 	ActionILL002.prototype.getTriggerData = function(unit) {
 		trigger = {
 			target_a: unit.unique_id,
+			action_type: this.bc.TYPE.ATTACK,
 		}
 		return trigger;
 	}
@@ -61,12 +64,15 @@
 		activate = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
+			action_effect_type: this.bc.chain.EFFECT.ACTIVATE,
+			action_type: this.bc.TYPE.COUNTER,
 		}
 		return activate;	
 	}
 	ActionILL002.prototype.canActivate = function(unit) {
 		data = this.getActivateData(unit);
-		if (data != null) {
+		var is_prepared = (this.location == this.bc.LOCATION.UNIT);
+		if ((data != null) && (is_prepared)) {
 			return this.bc.chain.isPossible(data);
 		} else {
 			return false;
@@ -90,7 +96,8 @@
 		use = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
-			counter: true
+			action_effect_type: this.bc.chain.EFFECT.USE,
+			action_type: this.bc.TYPE.COUNTER,
 		}
 		return use;
 	}
@@ -120,6 +127,8 @@
 		resolve = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
+			action_effect_type: this.bc.chain.EFFECT.RESOLVE,
+			action_type: this.bc.TYPE.COUNTER,
 			change_mana: 1
 		}
 		return resolve;

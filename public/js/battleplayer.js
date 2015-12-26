@@ -10,7 +10,7 @@
 
 		this.makeSprites();
 		this.setIdle();
-		this.x = 100;
+		this.x = 75;
 		this.y = 175;
 		this.scaleX = -1;
 	}

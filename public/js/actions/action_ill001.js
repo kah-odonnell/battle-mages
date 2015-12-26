@@ -54,6 +54,8 @@
 		use = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
+			action_effect_type: this.bc.chain.EFFECT.USE,
+			action_type: this.bc.TYPE.ATTACK,
 			change_mana: 0-this.cost_mana,
 			target_a: this.bc.chain.TARGET.OPPONENT_ALL,
 		}
@@ -67,6 +69,8 @@
 		use = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
+			action_effect_type: this.bc.chain.EFFECT.RESOLVE,
+			action_type: this.bc.TYPE.ATTACK,
 			target_a: this.bc.chain.TARGET.OPPONENT_ALL,
 			//random_a: this.bc.chain.RANDOM_UNIT.OPPONENT_ALL,
 			attack_damage: {

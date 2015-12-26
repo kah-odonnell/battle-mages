@@ -151,7 +151,7 @@ function tick(event) {
 	var color1 = "#FFFFFF"
 	var fps = "";
 	var playerCoords = "";
-	if (!(player === null)) playerCoords = player.tileX + "," + player.tileY + ":";
+	if (!(player === null)) playerCoords = player.tileX + "," + player.tileY + " | ";
 	fps = playerCoords + Math.floor(createjs.Ticker.getMeasuredFPS());
 	if (Math.floor(createjs.Ticker.getMeasuredFPS()) < 55) {
 		color1 = "#FF0000"

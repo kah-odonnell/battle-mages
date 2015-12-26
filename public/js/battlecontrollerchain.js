@@ -16,6 +16,13 @@
 			OWNER_UNITS: {string: ""},
 			OWNER_MINIONS: {string: ""},
 		}
+		this.EFFECT = {
+			USE: {string: ""},
+			RESOLVE: {string: ""},
+			PREPARE: {string: ""},
+			ACTIVATE: {string: ""},
+			TRIGGER: {string: ""},
+		}
 		this.bc = bc;
 		this.initialize();
 	};
@@ -45,6 +52,7 @@
 	//
 	//new token effects must be added to this function
 	BattleControllerChain.prototype.finalizeData = function(data) {
+		this.bc.is_resolving = true;
 		var action_id = data.action_unique_id;
 		var unit_id = data.unit_unique_id;
 		var unit = this.bc.getTokenByUniqueId(unit_id);
@@ -93,11 +101,37 @@
 			var main_unit = this.bc.getTokenByUniqueId(id);
 			unit.attack(main_unit, power);
 		}
-		if ("counter" in data) {
-			unit.addCounter(action);
-		}
-		if ((action.type == this.bc.TYPE.COUNTER) && (action.can_resolve == true)) {
-			unit.removeCounter(action);
+		if ("action_type" in data) {
+			var is_prep_counter = (
+				(data.action_type == this.bc.TYPE.COUNTER) && 
+				(data.action_effect_type == this.EFFECT.USE)
+			);
+			var is_activate_counter = (
+				(data.action_type == this.bc.TYPE.COUNTER) && 
+				(data.action_effect_type == this.EFFECT.ACTIVATE)
+			);
+			var is_use_action = (
+				(data.action_type != this.bc.TYPE.COUNTER) && 
+				(data.action_effect_type == this.EFFECT.USE)
+			);
+			var is_resolve_action = (
+				(data.action_effect_type == this.EFFECT.RESOLVE)
+			);
+			if (is_prep_counter) {
+				unit.addCounter(action);
+				action.location = this.bc.LOCATION.UNIT;
+			}
+			if (is_use_action || is_activate_counter) {
+				unit.guiUnit.useToken(action);
+				action.location = this.bc.LOCATION.CHAIN;
+			}
+			if (is_resolve_action) {
+				unit.guiUnit.resolveToken(action);
+				action.location = this.bc.LOCATION.DECK;
+			}
+			if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {
+				unit.removeCounter(action);
+			}
 		}
 		this.bc.resetActionPane();
 	}
@@ -119,6 +153,9 @@
 				if (!(trigger_evt in action_data)) {
 					match = false;
 				}
+				else if (trigger_data[trigger_evt] != action_data[trigger_evt]) {
+					match = false;
+				}
 			}
 			if (match) {
 				var action = this.bc.getTokenByUniqueId(this.chain[i].action_unique_id);				
@@ -127,12 +164,21 @@
 		}
 		return null;
 	}
+	/*
+	trigger_data = {
+		target_a: unit.unique_id,
+		action_type: this.bc.TYPE.ATTACK,
+	}
+	*/
 	BattleControllerChain.prototype.getTriggeringUnit = function(trigger_data) {
 		for (var i = this.chain.length - 1; i >= 0; i--) {
 			var action_data = this.chain[i];
 			var match = true;
 			for (var trigger_evt in trigger_data) {
 				if (!(trigger_evt in action_data)) {
+					match = false;
+				}
+				else if (trigger_data[trigger_evt] != action_data[trigger_evt]) {
 					match = false;
 				}
 			}
@@ -193,6 +239,7 @@
 				can_clear = false;
 				mr_unit = this.bc.getTokenByUniqueId(mr_unit_id);
 				mr_action.resolve(mr_unit);
+				return true;
 			} else {
 
 			}
@@ -202,7 +249,6 @@
 			this.short_term = {};
 			this.bc.doActionStage();
 		}
-
 	}
 	BattleControllerChain.prototype.makeDone = function(red_blue) {
 		if (red_blue == "red") this.bc.red_done = true;

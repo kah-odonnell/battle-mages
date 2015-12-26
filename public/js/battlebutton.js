@@ -24,9 +24,9 @@
 		else if (type == "continue") this.initContinueButton();
 		else if (type == "unitevoke") this.initUnitButton(unit);
 		else if (type == "unitrevoke") this.initUnitButton(unit);
-		else if (type == "action_info") this.initActionHandButton(unit);
+		else if (type == "action_info") this.initActionInfoButton(unit);
 		else if (type == "action_hand") this.initActionHandButton(unit);
-		else if (type == "counter_activate") this.initActionHandButton(unit);
+		else if (type == "counter_activate") this.initActionInfoButton(unit);
 		else if (type == "unit_token") this.initUnitTokenButton(unit);
 		else if (type == "unit_target") this.initUnitTokenButton(unit);
 		this.addChild(this.buttonChild);
@@ -67,69 +67,79 @@
 		//action token buttons, in the hand, are click and draggable
 		//im a bit embarrased by how this turned out but... it works nicely
 		if (type == "action_hand") {
-			var g = this;
-			this.on("mousedown", function(evt) {
-				//update the info pane with info about this Action
-				level.activebattle.battleStage.newInfoPane("action_hand_info", action);
-				//remove the bitmap represented by this class, and add it to battleStage
-				//that way, we can use the native mouseX and mouseY values, without
-				//having to translate into a different set of coordinates. thats like, hard.
-				evt.currentTarget.removeChild(this.buttonChild);
-				level.activebattle.battleStage.addChild(this.buttonChild);	
-				var buttonBounds = evt.currentTarget.buttonChild.getBounds()
-				evt.currentTarget.buttonChild.x = mouseX - buttonBounds.height/2;
-				evt.currentTarget.buttonChild.y = mouseY - buttonBounds.width/2;
-				//grey out units that can't use this Action
-				var units = g.bc.getActiveUnits("blue", true);
-				for (var i = 0; i < units.length; i++) {
-					if (!action.canUse(units[i])) units[i].guiUnit.greyOut();
-					else units[i].guiUnit.highlight();
-				}
-			});
-			this.buttonChild.on("pressmove", function(evt) {
-				//on mouse movement, update the bitmap's x and y
-				//the bitmap is a child of battleStage here
-				var buttonBounds = evt.currentTarget.getBounds()
-				evt.currentTarget.x = mouseX - buttonBounds.height/2;
-				evt.currentTarget.y = mouseY - buttonBounds.width/2;
-			});
-			this.buttonChild.on("pressup", function(evt) {
-				//on release, check if the Action token is being held over a unit
-				//if so, use it on the unit closest to the mouse release coords
-				var units = level.activebattle.battleController.getActiveUnits("blue", true);
-				var hits = []
-				var best_unit = null;
-				var best_dist = 999999999;
-				for (var i = 0; i < units.length; i++) {
-					var bounds = units[i].guiUnit.getBounds();
-					var unitX = units[i].guiUnit.x - bounds.width/2;
-					var unitY = units[i].guiUnit.y - bounds.height;
-					var centerX = unitX + bounds.width/2;
-					var centerY = unitY + bounds.height/2;
-					var inX = ((unitX < mouseX) && (mouseX < (unitX + bounds.width))); 
-					var inY = ((unitY < mouseY) && (mouseY < (unitY + bounds.height))); 
-					if (inX && inY) {
-						var d = distanceFormula(centerX, mouseX, centerY, mouseY);
-						if (d < best_dist) {
-							best_unit = units[i];
-							best_dist = d;
+			if (this.bc.is_resolving || (this.bc.turnPlayer == "red") || (this.bc.getBattleStage() != "Action")) {
+				var g = this;
+				this.on("click", function(evt) {
+					level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+				});
+			} else {
+				var g = this;
+				this.on("mousedown", function(evt) {
+					//update the info pane with info about this Action
+					level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+					//remove the bitmap represented by this class, and add it to battleStage
+					//that way, we can use the native mouseX and mouseY values, without
+					//having to translate into a different set of coordinates. thats like, hard.
+					evt.currentTarget.removeChild(this.buttonChild);
+					level.activebattle.battleStage.addChild(this.buttonChild);	
+					var buttonBounds = evt.currentTarget.buttonChild.getBounds()
+					evt.currentTarget.buttonChild.x = mouseX - buttonBounds.height/2;
+					evt.currentTarget.buttonChild.y = mouseY - buttonBounds.width/2;
+					//grey out units that can't use this Action
+					var units = g.bc.getActiveUnits("blue", true);
+					for (var i = 0; i < units.length; i++) {
+						if (!action.canUse(units[i])) units[i].guiUnit.greyOut();
+						else units[i].guiUnit.highlight();
+					}
+					action.location = g.bc.LOCATION.DRAG;
+				});
+				this.buttonChild.on("pressmove", function(evt) {
+					//on mouse movement, update the bitmap's x and y
+					//the bitmap is a child of battleStage here
+					var buttonBounds = evt.currentTarget.getBounds()
+					evt.currentTarget.x = mouseX - buttonBounds.height/2;
+					evt.currentTarget.y = mouseY - buttonBounds.width/2;
+				});
+				this.buttonChild.on("pressup", function(evt) {
+					//on release, check if the Action token is being held over a unit
+					//if so, use it on the unit closest to the mouse release coords
+					var units = level.activebattle.battleController.getActiveUnits("blue", true);
+					var hits = []
+					var best_unit = null;
+					var best_dist = 999999999;
+					for (var i = 0; i < units.length; i++) {
+						var bounds = units[i].guiUnit.getBounds();
+						var unitX = units[i].guiUnit.x - bounds.width/2;
+						var unitY = units[i].guiUnit.y - bounds.height;
+						var centerX = unitX + bounds.width/2;
+						var centerY = unitY + bounds.height/2;
+						var inX = ((unitX < mouseX) && (mouseX < (unitX + bounds.width))); 
+						var inY = ((unitY < mouseY) && (mouseY < (unitY + bounds.height))); 
+						if (inX && inY) {
+							var d = distanceFormula(centerX, mouseX, centerY, mouseY);
+							if (d < best_dist) {
+								best_unit = units[i];
+								best_dist = d;
+							}
 						}
 					}
-				}
-				if (best_unit != null) {
-					action.use(best_unit);
-				}
-				//remove the bitmap from battleStage and add it to this object
-				evt.currentTarget.x = 0;
-				evt.currentTarget.y = 0;
-				level.activebattle.battleStage.removeChild(evt.currentTarget);
-				g.addChild(evt.currentTarget);	
-				//ungrey everything
-				var units = g.bc.getActiveUnits("blue", true);
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.unGrey();
-				}	
-			});			
+					if (best_unit != null) {
+						action.use(best_unit);
+					} else {
+						action.location = g.bc.LOCATION.HAND;
+					}
+					//remove the bitmap from battleStage and add it to this object
+					evt.currentTarget.x = 0;
+					evt.currentTarget.y = 0;
+					level.activebattle.battleStage.removeChild(evt.currentTarget);
+					g.addChild(evt.currentTarget);	
+					//ungrey everything
+					var units = g.bc.getActiveUnits("blue", true);
+					for (var i = 0; i < units.length; i++) {
+						units[i].guiUnit.unGrey();
+					}	
+				});	
+			}				
 		}
 		if (type == "unit_token") {
 
@@ -191,6 +201,22 @@
 		}
 	}
 	BattleButton.prototype.initActionHandButton = function(action) {
+		if (this.bc.is_resolving || (this.bc.turnPlayer == "red") || (this.bc.getBattleStage() != "Action")) {
+			var imagename = action.token_img;
+			var image = new createjs.Bitmap(loader.getResult(imagename));
+			var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
+			image.filters = [
+			    new createjs.ColorMatrixFilter(matrix)
+			];
+			var bounds = image.getBounds();
+			image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
+			this.buttonChild = image;
+		} else {
+			var imagename = action.token_img;
+			this.buttonChild = new createjs.Bitmap(loader.getResult(imagename));
+		}
+	}
+	BattleButton.prototype.initActionInfoButton = function(action) {
 		var imagename = action.token_img;
 		this.buttonChild = new createjs.Bitmap(loader.getResult(imagename));
 	}

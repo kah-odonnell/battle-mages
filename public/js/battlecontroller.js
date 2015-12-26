@@ -36,6 +36,7 @@
 			HAND: {string: "Hand"},
 			UNIT: {string: "Unit"},
 			CHAIN: {string: "Chain"},
+			DRAG: {string: "Drag"},
 		}
 		this.gui = battleStage;
 		this.gui.bc = this;
@@ -67,10 +68,14 @@
 
 		this.ai = new BattleAI(this);
 		this.setBattleStage(this.STAGE.RPS);
+
+		//functions that need to be run with a delay will be added to this list
+		//the gameloop iterates through the list
+		this.master_timeline = [];
+		this.master_interval = 0;
+		this.tick2 = 0;
 	}
 	BattleController.prototype.updateStage = function() {
-		if (this.getBattleStage == "Action") this.newActionPane("action");
-		else if (this.getBattleStage == "Evoking") this.newActionPane("evoking");
 		var units = this.getAllUnits("all", true);
 		for (var i = 0; i < units.length; i++) {
 			units[i].guiUnit.updateStatusPane();
@@ -178,7 +183,6 @@
 		else if (stage == this.STAGE.END) {
 			this.doEndStage();
 		}
-		this.updateStage();
 		return this.currentStage.string;
 	}
 	BattleController.prototype.getBattleStage = function() {
@@ -290,6 +294,12 @@
 		}
 		return units;
 	}
+	BattleController.prototype.clearAllUnits = function() {
+		var units = this.getAllUnits("all", true);
+		for (var i = 0; i < units.length; i++) {
+			units[i].guiUnit.removeAllTokens();
+		}
+	}
 	BattleController.prototype.setActions = function(action_id_list, owner) {
 		var actions = [];
 		for (var i = 0; i < action_id_list.length; i++) {
@@ -301,8 +311,10 @@
 				action = new ActionILL002(this, owner);
 			}
 			if (action != null) {
-				actions.push(action);
-				action.location = this.LOCATION.DECK;				
+				action.location = this.LOCATION.DECK;
+				actions.push(action);				
+			} else {
+				console.log(action_id_list[i] + " is not a valid catalog id");
 			}
 		}
 		return actions;
@@ -313,12 +325,27 @@
 	BattleController.prototype.getActionsDeck = function() {
 		//returns list of tokens in deck (no prep'd-counters/in-chain/in-hand)
 	}
+	//returns a list of tokens in hand, excluding those currently being dragged
 	BattleController.prototype.getHand = function(red_blue) {
 		if (red_blue == "blue") {
-			return this.blueHand;
+			var newlist = [];
+			var list = this.blueHand;
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].location == this.LOCATION.HAND) {
+					newlist.push(list[i]);
+				}
+			}
+			return newlist;
 		}
 		else if (red_blue == "red") {
-			return this.redHand;
+			var newlist = [];
+			var list = this.redHand;
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].location == this.LOCATION.HAND) {
+					newlist.push(list[i]);
+				}
+			}
+			return newlist;
 		}
 	}
 	BattleController.prototype.newRedHand = function() {
@@ -331,14 +358,14 @@
 		while (hand.length < 4) {
 			var numtoadd = Math.floor(Math.random() * actions.length);
 			var tokentoadd = actions[numtoadd];
-			var canAdd = true;
 			if (tokentoadd.location == this.LOCATION.HAND) {
-				canAdd = false;
+
 			}
-			if (canAdd) {
+			else if (tokentoadd.location == this.LOCATION.DECK) {
 				hand.push(tokentoadd)
 				tokentoadd.location = this.LOCATION.HAND;
 			}
+			console.log("newRedHand()");
 		}
 		return hand;
 	}
@@ -352,14 +379,14 @@
 		while (hand.length < 4) {
 			var numtoadd = Math.floor(Math.random() * actions.length);
 			var tokentoadd = actions[numtoadd];
-			var canAdd = true;
 			if (tokentoadd.location == this.LOCATION.HAND) {
-				canAdd = false;
+
 			}
-			if (canAdd) {
+			else if (tokentoadd.location == this.LOCATION.DECK) {
 				hand.push(tokentoadd)
 				tokentoadd.location = this.LOCATION.HAND;
 			}
+			console.log("newBlueHand()");
 		}
 		return hand;
 	}
@@ -419,7 +446,7 @@
 		this.acceptingInput = false;
 		var bc = this;
 		console.log(red_blue + "|r:" + bc.red_done + "|b:" + bc.blue_done);
-		setTimeout(function() {
+		var counterSink = function() {
 			var stage = bc.getBattleStage();
 			if ((red_blue == "blue") && (bc.red_done) && (bc.blue_done)) {
 				//blue did something, and no one has a response
@@ -480,7 +507,8 @@
 				//hitting continue/counter button sets blue_done = true;
 				//and calls awaitInput("blue")
 			}
-		}, 500);			
+		}
+		this.addToTimeline(counterSink);
 	}
 	//awaitInputTarget("blue", "target_a", this.chain.TARGET.OPPONENT_ALL, data)
 	//BattleButton or BattleAI will save data to this.chain.short_term = {}
@@ -491,7 +519,7 @@
 	BattleController.prototype.awaitInputTarget = function(red_blue, tag, spec, data) {			
 		this.acceptingInput = false;
 		var bc = this;
-		setTimeout(function() {
+		var targetSink = function() {
 			var stage = bc.getBattleStage();
 			if ((red_blue == "blue") && (!bc.blue_done)) {
 				//blue added a skill requiring a target to the chain
@@ -505,7 +533,8 @@
 				bc.acceptingInput = true;
 				bc.ai.selectTarget(tag, spec, data); 
 			}
-		}, 0);			
+		}
+		targetSink();
 	}
 	BattleController.prototype.resetActionPane = function() {
 		this.updateStage();
@@ -520,9 +549,10 @@
 	}
 	BattleController.prototype.doStartStage = function() {
 		var bc = this;
-		setTimeout(function() {
+		var goToEvoking = function() {
 			bc.setBattleStage(bc.STAGE.EVOKING)
-		}, 1000);
+		}
+		this.addToTimeline(goToEvoking);
 	}
 	//this function is called when battlestage is set to EVOKING
 	//
@@ -540,10 +570,12 @@
 			this.gui.newActionPane("evoking");
 		} 
 		else if (this.turnPlayer == "red") {
+			this.gui.newActionPane("action");
 			var bc = this;
-			setTimeout(function() {
+			var aiEvoke = function() {
 				bc.ai.doEvokingStageAI();
-			}, 1000);
+			}
+			this.addToTimeline(aiEvoke);
 		}
 	}
 	//this function is called when battlestage is set to ACTION
@@ -560,55 +592,87 @@
 	//adding anything to the chain, be it a resolve effect or otherwise,
 	//should eventually come back to this function.
 	BattleController.prototype.doActionStage = function() {
-		console.log(this.chain.chain);
 		if (this.chain.chain.length == 0) {
+			this.is_resolving = false;
+			this.gui.newActionPane("action");
 			if (this.turnPlayer == "blue") {
-				this.gui.newActionPane("action");
+
 			} 
 			else if (this.turnPlayer == "red") {
 				var bc = this;
-				setTimeout(function() {
+				var aiAction = function() {
 					bc.ai.doActionStageAI();
-				}, 1000);
+				}
+				this.addToTimeline(aiAction);
 			}
+			this.clearAllUnits();
 		} else {
-			this.chain.resolveChain();
+			this.is_resolving = true;
+			var bc = this;
+			var resolveStep = function() {
+				bc.chain.resolveChain();
+			}
+			this.addToTimeline(resolveStep);
 		}
-
+		this.gui.newActionPane("action");
 	}
 	BattleController.prototype.doEndStage = function() {
+		this.gui.newActionPane("action");
 		this.gui.newDirectionPane("End Stage");
 		if (this.turnPlayer == "blue") {
 			this.blueHand = this.newBlueHand();
-			this.gui.newActionPane("action");
 			var bc = this;
-			setTimeout(function() {
+			var goToStartRed = function() {
 				bc.turnPlayer = "red";
 				bc.setBattleStage(bc.STAGE.START);
-			}, 1000);
+			}
+			this.addToTimeline(goToStartRed);
+			this.gui.newActionPane("action");
 		}
 		else if (this.turnPlayer == "red") {
 			this.redHand = this.newRedHand();
+			for (var i = 0; i < this.redActions; i++) {
+				console.log(this.redActions[i].location.string);
+			}
 			var bc = this;
-			setTimeout(function() {
+			var goToStartBlue = function() {
 				bc.turnPlayer = "blue";
 				bc.setBattleStage(bc.STAGE.START);
-			}, 1000);
+			}
+			this.addToTimeline(goToStartBlue);
+			this.gui.newActionPane("action");
 		} else {
 			console.log("doEndStage doesn't know whose turn it is")
 		}
-
 	}
 	BattleController.prototype.doRockPaperScissors = function(string) {
 		this.blue_done = true;
 		this.red_done = true;
 		//if (string == "rock" || ...) {
 		this.turnPlayer = "blue";
-
-		this.newBlueHand();
-		this.newRedHand();
 		this.gui.newActionPane("action");
 		this.setBattleStage(this.STAGE.START);
+	}
+	BattleController.prototype.addToTimeline = function(func) {
+		this.master_timeline.push(func);
+		this.tick2 = 0;
+	}
+	BattleController.prototype.tick = function() {
+		//Do footprints on an interval
+		this.updateStage();
+		if (this.tick2 == 0) {
+			this.tick2++;
+		}
+		else if (this.tick2 == 45) {
+			this.tick2 = 0;
+		} 
+		else {
+			this.tick2++;			
+		}
+		if ((this.master_interval < this.master_timeline.length) && (this.tick2 == 0)) {
+			this.master_timeline[this.master_interval]();
+			this.master_interval++;
+		}
 	}
 	window.BattleController = BattleController;
 } (window));

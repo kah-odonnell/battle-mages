@@ -28,6 +28,7 @@
 		}
 		this.tick = function() {
 			battleStage.tick();
+			this.battleController.tick();
 		}
 		this.initEndDialog = function() {
 			initiator.isBeaten = true;

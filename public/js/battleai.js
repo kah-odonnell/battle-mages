@@ -50,28 +50,29 @@
 			}
 		}
 		this.doActionStageAI = function() {
+			console.log("action stage ai")
 			if (!this.isTurn) return false;
-			var did_action = this.selectAction();
+			var did_action = this.useAction();
 			if (did_action) {
-
+				return true;
 			} 
 			else if (bc.chain.chain.length == 0) {
 				bc.setBattleStage(bc.STAGE.END);
+				return true;
 			} else {
 				bc.doActionStage();
+				return true;
 			}
 		}
-		this.selectAction = function() {
+		this.useAction = function() {
 			var hand = bc.getHand("red")
 			if (hand.length > 0) {
-				var j = Math.floor(Math.random() * (hand.length - 1))
+				var j = Math.floor(Math.random() * (hand.length))
 				var action = hand[j];
 				var units = bc.getActiveUnits("red", true);
 				for (var i = 0; i < units.length; i++) {
 					var unit = units[i];
-					console.log(unit.name);
 					if (action.canUse(unit)) {
-						console.log("can use " + action.name)
 						action.use(unit);
 						return true;
 					} 
@@ -82,7 +83,7 @@
 		this.selectCounters = function() {
 			var counters = bc.chain.getTriggeredCounters("red")
 			if (counters.length > 0) {
-				var j = Math.floor(Math.random() * (counters.length - 1))
+				var j = Math.floor(Math.random() * (counters.length))
 				var counter = counters[j];
 				var unit = bc.chain.getCounterUnit("red", counter);
 				counter.activate(unit);
@@ -96,7 +97,7 @@
 			var user_unit_id = data.unit_unique_id;
 			var action_id = data.action_unique_id;
 			var targets = bc.chain.getPossibleTargets(spec, "red");
-			var j = Math.floor(Math.random() * (targets.length - 1))
+			var j = Math.floor(Math.random() * (targets.length))
 			var target = targets[j];
 			var target_user_id = target.unique_id;
 			bc.chain.short_term[action_id][tag] = target_user_id;
