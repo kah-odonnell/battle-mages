@@ -13,6 +13,7 @@
 		this.x = 75;
 		this.y = 175;
 		this.scaleX = -1;
+		this.is_player = true;
 	}
 	BattlePlayer.prototype.tick = function() {
 

@@ -119,6 +119,11 @@
 			);
 			if (is_prep_counter) {
 				unit.addCounter(action);
+				if (action.owner == "red") {
+					this.bc.gui.npcSwirl.addCounter();
+				} else {
+					this.bc.gui.playerSwirl.addCounter();
+				}
 				action.location = this.bc.LOCATION.UNIT;
 			}
 			if (is_use_action || is_activate_counter) {
@@ -129,8 +134,16 @@
 				unit.guiUnit.resolveToken(action);
 				action.location = this.bc.LOCATION.DECK;
 			}
-			if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {
+			if (is_activate_counter) {
+				if (action.owner == "red") {
+					this.bc.gui.npcSwirl.removeCounter();
+				} else {
+					this.bc.gui.playerSwirl.removeCounter();
+				}
 				unit.removeCounter(action);
+			}
+			if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {
+
 			}
 		}
 		this.bc.resetActionPane();

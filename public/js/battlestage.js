@@ -24,6 +24,8 @@
 		this.infoPaneBkgd = new createjs.Container();
 		this.infoPaneActive = new createjs.Container();
 		this.infoPaneButtons = new createjs.Container();
+		this.playerSwirlPane = new createjs.Container();
+		this.npcSwirlPane = new createjs.Container();
 
 		this.actionPane.y = 240;
 		this.directionPane.y = 3;
@@ -38,6 +40,8 @@
 		this.actionPane.addChild(this.actionPaneBkgd);
 		this.actionPane.addChild(this.actionPaneActive);
 		this.actionPane.addChild(this.actionPaneButton);
+		this.addChild(this.playerSwirlPane);
+		this.addChild(this.npcSwirlPane);
 		this.addChild(this.directionPane);
 		this.addChild(this.curtainContainer);
 	}
@@ -46,6 +50,10 @@
 		this.setUpDirectionPane();
 		this.setUpActionPane();
 		this.setUpInfoPane();
+		this.playerSwirl = new BattleInfoSwirl(this.bc, player);
+		this.npcSwirl = new BattleInfoSwirl(this.bc, npc);
+		this.playerSwirlPane.addChild(this.playerSwirl);
+		this.npcSwirlPane.addChild(this.npcSwirl);
 	}
 	BattleStage.prototype.fadeToBlack = function() {
 		var color = '#000000'
@@ -74,7 +82,7 @@
 	}
 	BattleStage.prototype.setUpDirectionPane = function() {
 		var message = level.activebattle.initiator.formalname + " wants to fight!"
-		this.newDirectionPane(message);
+		this.newDirectionPane(message, false);
 	}
 	BattleStage.prototype.setUpActionPane = function() {
 		var color = '#FFFFFF'
@@ -104,13 +112,27 @@
 		this.fieldPane.addChild(npc);
 		this.fieldPane.addChild(player);
 	}
-	BattleStage.prototype.newDirectionPane = function(message) {
+	BattleStage.prototype.newDirectionPane = function(message, do_tween) {
 		this.directionPane.removeAllChildren();
 		var paneHead = new createjs.Container();
 		// Create the title text to be displayed
-		paneHeadText = new createjs.Text(message, "26px crazycreation", "#000000");
-		paneHeadText.x = canvas.width/2 - paneHeadText.getBounds().width/2;		
-		paneHead.addChild(paneHeadText);
+		var mcontainer = new createjs.Container();
+		for (var i = 0; i < 16; i++) {
+			var message1 = new createjs.Text(message, "26px crazycreation", "#000000");			
+			var color = "#FFFFFF";
+			message1.shadow = new createjs.Shadow(color, 0, 0, 4);
+			mcontainer.addChild(message1)
+		}
+		var message2 = new createjs.Text(message, "26px crazycreation", "#000000");
+		mcontainer.addChild(message2)
+		paneHead.addChild(mcontainer);
+		var goalX = canvas.width/2 - paneHead.getBounds().width/2;
+		if (do_tween) {
+			paneHead.x = goalX + 25;
+			createjs.Tween.get(paneHead).to({x:goalX},500);		
+		} else {
+			paneHead.x = goalX;
+		}	
 		this.directionPane.addChild(paneHead);
 	}
 	BattleStage.prototype.newActionPane = function(type) {
@@ -164,7 +186,7 @@
 		if (tag == "target_a") {
 			var action_id = data.action_unique_id;		
 			var action = this.bc.getTokenByUniqueId(action_id);
-			this.newDirectionPane("Select a Target for " + action.name);
+			this.newDirectionPane("Select a Target for " + action.name, true);
 			this.actionPane.removeChild(this.actionPaneActive);
 			this.actionPane.removeChild(this.actionPaneButton);
 			this.actionPaneActive = this.buildTargetPane(tag, spec, data);
@@ -173,7 +195,7 @@
 		}
 	}
 	BattleStage.prototype.newActionPaneCounter = function() {
-		this.newDirectionPane("Activate a Counter");
+		this.newDirectionPane("Activate a Counter", true);
 		this.actionPane.removeChild(this.actionPaneActive);
 		this.actionPane.removeChild(this.actionPaneButton);
 		this.actionPaneActive = this.buildCounterPane();

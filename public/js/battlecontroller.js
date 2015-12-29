@@ -100,20 +100,29 @@
 	}
 	BattleController.prototype.destroy = function(unit) {
 		if (unit.owner == "red") {
+			this.gui.npcSwirl.destroyUnit();
+			var c = unit.counters;
+			for (var j = 0; j < c.length; j++) {
+				c[j].location = this.LOCATION.DECK;
+				this.gui.npcSwirl.removeCounter();
+			}
 			var i = this.redUnits.indexOf(unit);
 			this.redDestroyed.push(unit);
 			this.redUnits.splice(i, 1);
 		}
 		if (unit.owner == "blue") {
+			this.gui.playerSwirl.destroyUnit();
+			var c = unit.counters;
+			for (var j = 0; j < c.length; j++) {
+				c[j].location = this.LOCATION.DECK;
+				this.gui.playerSwirl.removeCounter();
+			}
 			var i = this.blueUnits.indexOf(unit);
 			this.blueDestroyed.push(unit);
 			this.blueUnits.splice(i, 1);
 		}
 		unit.guiUnit.removeAllChildren();
 		this.gui.rearrangeUnits(unit.owner);
-		if (this.getAllUnits("red", false).length < 1) {
-			level.activebattle.initEndDialog();
-		}
 	}
 	BattleController.prototype.createUniqueIds = function() {
 		var collection = this.blueUnits;
@@ -168,15 +177,15 @@
 		//change battle stage > this.STAGE - RPS, START, EVOKING, ACTION, END
 		this.currentStage = stage;
 		if (stage == this.STAGE.START) {
-			this.gui.newDirectionPane("Start Stage");
+			this.gui.newDirectionPane("Start Stage", true);
 			this.doStartStage();
 		}
 		else if (stage == this.STAGE.EVOKING) {
-			this.gui.newDirectionPane("Evoking Stage");
+			this.gui.newDirectionPane("Evoking Stage", true);
 			this.doEvokingStage();
 		}
 		else if (stage == this.STAGE.ACTION) {
-			this.gui.newDirectionPane("Action Stage");
+			this.gui.newDirectionPane("Action Stage", true);
 			this.increaseAllMana();		
 			this.doActionStage();
 		}
@@ -365,7 +374,6 @@
 				hand.push(tokentoadd)
 				tokentoadd.location = this.LOCATION.HAND;
 			}
-			console.log("newRedHand()");
 		}
 		return hand;
 	}
@@ -386,7 +394,6 @@
 				hand.push(tokentoadd)
 				tokentoadd.location = this.LOCATION.HAND;
 			}
-			console.log("newBlueHand()");
 		}
 		return hand;
 	}
@@ -408,6 +415,10 @@
 			if (this.getActiveUnits("blue", false).length < 2) {
 				bcunit.evoke();
 				this.gui.evoke(bcunit);
+				var c = bcunit.counters;
+				for (var i = 0; i < c.length; i++) {
+					this.gui.playerSwirl.addCounter();
+				}
 				this.doEvokingStage();
 			}
 		}
@@ -415,6 +426,10 @@
 			if (this.getActiveUnits("red", false).length < 2) {
 				bcunit.evoke();
 				this.gui.evoke(bcunit);
+				var c = bcunit.counters;
+				for (var i = 0; i < c.length; i++) {
+					this.gui.playerSwirl.addCounter();
+				}
 				this.doEvokingStage();
 			}
 		}
@@ -540,11 +555,11 @@
 		this.updateStage();
 		if (this.getBattleStage() == "Evoking") {
 			this.gui.newActionPane("evoking");
-			this.gui.newDirectionPane("Evoking Stage");
+			this.gui.newDirectionPane("Evoking Stage", false);
 		}
 		else if (this.getBattleStage() == "Action") {
 			this.gui.newActionPane("action");
-			this.gui.newDirectionPane("Action Stage");
+			this.gui.newDirectionPane("Action Stage", false);
 		}
 	}
 	BattleController.prototype.doStartStage = function() {
@@ -593,6 +608,9 @@
 	//should eventually come back to this function.
 	BattleController.prototype.doActionStage = function() {
 		if (this.chain.chain.length == 0) {
+			if (this.getAllUnits("red", false).length < 1) {
+				level.activebattle.initEndDialog();
+			}
 			this.is_resolving = false;
 			this.gui.newActionPane("action");
 			if (this.turnPlayer == "blue") {
@@ -618,7 +636,7 @@
 	}
 	BattleController.prototype.doEndStage = function() {
 		this.gui.newActionPane("action");
-		this.gui.newDirectionPane("End Stage");
+		this.gui.newDirectionPane("End Stage", true);
 		if (this.turnPlayer == "blue") {
 			this.blueHand = this.newBlueHand();
 			var bc = this;

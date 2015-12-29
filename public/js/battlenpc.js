@@ -7,14 +7,12 @@
 	pp.initialize = function(npc){
 		this.Container_initialize();
 		this.battlename = npc.formalname;
-		this.library = player2library;
-		this.actions = this.library["actions"];
-		this.units = this.library["units"];
 
 		this.makeSprites();
 		this.setIdle();
 		this.x = canvas.width - 75;
 		this.y = 175;
+		this.is_player = false;
 	}
 	BattleNPC.prototype.tick = function() {
 
