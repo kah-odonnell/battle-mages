@@ -117,6 +117,8 @@
 			var is_resolve_action = (
 				(data.action_effect_type == this.EFFECT.RESOLVE)
 			);
+			//preping a counter should add the counter to a unit
+			//
 			if (is_prep_counter) {
 				unit.addCounter(action);
 				if (action.owner == "red") {
@@ -137,9 +139,10 @@
 			if (is_activate_counter) {
 				if (action.owner == "red") {
 					this.bc.gui.npcSwirl.removeCounter();
-				} else {
+				} 
+				else if (action.owner == "blue"){
 					this.bc.gui.playerSwirl.removeCounter();
-				}
+				} else console.log(action.name + " has no owner");
 				unit.removeCounter(action);
 			}
 			if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {

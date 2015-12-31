@@ -9,37 +9,39 @@
 		this.bc = battleController;
 		var swirl = new createjs.Bitmap(loader.getResult("infoswirl"));
 		var name = player_npc.battlename;
-		var namecontainer = new createjs.Container();
+		var name_container = new createjs.Container();
 		for (var i = 0; i < 6; i++) {
 			var nametext1 = new createjs.Text(name, "22px crazycreation", "#000000");			
 			var color = "#FFFFFF";
 			nametext1.shadow = new createjs.Shadow(color, 0, 0, 4);
-			namecontainer.addChild(nametext1);
+			name_container.addChild(nametext1);
 		}
-		namecontainer.addChild(nametext2)
+		name_container.addChild(nametext2)
 		var nametext2 = new createjs.Text(name, "22px crazycreation", "#000000");
 		if (player_npc.is_player) {
 			this.owner = "blue";
 			swirl.x = 0;
 			swirl.y = 0;
-			namecontainer.x = 10;
-			namecontainer.y = 0;
+			name_container.x = 10;
+			name_container.y = 0;
 		} else {
 			this.owner = "red";
 			swirl.scaleX = -1;
 			swirl.x = canvas.width;
 			swirl.y = 0;
-			namecontainer.x = canvas.width - namecontainer.getBounds().width - 10;
-			namecontainer.y = 0;
+			name_container.x = canvas.width - name_container.getBounds().width - 10;
+			name_container.y = 0;
 		}
 		this.swirl = swirl;
-		this.namecontainer = namecontainer;
+		this.name_container = name_container;
+		this.counter_container = new createjs.Container();
 		this.uniticons = [];
-		this.countericons = [];
+		this.counter_icons = [];
 		this.num_units = 0;
 		this.num_counters = 0;
 		this.addChild(this.swirl);
-		this.addChild(this.namecontainer);
+		this.addChild(this.name_container);
+		this.addChild(this.counter_container)
 		this.addUnits();
 	}
 	BattleInfoSwirl.prototype.addUnits = function() {
@@ -85,16 +87,13 @@
 			counter.x = canvas.width - (40 + this.num_counters*(w + 2));
 		}
 		counter.y = 28;
-		this.countericons.push(counter);
+		this.counter_container.addChildAt(counter, this.num_counters);
 		this.num_counters++;
-		this.addChild(counter);
 	}
 	BattleInfoSwirl.prototype.removeCounter = function() {
-		//var counter = this.countericons[this.num_counters - 1]
-		this.removeChild(this.countericons[this.num_counters - 1]);
-		var i = this.countericons.indexOf(this.countericons[this.num_counters - 1]);
-		this.countericons.slice(i, 1);
 		this.num_counters--;
+		this.counter_container.removeChildAt(this.num_counters);
+		stage.update();
 	}
 	BattleInfoSwirl.prototype.tick = function() {
 
