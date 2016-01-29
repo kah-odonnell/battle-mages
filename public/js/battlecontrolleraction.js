@@ -36,7 +36,7 @@
 	//if this Action Token is clicked and dragged to a compatible unit, 
 	//this data will be sent to the chain after the necessary variables have been defined
 	//if this Action Token is a counter, the data sent to chain will be non-specific
-	BattleControllerAction.prototype.getUseData = function() {
+	BattleControllerAction.prototype.getUseData = function(unit) {
 		return null;
 	}
 	BattleControllerAction.prototype.canUse = function(unit) {
@@ -51,6 +51,7 @@
 		var t = this.canUse(unit)
 		if (t) {
 			this.is_resolved = false;
+			this.resolve_failed = false;
 			var data = this.getUseData(unit);
 			this.bc.chain.finalizeData(data);
 		}		
@@ -59,15 +60,27 @@
 	//if this Action Token is currently being resolved on the chain, 
 	//this Action Token's eventData (or ACTIVATE if counter) is replaced by this data. 
 	//The changed chain is rebroadcast so additional counters can be triggered
-	BattleControllerAction.prototype.getResolveData = function() {
+	BattleControllerAction.prototype.getResolveData = function(unit) {
 		return null;
 	}
-	BattleControllerAction.prototype.canResolve = function() {
-		return false;
+	BattleControllerAction.prototype.canResolve = function(unit) {
+		data = this.getResolveData(unit);
+		if ((data != null) && this.can_resolve) {
+			return this.bc.chain.isPossible(data);
+		} else {
+			return false;
+		}
 	}
-	BattleControllerAction.prototype.resolve = function() {
-		
+	BattleControllerAction.prototype.resolve = function(unit) {
+		var t = this.canResolve(unit)
+		if (t) {
+			this.is_resolved = true;
+			this.resolve_failed = false;
+			var data = this.getResolveData(unit);
+			this.bc.chain.finalizeData(data);
+		}
 	}
+	//each Token in a battle is given a unique id created at random
 	BattleControllerAction.prototype.createUniqueId = function() {
 		var id = "";
 		var chars = "0123456789abcdefghijklmnopqrstuvwxyz"

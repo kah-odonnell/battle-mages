@@ -1,6 +1,6 @@
 (function (window) {
-	var BattleButton = function(clickable, type, unit, mem_tag, data){
-		this.initialize(clickable, type, unit, mem_tag, data);
+	var BattleButton = function(clickable, type, unit, memory_id, data){
+		this.initialize(clickable, type, unit, memory_id, data);
 		this.STAGE = {
 			RPS: {string: "RPS"},
 			START: {string: "Start"},
@@ -11,7 +11,7 @@
 	}
 	var bb = BattleButton.prototype = new createjs.Container();
 	bb.Container_initialize = bb.initialize;
-	bb.initialize = function(clickable, type, unit, mem_tag, data){
+	bb.initialize = function(clickable, type, unit, memory_id, data){
 		this.Container_initialize();
 		var action = unit;
 		this.bc = level.activebattle.battleController;
@@ -39,13 +39,18 @@
 		}
 		//evoke buttons created during "blue"'s turn, during the EVOKING stage
 		if (type == "unitevoke") {
+			this.on("mouseover", function(event) {
+				level.activebattle.battleStage.newInfoPane("unit_stats", unit);
+			});
 			this.on("click", function(event) {
-				level.activebattle.battleStage.newInfoPane("unit_stats", unit)
 				this.bc.evoke(unit);
 			});
 		}
 		//revoke buttons created during "blue"'s turn, during the EVOKING stage
-		if (type == "unitrevoke") {
+		if (type == "unitrevoke") {			
+			this.on("mouseover", function(event) {
+				level.activebattle.battleStage.newInfoPane("unit_stats", unit);
+			});
 			this.on("click", function(event) {
 				this.bc.revoke(unit);
 			});
@@ -69,14 +74,17 @@
 		if (type == "action_hand") {
 			if (this.bc.is_resolving || (this.bc.turnPlayer == "red") || (this.bc.getBattleStage() != "Action")) {
 				var g = this;
-				this.on("click", function(evt) {
+				this.on("mouseover", function(evt) {
+					//update the info pane with info about this Action
 					level.activebattle.battleStage.newInfoPane("action_hand_info", action);
 				});
 			} else {
 				var g = this;
-				this.on("mousedown", function(evt) {
+				this.on("mouseover", function(evt) {
 					//update the info pane with info about this Action
 					level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+				})
+				this.on("mousedown", function(evt) {
 					//remove the bitmap represented by this class, and add it to battleStage
 					//that way, we can use the native mouseX and mouseY values, without
 					//having to translate into a different set of coordinates. thats like, hard.
@@ -86,10 +94,11 @@
 					evt.currentTarget.buttonChild.x = mouseX - buttonBounds.height/2;
 					evt.currentTarget.buttonChild.y = mouseY - buttonBounds.width/2;
 					//grey out units that can't use this Action
+					//turn on the marker of those that can
 					var units = g.bc.getActiveUnits("blue", true);
 					for (var i = 0; i < units.length; i++) {
 						if (!action.canUse(units[i])) units[i].guiUnit.greyOut();
-						else units[i].guiUnit.highlight();
+						else units[i].guiUnit.markerOn();
 					}
 					action.location = g.bc.LOCATION.DRAG;
 				});
@@ -137,6 +146,7 @@
 					var units = g.bc.getActiveUnits("blue", true);
 					for (var i = 0; i < units.length; i++) {
 						units[i].guiUnit.unGrey();
+						units[i].guiUnit.markerOff();
 					}	
 				});	
 			}				
@@ -147,12 +157,21 @@
 		if (type == "unit_target") {
 			//in this case, unit is the target
 			var g = this;
+			this.on("mouseover", function(evt) {
+				//update the info pane with info about this Action
+				level.activebattle.battleStage.newInfoPane("unit_stats", unit);
+				unit.guiUnit.markerOn();
+			})
+			this.on("mouseout", function(evt) {
+				unit.guiUnit.markerOff();
+			})
 			this.on("click", function(event) {
+				unit.guiUnit.markerOff();
 				level.activebattle.battleStage.newInfoPane("unit_stats", unit)
 				var user_unit_id = data.unit_unique_id;
 				var action_id = data.action_unique_id;
 				var target_user_id = unit.unique_id;
-				g.bc.chain.short_term[action_id][mem_tag] = target_user_id;
+				g.bc.chain.short_term[action_id].select_target[memory_id] = target_user_id;
 				g.bc.blue_done = true;
 				g.bc.chain.finalizeData(data);
 			});
@@ -160,9 +179,21 @@
 		if (type == "counter_activate") {
 			//in this case, unit is the target
 			var g = this;
+			this.on("mouseover", function(evt) {
+				//update the info pane with info about this Action
+				level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+				var unit_c = g.bc.chain.getCounterUnit("blue", action);
+				if (unit_c) unit_c.guiUnit.markerOn();
+			})
+			this.on("mouseout", function(evt) {
+				//update the info pane with info about this Action
+				var unit_c = g.bc.chain.getCounterUnit("blue", action);
+				if (unit_c) unit_c.guiUnit.markerOff();
+			})
 			this.on("click", function(event) {
 				level.activebattle.battleStage.newInfoPane("action_hand_info", action);
 				var unit_c = g.bc.chain.getCounterUnit("blue", action);
+				unit_c.guiUnit.markerOff();
 				action.activate(unit_c);
 			});
 		}

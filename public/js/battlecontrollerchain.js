@@ -39,8 +39,9 @@
 				return false;
 			}
 		}
-		if ("target_a" in data) {
-			if (this.getPossibleTargets(data["target_a"], unit.owner).length < 1) {
+		if ("select_target" in data) {
+			var range = data["select_target"].target_type;
+			if (this.getPossibleTargets(range, unit.owner).length < 1) {
 				return false;
 			}
 		}
@@ -60,26 +61,31 @@
 		var action = this.bc.getTokenByUniqueId(action_id);
 		var memory = this.short_term[action_id];
 		if (!memory) {
-			this.short_term[action_id] = {};
+			this.short_term[action_id] = data;
 			memory = this.short_term[action_id];
 		}
-		//if a "target_a" is requested, it's either already in memory
-		//or we need to let the player add it to memory and run this function
-		if ("target_a" in data) {
-			var tag = "target_a";
-			if (!(tag in memory)) {
-				var spec = data[tag] //this.TARGET.OPPONENT_ALL
+		//if target_a is requested, target_a's unique_id is either already in memory,
+		//or we need to let the player/ai add it to memory
+		//if the latter, this function will get called a second time
+		if ("select_target" in data) {
+			var memory_id = "target_unique_id";
+			var in_memory = false;
+			if (memory["select_target"][memory_id]) in_memory = true;
+			if (!(in_memory)) {
+				var range = data.select_target.target_type; //this.TARGET.OPPONENT_ALL
 				if (owner == "blue") this.bc.red_done = true;
 				else this.bc.red_done = false;
 				if (owner == "red") this.bc.blue_done = true;
 				else this.bc.blue_done = false;
-				this.bc.awaitInputTarget(owner, tag, spec, data)
-				return true;
+				this.bc.awaitInputTarget(owner, memory_id, range, data)
+				return false;
 			} else {
-				data[tag] = memory[tag]
+				//player/ai will set memory[memory_id] = BattleControllerUnit.unique_id
+				//this.short_term.action_id.memory[1] = 7SADK83MD02..
 			}
 		}
 		this.addToChain(data)
+		return true;
 	}
 	//gives/takes mana from units, inflicts damage, etc.
 	//new token effects must be added to this function
@@ -94,12 +100,12 @@
 		if ("change_mana" in data) {
 			unit.changeMana(data["change_mana"]);
 		}
-		if ("attack_damage" in data) {
-			var tag = data["attack_damage"].main;
-			var power = data["attack_damage"].main_power;
-			var id = data[tag]
-			var main_unit = this.bc.getTokenByUniqueId(id);
-			unit.attack(main_unit, power);
+		if ("attack" in data) {
+			//var memory_id = data.attack.memory_id;
+			var power = data.attack.attack_power;
+			var target_id = data.attack.target_unique_id;
+			var target_unit = this.bc.getTokenByUniqueId(target_id);
+			unit.attack(target_unit, power);
 		}
 		if ("action_type" in data) {
 			var is_prep_counter = (
@@ -164,15 +170,7 @@
 	BattleControllerChain.prototype.getTriggeringAction = function(trigger_data) {
 		for (var i = this.chain.length - 1; i >= 0; i--) {
 			var action_data = this.chain[i];
-			var match = true;
-			for (var trigger_evt in trigger_data) {
-				if (!(trigger_evt in action_data)) {
-					match = false;
-				}
-				else if (trigger_data[trigger_evt] != action_data[trigger_evt]) {
-					match = false;
-				}
-			}
+			var match = dict1_subsetOf_dict2(trigger_data, action_data);
 			if (match) {
 				var action = this.bc.getTokenByUniqueId(this.chain[i].action_unique_id);				
 				return action;
@@ -189,15 +187,7 @@
 	BattleControllerChain.prototype.getTriggeringUnit = function(trigger_data) {
 		for (var i = this.chain.length - 1; i >= 0; i--) {
 			var action_data = this.chain[i];
-			var match = true;
-			for (var trigger_evt in trigger_data) {
-				if (!(trigger_evt in action_data)) {
-					match = false;
-				}
-				else if (trigger_data[trigger_evt] != action_data[trigger_evt]) {
-					match = false;
-				}
-			}
+			var match = dict1_subsetOf_dict2(trigger_data, action_data);
 			if (match) {
 				var unit = this.bc.getTokenByUniqueId(this.chain[i].unit_unique_id);				
 				return unit;
@@ -250,12 +240,22 @@
 			var mr_action_id = this.chain[i].action_unique_id;
 			var mr_unit_id = this.chain[i].unit_unique_id;
 			var mr_action = this.bc.getTokenByUniqueId(mr_action_id);
-			var mr_unit;
-			if (!(mr_action.is_resolved) && (mr_action.can_resolve)) {
+			var mr_unit = this.bc.getTokenByUniqueId(mr_unit_id);
+			var can_resolve = mr_action.canResolve(mr_unit);
+			var is_prep_counter = (
+				(mr_data.action_type == this.bc.TYPE.COUNTER) && 
+				(mr_data.action_effect_type == this.EFFECT.USE)
+			);
+			if (!(mr_action.is_resolved) && (can_resolve)) {
 				can_clear = false;
-				mr_unit = this.bc.getTokenByUniqueId(mr_unit_id);
 				mr_action.resolve(mr_unit);
 				return true;
+			}
+			else if (!(mr_action.is_resolved) && !(mr_action.resolve_failed) && !(can_resolve) && !(is_prep_counter)) {
+				mr_action.resolve_failed = true;
+				console.log(mr_action.name + " could not resolve!");
+				this.bc.awaitInputCounter(mr_action.owner);
+				return false;
 			} else {
 
 			}

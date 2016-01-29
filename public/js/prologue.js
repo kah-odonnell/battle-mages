@@ -19,7 +19,6 @@ function distanceFormula(x1, x2, y1, y2) {
 function signOf(number) {
 	return number?number<0?-1:1:0
 }
-
 function getMousePos(evt) {
 	if (canvas != undefined) {
 		var rect = canvas.getBoundingClientRect();
@@ -27,6 +26,44 @@ function getMousePos(evt) {
 		mouseY = evt.clientY - rect.top
 	}
 }
+function isIterable(obj) {
+  // checks for null and undefined
+  if (obj == null) {
+    return false
+  }
+  return obj[Symbol.iterator] !== undefined
+}
+function isObject ( obj ) {
+   return obj && (typeof obj  === "object");
+}
+//check that every key/value pair in dict1 is represented in dict2
+//used by Counter Tokens to see if they should trigger
+function dict1_subsetOf_dict2(dict1, dict2) {
+	var isSubset = true;
+	for (var key in dict1) {
+		if (!(key in dict2)) {
+			return false;
+		}
+		else if (key in dict2) {
+			var both_objects = (isObject(dict2[key]) && isObject(dict1[key]));
+			if (both_objects) {
+				isSubset = dict1_subsetOf_dict2(dict1[key], dict2[key]);
+			}
+			else if (!(both_objects) && (dict1[key] == dict2[key])) {
+
+			}
+			else if (!(both_objects) && (dict1[key] != dict2[key])) {
+				isSubset = false;
+			}
+		}
+	}
+	return isSubset;
+}
+function isEmpty(obj) {
+	return Object.keys(obj).length === 0;
+}
+
+
 
 window.addEventListener('mousemove', getMousePos, false);
 window.onkeydown = function(e) { 
@@ -48,10 +85,11 @@ function init() {
 	stage.addChild(loadBar);
 
 	var manifest = [
+		//~~~ character sprites 
 		{src:"../imgs/sprites/knight_92.png", id:"knight"},
 		{src:"../imgs/sprites/audrey_92.png", id:"audrey"},
 		{src:"../imgs/sprites/audrey_p_92.png", id:"audreyparserrokah"},
-
+		//~~~ temple tiles
 		{src:"../imgs/tiles/spaceTileLarge.png", id:"spaceTile"},
 		{src:"../imgs/tiles/blackTile.png", id:"blackTile"},
 		{src:"../imgs/tiles/templereversewall1.png", id:"templereversewall1"},
@@ -69,7 +107,7 @@ function init() {
 		{src:"../imgs/tiles/templefrontcornerR.png", id:"templefrontcornerR"},
 		{src:"../imgs/tiles/templerightwall1.png", id:"templerightwall1"},
 		{src:"../imgs/tiles/snowtile1.png", id:"snowtile1"},
-
+		//~~~ forest tiles
 		{src:"../imgs/tiles/grasstile1.png", id:"grasstile1"},
 		{src:"../imgs/tiles/grasstile2.png", id:"grasstile2"},
 		//{src:"../imgs/tiles/forest_reversewall1.png", id:"forest_reversewall1"},
@@ -86,40 +124,48 @@ function init() {
 		{src:"../imgs/tiles/forest_backcornerR.png", id:"forest_backcornerR"},
 		//{src:"../imgs/tiles/forest_frontcornerR.png", id:"forest_frontcornerR"},
 		{src:"../imgs/tiles/forest_rightwall0.png", id:"forest_rightwall0"},
-
+		//~~~ prompt icons
 		{src:"../imgs/dialogs/spacebar.png", id:"spacebarIcon"},
+		//~~~ dialog ui elements
 		{src:"../imgs/dialogs/dialogbox.png", id:"dialogbox"},
 		{src:"../imgs/dialogs/dialogarrow.png", id:"dialogarrow"},
+		//~~~ dialog sprites
 		{src:"../imgs/dialogs/knight1.png", id:"knight1"},
 		{src:"../imgs/dialogs/morganprologue.png", id:"morganprologue"},
-
+		//~~~ battle ui elements
 		{src:"../imgs/battles/gui/healthbar.png", id:"healthbar"},
 		{src:"../imgs/battles/gui/healthempty.png", id:"healthempty"},
 		{src:"../imgs/battles/gui/mana.png", id:"mana"},
 		{src:"../imgs/battles/gui/unit.png", id:"unit"},
 		{src:"../imgs/battles/gui/counter.png", id:"counter"},
 		{src:"../imgs/battles/gui/infoswirl.png", id:"infoswirl"},
+		{src:"../imgs/battles/gui/marker.png", id:"marker"},
 		{src:"../imgs/battles/gui/paperbutton.png", id:"paperbutton"},
 		{src:"../imgs/battles/gui/rockbutton.png", id:"rockbutton"},
 		{src:"../imgs/battles/gui/scissorsbutton.png", id:"scissorsbutton"},
 		{src:"../imgs/battles/gui/cancel.png", id:"cancelbutton"},
-
+		//~~~ battle units and unit tokens
 		{src:"../imgs/battles/units/renmei.png", id:"renmei"},
 		{src:"../imgs/battles/units/token_renmei.png", id:"token_renmei"},
-		{src:"../imgs/battles/units/ao.png", id:"ao"},
-		{src:"../imgs/battles/units/token_ao.png", id:"token_ao"},
-
-		{src:"../imgs/battles/actions/arcanechain.png", id:"arcanechain"},
-		{src:"../imgs/battles/actions/small_arcanechain.png", id:"small_arcanechain"},
+		{src:"../imgs/battles/units/ajai.png", id:"ajai"},
+		{src:"../imgs/battles/units/token_ajai.png", id:"token_ajai"},
+		//~~~ battle action tokens, big and small
 		{src:"../imgs/battles/actions/neurolyse.png", id:"neurolyse"},
 		{src:"../imgs/battles/actions/small_neurolyse.png", id:"small_neurolyse"},
+		{src:"../imgs/battles/actions/swordofsmoke.png", id:"swordofsmoke"},
+		{src:"../imgs/battles/actions/small_swordofsmoke.png", id:"small_swordofsmoke"},
+		{src:"../imgs/battles/actions/arcanechain.png", id:"arcanechain"},
+		{src:"../imgs/battles/actions/small_arcanechain.png", id:"small_arcanechain"},
 		{src:"../imgs/battles/actions/mirrorforce.png", id:"mirrorforce"},
 		{src:"../imgs/battles/actions/small_mirrorforce.png", id:"small_mirrorforce"},
-
+		{src:"../imgs/battles/actions/manatap.png", id:"manatap"},
+		{src:"../imgs/battles/actions/small_manatap.png", id:"small_manatap"},
+		//~~~ battle backgrounds
 		{src:"../imgs/battles/backgrounds/battlebkgd1.png", id:"battlebkgd1"},
 	];
 
 	loader = new createjs.LoadQueue(false);
+	loader.setMaxConnections(10);
 	loader.on("progress", handleProgress);
 	loader.on("complete", handleComplete);
 	loader.loadManifest(manifest);
@@ -162,10 +208,6 @@ function tick(event) {
 	$("#FPSdata").css("color",color1).html(fps);
 }
 
-function isEmpty(obj) {
-	return Object.keys(obj).length === 0;
-}
-
 var Key = {
 	_pressed: {},
 
@@ -189,6 +231,6 @@ var Key = {
 };
 window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
 window.addEventListener('keydown', function(event) { 
-	event.preventDefault();
+	event.preventDefault(); //prevents spacebar from scrolling the page
 	Key.onKeydown(event); 
 }, false);

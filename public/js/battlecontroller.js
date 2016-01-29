@@ -109,6 +109,7 @@
 			var i = this.redUnits.indexOf(unit);
 			this.redDestroyed.push(unit);
 			this.redUnits.splice(i, 1);
+			unit.is_active = false;
 		}
 		if (unit.owner == "blue") {
 			this.gui.playerSwirl.destroyUnit();
@@ -120,7 +121,9 @@
 			var i = this.blueUnits.indexOf(unit);
 			this.blueDestroyed.push(unit);
 			this.blueUnits.splice(i, 1);
+			unit.is_active = false;
 		}
+		unit.guiUnit.spot = this.gui.SPOT.NONE;
 		unit.guiUnit.removeAllChildren();
 		this.gui.rearrangeUnits(unit.owner);
 	}
@@ -319,6 +322,12 @@
 			if ("ILL002" === action_id_list[i]) {
 				action = new ActionILL002(this, owner);
 			}
+			if ("ILL003" === action_id_list[i]) {
+				action = new ActionILL003(this, owner);
+			}
+			if ("ILL004" === action_id_list[i]) {
+				action = new ActionILL004(this, owner);
+			}
 			if (action != null) {
 				action.location = this.LOCATION.DECK;
 				actions.push(action);				
@@ -428,7 +437,31 @@
 				this.gui.evoke(bcunit);
 				var c = bcunit.counters;
 				for (var i = 0; i < c.length; i++) {
-					this.gui.playerSwirl.addCounter();
+					this.gui.npcSwirl.addCounter();
+				}
+				this.doEvokingStage();
+			}
+		}
+	}
+	BattleController.prototype.revoke = function(bcunit) {
+		if ((bcunit.owner == "blue") && (this.getBattleStage() == "Evoking")) {
+			if (this.getActiveUnits("blue", false).length > 0) {
+				bcunit.revoke();
+				this.gui.revoke(bcunit);
+				var c = bcunit.counters;
+				for (var i = 0; i < c.length; i++) {
+					this.gui.playerSwirl.removeCounter();
+				}
+				this.doEvokingStage();
+			}
+		}
+		if ((bcunit.owner == "red") && (this.getBattleStage() == "Evoking")) {
+			if (this.getActiveUnits("red", false).length > 0) {
+				bcunit.revoke();
+				this.gui.revoke(bcunit);
+				var c = bcunit.counters;
+				for (var i = 0; i < c.length; i++) {
+					this.gui.npcSwirl.removeCounter();
 				}
 				this.doEvokingStage();
 			}
@@ -460,7 +493,6 @@
 	BattleController.prototype.awaitInputCounter = function(red_blue) {
 		this.acceptingInput = false;
 		var bc = this;
-		console.log(red_blue + "|r:" + bc.red_done + "|b:" + bc.blue_done);
 		var counterSink = function() {
 			var stage = bc.getBattleStage();
 			if ((red_blue == "blue") && (bc.red_done) && (bc.blue_done)) {
@@ -525,13 +557,13 @@
 		}
 		this.addToTimeline(counterSink);
 	}
-	//awaitInputTarget("blue", "target_a", this.chain.TARGET.OPPONENT_ALL, data)
+	//awaitInputTarget("blue", 0, this.chain.TARGET.OPPONENT_ALL, data)
 	//BattleButton or BattleAI will save data to this.chain.short_term = {}
 	//and call this.chain.finalizeData(data)
 	//
 	//unlike awaitInputCounter(), this function doesn't get called by
 	//BattleButton() or BattleAI(). instead, they will call this.chain.finalizeData
-	BattleController.prototype.awaitInputTarget = function(red_blue, tag, spec, data) {			
+	BattleController.prototype.awaitInputTarget = function(red_blue, memory_id, range, data) {			
 		this.acceptingInput = false;
 		var bc = this;
 		var targetSink = function() {
@@ -540,13 +572,13 @@
 				//blue added a skill requiring a target to the chain
 				//blue must respond
 				bc.acceptingInput = true;
-				bc.gui.newActionPaneTarget(tag, spec, data); 
+				bc.gui.newActionPaneTarget(memory_id, range, data); 
 			}
 			else if ((red_blue == "red") && (!bc.red_done)) {
 				//red added a skill requiring a target to the chain
 				//red must respond
 				bc.acceptingInput = true;
-				bc.ai.selectTarget(tag, spec, data); 
+				bc.ai.selectTarget(memory_id, range, data); 
 			}
 		}
 		targetSink();
@@ -608,9 +640,6 @@
 	//should eventually come back to this function.
 	BattleController.prototype.doActionStage = function() {
 		if (this.chain.chain.length == 0) {
-			if (this.getAllUnits("red", false).length < 1) {
-				level.activebattle.initEndDialog();
-			}
 			this.is_resolving = false;
 			this.gui.newActionPane("action");
 			if (this.turnPlayer == "blue") {
@@ -678,18 +707,22 @@
 	BattleController.prototype.tick = function() {
 		//Do footprints on an interval
 		this.updateStage();
-		if (this.tick2 == 0) {
+		if (this.tick2 < 45) {
 			this.tick2++;
 		}
 		else if (this.tick2 == 45) {
 			this.tick2 = 0;
 		} 
-		else {
-			this.tick2++;			
-		}
 		if ((this.master_interval < this.master_timeline.length) && (this.tick2 == 0)) {
 			this.master_timeline[this.master_interval]();
 			this.master_interval++;
+			//if victory conditions are met, the next item in timeline ends the battle
+			if (this.getAllUnits("red", false).length < 1) {
+				var battleVictory = function() {
+					level.activebattle.initEndDialog();
+				}
+				this.master_timeline[this.master_interval] = battleVictory;
+			}
 		}
 	}
 	window.BattleController = BattleController;

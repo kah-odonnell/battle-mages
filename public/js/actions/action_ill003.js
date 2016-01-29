@@ -1,56 +1,56 @@
 (function (window) {
-	var ActionILL001 = function(battleController, owner) {
+	var ActionILL003 = function(battleController, owner) {
 		this.bc = battleController;
 		this.initialize(owner);
 	}
-	var a = ActionILL001.prototype = new BattleControllerAction();
+	var a = ActionILL003.prototype = new BattleControllerAction();
 	a.initialize = function(owner) {
 		this.owner = owner;
-		this.unique_id = null; //set by BattleController;
+		this.unique_id = null; //set by BattleController on deck creation (setActions());
 		this.chain = this.bc.chain;
 
-		this.catalog_id = "ILL001";
-		this.name = "Sword of Smoke";
+		this.catalog_id = "ILL003";
+		this.name = "Neurolyse";
 		this.attribute = this.bc.ATTRIBUTE.ILLUSIONIST;
 		this.type = this.bc.TYPE.ATTACK;
-		this.cost_mana = 1;
-		this.description = "Damage target opponent's unit for 1.0x power.";
-		this.token_img = "swordofsmoke";
-		this.mini_img = "small_swordofsmoke";
+		this.cost_mana = 2;
+		this.description = "Damage target opponent's unit for 1.5x power.";
+		this.token_img = "neurolyse";
+		this.mini_img = "small_neurolyse";
 
-		this.is_resolved = false;
-		this.can_resolve = true;
+		this.is_resolved = false; //false for all Action Tokens
+		this.can_resolve = true; //false only for counters, set true by activate()
 	}
 	/* ~~~~~~~~~ TRIGGER (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is a counter, and it is currently 'prepared' (in use) by a unit,
 	//this data will be compared to the data on the chain to determine whether it can be triggered
-	ActionILL001.prototype.getTriggerData = function() {
+	ActionILL003.prototype.getTriggerData = function() {
 		return null;
 	}
-	ActionILL001.prototype.canTrigger = function() {
+	ActionILL003.prototype.canTrigger = function() {
 		return false;
 	}
-	ActionILL001.prototype.trigger = function() {
+	ActionILL003.prototype.trigger = function() {
 		
 	}
 	/* ~~~~~~~~~ ACTIVATE (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is a counter and it has been triggered, 
 	//and it has been selected by the player (if activation is voluntary),
 	//this data will be sent to the chain where it is processed
-	ActionILL001.prototype.getActivateData = function() {
+	ActionILL003.prototype.getActivateData = function() {
 		return null;
 	}
-	ActionILL001.prototype.canActivate = function() {
+	ActionILL003.prototype.canActivate = function() {
 		return false;
 	}
-	ActionILL001.prototype.activate = function() {
+	ActionILL003.prototype.activate = function() {
 		
 	}
 	/* ~~~~~~~~~ USE or PREPARE (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is clicked and dragged to a compatible unit, 
 	//this data will be sent to the chain where it is processed
-	//if this Action Token is a counter, this data should never be given to opponent
-	ActionILL001.prototype.getUseData = function(unit) {
+	//if this Action Token is a counter, this data should not be given to opponent
+	ActionILL003.prototype.getUseData = function(unit) {
 		use = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
@@ -85,7 +85,7 @@
 	//if this Action Token is currently being resolved on the chain, 
 	//this Action Token's eventData (or ACTIVATE if counter) is replaced by this data. 
 	//The changed chain is rebroadcast so additional counters can be triggered
-	ActionILL001.prototype.getResolveData = function(unit) {
+	ActionILL003.prototype.getResolveData = function(unit) {
 		var short_term = this.bc.chain.short_term[this.unique_id];
 		use = {
 			unit_unique_id: unit.unique_id,
@@ -94,7 +94,7 @@
 			action_type: this.type,
 			attack: {
 				target_unique_id: short_term.select_target.target_unique_id,
-				attack_power: 1.0,
+				attack_power: 1.5,
 			}
 		}
 		return use;
@@ -117,5 +117,5 @@
 		}		
 	}
 	*/
-	window.ActionILL001 = ActionILL001;
+	window.ActionILL003 = ActionILL003;
 } (window));

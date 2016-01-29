@@ -8,16 +8,16 @@
 		this.owner = player;
 		this.unique_id = null; //set by BattleController;
 		this.catalog_id = "002";
-		this.name = "Ao";
-		this.title = "the Arcane Avatar";
+		this.name = "Ajai";
+		this.title = "the Arcane Keeper";
 		this.attributes = [this.bc.ATTRIBUTE.ELEMENTALIST];
 		this.level = 5;
 		this.base_stat_health = 95;
 		this.base_stat_attack = 90;
 		this.base_stat_defense = 95;
 		this.base_stat_luck = 60;
-		this.unit_img = "ao";
-		this.token_img = "token_ao";
+		this.unit_img = "ajai";
+		this.token_img = "token_ajai";
 
 		this.mana = 0;
 		this.counters = [];

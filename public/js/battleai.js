@@ -50,7 +50,6 @@
 			}
 		}
 		this.doActionStageAI = function() {
-			console.log("action stage ai")
 			if (!this.isTurn) return false;
 			var did_action = this.useAction();
 			if (did_action) {
@@ -92,15 +91,15 @@
 				bc.awaitInputCounter("red");		
 			}
 		}
-		//selectTarget("target_a", bc.chain.TARGET.OPPONENT_ALL, data)
-		this.selectTarget = function(tag, spec, data) {
+		//selectTarget(0, bc.chain.TARGET.OPPONENT_ALL, data)
+		this.selectTarget = function(memory_id, range, data) {
 			var user_unit_id = data.unit_unique_id;
 			var action_id = data.action_unique_id;
-			var targets = bc.chain.getPossibleTargets(spec, "red");
+			var targets = bc.chain.getPossibleTargets(range, "red");
 			var j = Math.floor(Math.random() * (targets.length))
 			var target = targets[j];
 			var target_user_id = target.unique_id;
-			bc.chain.short_term[action_id][tag] = target_user_id;
+			bc.chain.short_term[action_id].select_target[memory_id] = target_user_id;
 			bc.red_done = true;
 			bc.chain.finalizeData(data);
 		}

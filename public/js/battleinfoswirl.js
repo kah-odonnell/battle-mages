@@ -10,14 +10,12 @@
 		var swirl = new createjs.Bitmap(loader.getResult("infoswirl"));
 		var name = player_npc.battlename;
 		var name_container = new createjs.Container();
-		for (var i = 0; i < 6; i++) {
+		for (var i = 0; i < 16; i++) {
 			var nametext1 = new createjs.Text(name, "22px crazycreation", "#000000");			
 			var color = "#FFFFFF";
 			nametext1.shadow = new createjs.Shadow(color, 0, 0, 4);
 			name_container.addChild(nametext1);
 		}
-		name_container.addChild(nametext2)
-		var nametext2 = new createjs.Text(name, "22px crazycreation", "#000000");
 		if (player_npc.is_player) {
 			this.owner = "blue";
 			swirl.x = 0;
@@ -40,6 +38,8 @@
 		this.num_units = 0;
 		this.num_counters = 0;
 		this.addChild(this.swirl);
+		var bounds = name_container.getBounds();
+		name_container.cache(bounds.x - 20, bounds.y - 20, bounds.width + 20, bounds.height + 40)
 		this.addChild(this.name_container);
 		this.addChild(this.counter_container)
 		this.addUnits();
@@ -93,7 +93,6 @@
 	BattleInfoSwirl.prototype.removeCounter = function() {
 		this.num_counters--;
 		this.counter_container.removeChildAt(this.num_counters);
-		stage.update();
 	}
 	BattleInfoSwirl.prototype.tick = function() {
 

@@ -8,6 +8,14 @@
 			COUNTER: {value: 0},
 			INACTIVE: {value: 0},
 		}
+		this.SPOT = {
+			UNIT_A: {value: 0},
+			UNIT_B: {value: 0},
+			MINION_A: {value: 0},
+			MINION_B: {value: 0},
+			MINION_C: {value: 0},
+			NONE: {value: 0},
+		}
 		this.CURRENTPROMPT = this.PROMPT.INACTIVE;
 	}
 	var t = BattleStage.prototype = new createjs.Container();
@@ -123,10 +131,12 @@
 			message1.shadow = new createjs.Shadow(color, 0, 0, 4);
 			mcontainer.addChild(message1)
 		}
+		var bounds = mcontainer.getBounds();
+		mcontainer.cache(bounds.x - 80, bounds.y, bounds.width + 80, bounds.height + 80)
 		var message2 = new createjs.Text(message, "26px crazycreation", "#000000");
 		mcontainer.addChild(message2)
 		paneHead.addChild(mcontainer);
-		var goalX = canvas.width/2 - paneHead.getBounds().width/2;
+		var goalX = canvas.width/2 - paneHead.getBounds().width/2 + 40;
 		if (do_tween) {
 			paneHead.x = goalX + 25;
 			createjs.Tween.get(paneHead).to({x:goalX},500);		
@@ -163,7 +173,7 @@
 
 			if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Action")) {
 				var activeUnits = this.bc.getActiveUnits("blue", false);
-				if (activeUnits.length > 0) {
+				if ((activeUnits.length > 0) && (this.bc.chain.chain.length == 0)){
 					var continueButton = new BattleButton(true, "continue")
 					continueButton.x = 700;
 					continueButton.y = -18;
@@ -182,17 +192,15 @@
 	//tag: "target_a", "target_b", etc.
 	//spec: this.bc.chain.TARGET.OPPONENT_ALL
 	//data: the data that must be finalized before it can be added to chain
-	BattleStage.prototype.newActionPaneTarget = function(tag, spec, data) {
-		if (tag == "target_a") {
-			var action_id = data.action_unique_id;		
-			var action = this.bc.getTokenByUniqueId(action_id);
-			this.newDirectionPane("Select a Target for " + action.name, true);
-			this.actionPane.removeChild(this.actionPaneActive);
-			this.actionPane.removeChild(this.actionPaneButton);
-			this.actionPaneActive = this.buildTargetPane(tag, spec, data);
-			this.actionPaneActive.y -= 36;
-			this.actionPane.addChild(this.actionPaneActive);
-		}
+	BattleStage.prototype.newActionPaneTarget = function(memory_id, range, data) {
+		var action_id = data.action_unique_id;		
+		var action = this.bc.getTokenByUniqueId(action_id);
+		this.newDirectionPane("Select a Target for " + action.name, true);
+		this.actionPane.removeChild(this.actionPaneActive);
+		this.actionPane.removeChild(this.actionPaneButton);
+		this.actionPaneActive = this.buildTargetPane(memory_id, range, data);
+		this.actionPaneActive.y -= 36;
+		this.actionPane.addChild(this.actionPaneActive);
 	}
 	BattleStage.prototype.newActionPaneCounter = function() {
 		this.newDirectionPane("Activate a Counter", true);
@@ -359,15 +367,17 @@
 			}
 			desc2_max = best_size + desc1_max;
 		}
-		for (var i = 0; i < desc.length + 1; i++) {
-			if (i < desc1_max) {
-				desctext1.text = desc.slice(0, i);
-			} 
-			else if ((i >= desc1_max) && (i < desc2_max)){
-				desctext2.text = desc.slice(desc1_max, i);
-			} else {
-				desctext3.text = desc.slice(desc2_max, i)
-			}
+		if (desc.length <= desc1_max) {
+			desctext1.text = desc.slice(0, desc.length);
+		} 
+		else if ((desc.length > desc1_max) && (desc.length <= desc2_max)){
+			desctext1.text = desc.slice(0, desc1_max);
+			desctext2.text = desc.slice(desc1_max + 1, desc.length);
+		} 
+		else if (i > desc.length) {
+			desctext1.text = desc.slice(0, desc1_max);
+			desctext2.text = desc.slice(desc1_max + 1, desc2_max);
+			desctext3.text = desc.slice(desc2_max + 1, desc.length)
 		}
 		var bounds1 = desctext1.getBounds();
 		var bounds2 = desctext2.getBounds();
@@ -452,14 +462,14 @@
 		buttonContainer.x = canvas.width/2 - offset;
 		return buttonContainer;
 	}
-	//buildTargetPane("target_a", this.bc.chain.TARGET.OPPONENT_ALL);
-	BattleStage.prototype.buildTargetPane = function(tag, spec, data) {
+	//buildTargetPane("one", this.bc.chain.TARGET.OPPONENT_ALL);
+	BattleStage.prototype.buildTargetPane = function(memory_id, range, data) {
 		var buttonContainer = new createjs.Container();
 		var buttons = [];
 
-		var targets = this.bc.chain.getPossibleTargets(spec, "blue");
+		var targets = this.bc.chain.getPossibleTargets(range, "blue");
 		for (var i = 0; i < targets.length; i++) {
-			buttons.push(new BattleButton(true, "unit_target", targets[i], tag, data));
+			buttons.push(new BattleButton(true, "unit_target", targets[i], memory_id, data));
 		}
 		for (var i = 0; i < buttons.length; i++) {
 			var bcWidth = 0;
@@ -480,9 +490,69 @@
 	}
 	BattleStage.prototype.revoke = function(bcunit) {
 		var unit = bcunit.guiUnit;
+		unit.spot = this.SPOT.NONE;
 		this.fieldPane.removeChild(unit);
 		this.rearrangeUnits(bcunit.owner);
 	}
+	BattleStage.prototype.isTaken = function(owner, spot) {
+		var units = this.bc.getAllUnits(owner, true);
+		for (var i = 0; i < units.length; i++) {
+			var bcunit = units[i];
+			if (bcunit.guiUnit.spot == spot) {
+				return true;
+			}
+		}
+		return false;
+	}
+	BattleStage.prototype.rearrangeUnits = function(red_blue) {
+		var units;
+		var owner;
+		var spacing = 75;
+		if (red_blue == "red") {
+			units = this.bc.getActiveUnits("red", false);	
+			owner = level.activebattle.getNPC();
+			for (var j = 0; j < units.length; j++) {
+				var bcunit = units[j];
+				if (bcunit.guiUnit.spot == this.SPOT.NONE) {
+					if (!this.isTaken(red_blue, this.SPOT.UNIT_A)) {
+						bcunit.guiUnit.spot = this.SPOT.UNIT_A;
+						var i = 0;
+						bcunit.guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
+						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
+					}
+					else if (!this.isTaken(red_blue, this.SPOT.UNIT_B)) {
+						bcunit.guiUnit.spot = this.SPOT.UNIT_B;
+						var i = 1;
+						bcunit.guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
+						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
+					}
+				}
+			}
+		} 
+		else if (red_blue == "blue"){
+			units = this.bc.getActiveUnits("blue", false);	
+			owner = level.activebattle.getPlayer();
+			for (var j = 0; j < units.length; j++) {
+				var bcunit = units[j];
+				if (bcunit.guiUnit.spot == this.SPOT.NONE) {
+					if (!this.isTaken(red_blue, this.SPOT.UNIT_A)) {
+						bcunit.guiUnit.spot = this.SPOT.UNIT_A;
+						var i = 0;
+						bcunit.guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
+						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
+					}
+					else if (!this.isTaken(red_blue, this.SPOT.UNIT_B)) {
+						bcunit.guiUnit.spot = this.SPOT.UNIT_B;
+						var i = 1;
+						bcunit.guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
+						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
+					}
+				}
+			}
+		}
+		this.fieldPane.sortChildren(sortFunction);
+	}
+	/*
 	BattleStage.prototype.rearrangeUnits = function(red_blue) {
 		var units;
 		var owner;
@@ -533,6 +603,7 @@
 		}
 		this.fieldPane.sortChildren(sortFunction);
 	}
+	*/
 	BattleStage.prototype.tick = function() {
 
 	}
