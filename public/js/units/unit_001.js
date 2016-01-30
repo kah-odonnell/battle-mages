@@ -8,8 +8,8 @@
 		this.owner = player;
 		this.unique_id = null;
 		this.catalog_id = "001";
-		this.name = "Ren Mei";
-		this.title = "the Renowned Act";
+		this.name = "Shiren";
+		this.title = "the Veiled";
 		this.attributes = [this.bc.ATTRIBUTE.ILLUSIONIST];
 		this.level = 5;
 		this.base_stat_health = 95;

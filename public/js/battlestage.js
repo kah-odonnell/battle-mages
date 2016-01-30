@@ -249,7 +249,7 @@
 
 		var thumbnailbox = new createjs.Container();
 		// Create the title text to be displayed
-		var message = unit.name + ", " + unit.title;
+		var message = unit.name + " " + unit.title;
 		nametext = new createjs.Text(message, "32px crazycreation", "#000000");
 		nametext.x = uniticon.x + uniticon.getBounds().width + 8;
 		var message2 = "";
