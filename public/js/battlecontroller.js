@@ -722,6 +722,11 @@
 					level.activebattle.initEndDialog();
 				}
 				this.master_timeline[this.master_interval] = battleVictory;
+			} 
+			if (this.getAllUnits("blue", false).length < 1) {
+				var color1 = "#FF0000"
+				$("#lose").css("color",color1).html("You aren't supposed to lose yet!");
+				init();
 			}
 		}
 	}
