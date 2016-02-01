@@ -7,7 +7,10 @@ var level;
 var mouseX, mouseY;
 var loader, loadBar;
 
-var sortFunction = function(obj1, obj2, options) {
+//disable selection of the canvas
+$("#canvas").disableSelection();
+
+function sortFunction(obj1, obj2, options) {
     if (obj1.y > obj2.y) { return 1; }
     if (obj1.y < obj2.y) { return -1; }
     return 0;
@@ -36,7 +39,7 @@ function isIterable(obj) {
 function isObject ( obj ) {
    return obj && (typeof obj  === "object");
 }
-//check that every key/value pair in dict1 is represented in dict2
+//check that every key/value pair in dict1 is also present in dict2
 //used by Counter Tokens to see if they should trigger
 function dict1_subsetOf_dict2(dict1, dict2) {
 	var isSubset = true;
@@ -92,38 +95,38 @@ function init() {
 		//~~~ temple tiles
 		{src:"../imgs/tiles/spaceTileLarge.png", id:"spaceTile"},
 		{src:"../imgs/tiles/blackTile.png", id:"blackTile"},
-		{src:"../imgs/tiles/templereversewall1.png", id:"templereversewall1"},
-		{src:"../imgs/tiles/templereversebottomleft.png", id:"templereversebottomleft"},
-		{src:"../imgs/tiles/templereversebottomright.png", id:"templereversebottomright"},
-		{src:"../imgs/tiles/templereversetopright.png", id:"templereversetopright"},
-		{src:"../imgs/tiles/templereversetopleft.png", id:"templereversetopleft"},
-		{src:"../imgs/tiles/templebackwall0.png", id:"templebackwall0"},
-		{src:"../imgs/tiles/templebackwall1.png", id:"templebackwall1"},
-		{src:"../imgs/tiles/templebackwalldoor.png", id:"templebackwalldoor"},
-		{src:"../imgs/tiles/templebackcornerL.png", id:"templebackcornerL"},
-		{src:"../imgs/tiles/templefrontcornerL.png", id:"templefrontcornerL"},
-		{src:"../imgs/tiles/templeleftwall1.png", id:"templeleftwall1"},
-		{src:"../imgs/tiles/templebackcornerR.png", id:"templebackcornerR"},
-		{src:"../imgs/tiles/templefrontcornerR.png", id:"templefrontcornerR"},
-		{src:"../imgs/tiles/templerightwall1.png", id:"templerightwall1"},
+		{src:"../imgs/tiles/temple/temple_southwestcorner_concave.png", id:"temple_southwestcorner_concave"},
+		{src:"../imgs/tiles/temple/temple_southeastcorner_concave.png", id:"temple_southeastcorner_concave"},
+		{src:"../imgs/tiles/temple/temple_northwestcorner_concave.png", id:"temple_northwestcorner_concave"},
+		{src:"../imgs/tiles/temple/temple_northeastcorner_concave.png", id:"temple_northeastcorner_concave"},
+		{src:"../imgs/tiles/temple/temple_northwestcorner_convex.png", id:"temple_northwestcorner_convex"},
+		{src:"../imgs/tiles/temple/temple_northeastcorner_convex.png", id:"temple_northeastcorner_convex"},
+		{src:"../imgs/tiles/temple/temple_southwestcorner_convex.png", id:"temple_southwestcorner_convex"},
+		{src:"../imgs/tiles/temple/temple_southeastcorner_convex.png", id:"temple_southeastcorner_convex"},
+		{src:"../imgs/tiles/temple/temple_northwall_0.png", id:"temple_northwall_0"},
+		{src:"../imgs/tiles/temple/temple_northwall_1.png", id:"temple_northwall_1"},
+		{src:"../imgs/tiles/temple/temple_northwall_door.png", id:"temple_northwall_door"},
+		{src:"../imgs/tiles/temple/temple_southwall_1.png", id:"temple_southwall_1"},
+		{src:"../imgs/tiles/temple/temple_westwall_1.png", id:"temple_westwall_1"},
+		{src:"../imgs/tiles/temple/temple_eastwall_1.png", id:"temple_eastwall_1"},
 		{src:"../imgs/tiles/snowtile1.png", id:"snowtile1"},
 		//~~~ forest tiles
-		{src:"../imgs/tiles/grasstile1.png", id:"grasstile1"},
-		{src:"../imgs/tiles/grasstile2.png", id:"grasstile2"},
-		//{src:"../imgs/tiles/forest_reversewall1.png", id:"forest_reversewall1"},
-		//{src:"../imgs/tiles/forest_reversebottomleft.png", id:"forest_reversebottomleft"},
-		//{src:"../imgs/tiles/forest_reversebottomright.png", id:"forest_reversebottomright"},
-		{src:"../imgs/tiles/forest_reversetopright.png", id:"forest_reversetopright"},
-		{src:"../imgs/tiles/forest_reversetopleft.png", id:"forest_reversetopleft"},
-		{src:"../imgs/tiles/forest_backwall0.png", id:"forest_backwall0"},
-		{src:"../imgs/tiles/forest_backwall1.png", id:"forest_backwall1"},
-		//{src:"../imgs/tiles/forest_backwalldoor.png", id:"forest_backwalldoor"},
-		{src:"../imgs/tiles/forest_backcornerL.png", id:"forest_backcornerL"},
-		//{src:"../imgs/tiles/forest_frontcornerL.png", id:"forest_frontcornerL"},
-		{src:"../imgs/tiles/forest_leftwall0.png", id:"forest_leftwall0"},
-		{src:"../imgs/tiles/forest_backcornerR.png", id:"forest_backcornerR"},
-		//{src:"../imgs/tiles/forest_frontcornerR.png", id:"forest_frontcornerR"},
-		{src:"../imgs/tiles/forest_rightwall0.png", id:"forest_rightwall0"},
+		{src:"../imgs/tiles/forest/grasstile1.png", id:"grasstile1"},
+		{src:"../imgs/tiles/forest/grasstile2.png", id:"grasstile2"},
+		//{src:"../imgs/tiles/forest/forest_reversewall1.png", id:"forest_reversewall1"},
+		//{src:"../imgs/tiles/forest/forest_reversebottomleft.png", id:"forest_reversebottomleft"},
+		//{src:"../imgs/tiles/forest/forest_reversebottomright.png", id:"forest_reversebottomright"},
+		{src:"../imgs/tiles/forest/forest_reversetopright.png", id:"forest_reversetopright"},
+		{src:"../imgs/tiles/forest/forest_reversetopleft.png", id:"forest_reversetopleft"},
+		{src:"../imgs/tiles/forest/forest_backwall0.png", id:"forest_backwall0"},
+		{src:"../imgs/tiles/forest/forest_backwall1.png", id:"forest_backwall1"},
+		//{src:"../imgs/tiles/forest/forest_backwalldoor.png", id:"forest_backwalldoor"},
+		{src:"../imgs/tiles/forest/forest_backcornerL.png", id:"forest_backcornerL"},
+		//{src:"../imgs/tiles/forest/forest_frontcornerL.png", id:"forest_frontcornerL"},
+		{src:"../imgs/tiles/forest/forest_leftwall0.png", id:"forest_leftwall0"},
+		{src:"../imgs/tiles/forest/forest_backcornerR.png", id:"forest_backcornerR"},
+		//{src:"../imgs/tiles/forest/forest_frontcornerR.png", id:"forest_frontcornerR"},
+		{src:"../imgs/tiles/forest/forest_rightwall0.png", id:"forest_rightwall0"},
 		//~~~ prompt icons
 		{src:"../imgs/dialogs/spacebar.png", id:"spacebarIcon"},
 		//~~~ dialog ui elements

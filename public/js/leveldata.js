@@ -24,26 +24,23 @@ var level1maps = [
 		"maptiles": {
 			"defaultHeight": 40,
 
-			"999": "spaceTile",
-
 			"99": "blackTile",
-			"91": "templereversewall1",
-			"92": "templereversebottomleft",
-			"93": "templereversebottomright",
-			"94": "templereversetopright",
-			"95": "templereversetopleft",
-
 			"0": "snowtile1", //invisible boundary
 
-			"81": "templebackwall0",
-			"82": "templebackwall1",
-			"83": "templebackcornerL",
-			"84": "templefrontcornerL",
-			"85": "templeleftwall1",
-			"86": "templebackcornerR",
-			"87": "templefrontcornerR",
-			"88": "templerightwall1",
-			"89": "templebackwalldoor",
+			"81": "temple_northwall_0",
+			"82": "temple_northwall_1",
+			"85": "temple_westwall_1",
+			"88": "temple_eastwall_1",
+			"91": "temple_southwall_1",
+			"83": "temple_northwestcorner_concave",
+			"86": "temple_northeastcorner_concave",
+			"92": "temple_southwestcorner_concave",
+			"93": "temple_southeastcorner_concave",
+			"95": "temple_northwestcorner_convex",
+			"94": "temple_northeastcorner_convex",
+			"84": "temple_southeastcorner_convex",
+			"87": "temple_southwestcorner_convex",
+			"89": "temple_northwall_door",
 
 			"10": "snowtile1",
 			"19": "snowtileN",
@@ -92,11 +89,11 @@ var level1maps = [
 						["Jeff","Morgan"],
 					"Jeff":
 						{"neutral": 
-							//Some dialog sprites are more than static animations with mouth movements.
-							//There will need to be one set of sprites for when the character is both speaking and emoting
-							//And one for when the character is finished speaking but still emoting
-							//if a mood is not animated, (isAnimated = false), the renderer will still attempt
-							//to cycle through talkingSprites while the character's line is being delivered
+							/* Some dialog sprites are more than static animations with mouth movements. 
+							eventually need a set of sprites for when the character is both speaking and emoting
+							and for when the character is finished speaking but still emoting
+							if a mood is not animated, (isAnimated = false), the renderer will still attempt
+							to cycle through talkingSprites while the character's line is being delivered (lips move) */
 							{"silentSprites": ["knight1"],
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
@@ -307,7 +304,7 @@ var level1maps = [
 						{"xPosition": 510,},
 					}
 				},
-				["Rosa","There are two types of women in this world. Women who are nice, and women who are knights. My advice? Take up the sword. "], ],
+				["Rosa","Currently unused dialog. "], ],
 			"battleStartDialog": [
 				{"dialogsetup": 
 					{"characters":
@@ -356,7 +353,7 @@ var level1maps = [
 						{"xPosition": 510,},
 					}
 				},
-				["Rosa","There are two types of women in this world: women who are nice, and women who are knights! "], 
+				["Rosa","There are two types of women in this game: women who are nice, and women who are knights! "], 
 				{"event": 
 					{"battleinit": "Rosa", }
 				}, ],
@@ -518,11 +515,6 @@ var level1maps = [
 						["Jeff","Morgan"],
 					"Jeff":
 						{"neutral": 
-							//Some dialog sprites are more than static animations with mouth movements.
-							//There will need to be one set of sprites for when the character is both speaking and emoting
-							//And one for when the character is finished speaking but still emoting
-							//if a mood is not animated, (isAnimated = false), the renderer will still attempt
-							//to cycle through talkingSprites while the character's line is being delivered
 							{"silentSprites": ["knight1"],
 							"talkingSprites": ["knight1"],
 							"isAnimated": false,
