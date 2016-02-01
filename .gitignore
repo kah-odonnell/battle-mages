@@ -2,3 +2,4 @@
 *.pdn
 *.mp3
 *.txt
+node_modules/
