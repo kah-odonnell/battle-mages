@@ -7,6 +7,10 @@
 			CHAIN: {string: "Chain"},
 		}
 	};
+	BattleControllerAction.prototype.negate = function() {
+		this.can_resolve = false;
+		return true;
+	}
 	/* ~~~~~~~~~ TRIGGER (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is a counter, and it is currently 'prepared' (in use) by a unit,
 	//this data will be compared to the data on the chain to determine whether it can be triggered

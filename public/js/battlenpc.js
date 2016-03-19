@@ -1,5 +1,5 @@
 (function (window) {
-	var BattleNPC = function(initiator){
+	var BattleNPC = function(npc){
 		this.initialize(npc);
 	}
 	var pp = BattleNPC.prototype = new createjs.Container();

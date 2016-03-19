@@ -58,32 +58,33 @@
  *
 **/
 (function (window) {
-	var Map = function Map(title, subtitle, array, tileData, entrances, exits, footprints, levelobject){
-		this.hostlevel = levelobject;
+	var Map = function Map(mapdata){
+		this.hostlevel = level;
 		this.INTERACTABLE = {
 			DOOR: {value: 0},
 			WALKOUT: {value: 1},
 			NPC: {value: 2},	
 		}
-		this.initialize(title, subtitle, array, tileData, entrances, exits, footprints);
+		this.initialize(mapdata);
 	}
 	var m = Map.prototype = new createjs.Container();
 	m.Container_initialize = m.initialize;
-	m.initialize = function(title, subtitle, array, tileData, entrances, exits, footprints){
+	m.initialize = function(mapdata){
 		this.Container_initialize();
-		this.array = array;
-		this.entrances = entrances;
-		this.exits = exits;
-		this.footprints = footprints;
+		this.starttile = mapdata.starttile;
+		this.array = mapdata.maparray;
+		this.tileData = mapdata.maptiles;
+		this.entrances = mapdata.entrances;
+		this.exits = mapdata.exits;
+		this.footprints = mapdata.footprints;
 		this.alarm = false;
 		this.x = 0;
-		this.tileData = tileData;
 		this.NWExit = [];
 		this.SWExit = [];
 		this.NEExit = [];
 		this.SEExit = [];
 
-		this.buildMap(array, tileData);
+		this.buildMap(this.array, this.tileData);
 		//this.hostlevel.addDialog(testdialog);
 	}
 

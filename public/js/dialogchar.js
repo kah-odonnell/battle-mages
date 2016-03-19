@@ -1,15 +1,16 @@
 (function (window) {
-	var DialogChar = function(name, moodData, initData){
-		this.initialize(name, moodData, initData);
+	var DialogChar = function(name, initData){
+		this.initialize(name, initData);
 	}
 	var d = DialogChar.prototype = new createjs.Container();
 	d.Container_initialize = d.initialize;
-	d.initialize = function(name, moodData, initData){
+	d.initialize = function(name, initData){
 		this.Container_initialize();
 		this.charName = name;
 		this.moodRange = {};
 		this.moodList = [];
 
+		var moodData = initData["sprites"];
 		for (var key in moodData) {
 			this.moodRange[key] = moodData[key];
 			this.moodRange[key].silentSprites = moodData[key]["silentSprites"];
@@ -26,8 +27,8 @@
 		if (initData["facing"] == "right") {
 			this.scaleX = -1;
 		}
-		this.x = initData["xPosition"];
-		this.y = initData["yPosition"];
+		this.x = initData["position"].x;
+		this.y = initData["position"].y;
 		this.isTalking = false;
 		this.isOnstage = false;
 
@@ -46,8 +47,9 @@
 	}
 	DialogChar.prototype.transition = function(transitionData) {
 		for (var key in transitionData) {
-			if (key == "xPosition") {
-				createjs.Tween.get(this, {loop: false}).to({x:transitionData[key]},1000,createjs.Ease.getPowInOut(4));
+			if (key == "position") {
+				var x_pos = transitionData["position"].x;
+				createjs.Tween.get(this, {loop: false}).to({x: x_pos},1000,createjs.Ease.getPowInOut(4));
 			}
 		}
 	}

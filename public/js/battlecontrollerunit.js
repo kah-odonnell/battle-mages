@@ -32,7 +32,9 @@
 		var random = 1;
 		var damage = ((2*this.level+10)/250)*(final_unit_attack/final_target_defense)*(power*100)*random;
 		target.current_health -= damage;
-		if (target.current_health <= 0) this.bc.destroy(target);
+		if (target.current_health <= 0) {
+			this.bc.destroy(target);
+		}
 	}
 	BattleControllerUnit.prototype.setCurrentHealth = function() {
 		var health = Math.floor(2*this.base_stat_health*(this.level/100)) + this.level + 10;

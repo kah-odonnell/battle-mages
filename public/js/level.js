@@ -1,44 +1,46 @@
 (function (window) {
-	var Level = function Level(levelmaps){
-		this.initialize(levelmaps);
+	var Level = function Level(gamedata) {
+		this.initialize(gamedata);
 	}
 	var l = Level.prototype = new createjs.Container();
 	l.Container_initialize = l.initialize;
-	l.initialize = function(levelmaps){
+	l.initialize = function(gamedata) {
 		this.Container_initialize();
+		this.gamedata = gamedata;
 		this.paused = false;
-
-		this.maplist = [];
+		var currentmap = gamedata.maps.maptostart;
+		var level_maps = gamedata.maps.getMapDataList();
+		var level_npcs = gamedata.npcs.getNPCData();
+		//the current prompt, if any
 		this.activeprompt = null;
+		//the current battle, if any
 		this.activebattle = null;
+		//if were are currently fading in/out upon a map change
 		this.isChanging = false;
+		//prompts (like press space to enter/talk) are enabled
 		this.promptEnabled = true;
-		this.npcsPaused = false;
 
-		for (var i = 0; i < levelmaps.length; i++) {
-			var currentmap = levelmaps[i];
-			this.maplist[i] = new Map(
-				currentmap["title"], 
-				currentmap["subtitle"], 
-				currentmap["maparray"], 
-				currentmap["maptiles"], 
-				currentmap["entrances"],
-				currentmap["exits"],
-				currentmap["footprints"],
-				this);
-			this.getNPCs(currentmap["mapnpcs"], i)
-			var initialize = currentmap["entrances"]["initialize"];
+		this.npcsPaused = false;
+		//generate each map
+		this.maplist = []
+		for (var i = 0; i < gamedata.maps.map_id_list.length; i++) {
+			var m = level_maps[i];
+			var map_id = level_maps[i]["id"];
+			this.maplist[map_id] = new Map(gamedata.maps.getMapData(map_id));
+			//generate all npcs for this map
+			this.setNPCs(level_npcs[map_id], map_id);
+			var initialize = m["entrances"]["initialize"];
 			if (!(initialize === undefined)) {
-				this.maplist[i].centerOn(initialize["x"],initialize["y"], 0)				
+				this.maplist[map_id].centerOn(initialize["x"],initialize["y"], 0)				
 			}
 		}
-		this.currentmap = 0;
+		this.currentmap = currentmap;
 		map = this.maplist[this.currentmap];
 		this.addChild(map);
 	}
 	Level.prototype.initPlayer =function() {
-		var player = new Player(12, 13);
-		map = this.maplist[this.currentmap];
+		var map = this.maplist[this.currentmap];
+		var player = new Player(map.starttile.x, map.starttile.y);
 		map.addChild(player);
 		//map.centerOn(player.tileX, player.tileY, 3000); 
 		//centerOn should only be done by MapEvents post map-init
@@ -50,16 +52,16 @@
 		this.setChildIndex(dialog1, this.getNumChildren()-1);
 		this.currentdialog = dialog1;	
 	}
-	Level.prototype.getNPCs = function(npcData, mapindex) {
-		this.maplist[mapindex].npcs = [];
+	Level.prototype.setNPCs = function(npcData, map_id) {
+		this.maplist[map_id].npcs = [];
 		for (var i = npcData.length - 1; i >= 0; i--) {
-			var newNpc = npcData[i]
-			if (newNpc["type"] == "prologueknight") {
-				npc = new PrologueKnight(newNpc, this.maplist[mapindex]);
-				this.maplist[mapindex].npcs.push(npc);
-				this.maplist[mapindex].addChild(npc)
+			var newNpcData = npcData[i];
+			if (newNpcData["type"] == "knight") {
+				newNpc = new NPCKnight(newNpcData, this.maplist[map_id]);
+				this.maplist[map_id].addChild(newNpc);
+				this.maplist[map_id].npcs.push(newNpc);
 			}
-		};
+		}
 	}
 	Level.prototype.tick = function() {
 		if (!(this.npcsPaused)) this.npcsTick();

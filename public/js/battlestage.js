@@ -372,20 +372,20 @@
 		} 
 		else if ((desc.length > desc1_max) && (desc.length <= desc2_max)){
 			desctext1.text = desc.slice(0, desc1_max);
-			desctext2.text = desc.slice(desc1_max + 1, desc.length);
+			desctext2.text = desc.slice(desc1_max, desc.length);
 		} 
 		else if (i > desc.length) {
 			desctext1.text = desc.slice(0, desc1_max);
-			desctext2.text = desc.slice(desc1_max + 1, desc2_max);
-			desctext3.text = desc.slice(desc2_max + 1, desc.length)
+			desctext2.text = desc.slice(desc1_max, desc2_max);
+			desctext3.text = desc.slice(desc2_max, desc.length)
 		}
 		var bounds1 = desctext1.getBounds();
 		var bounds2 = desctext2.getBounds();
 		if (bounds1 != null) {
-			desctext2.y = desctext1.y + desctext1.getBounds().height + 2;
+			desctext2.y = desctext1.y + desctext1.getBounds().height + 4;
 		}
 		if (bounds2 != null) {
-			desctext3.y = desctext2.y + desctext2.getBounds().height + 2;	
+			desctext3.y = desctext2.y + desctext2.getBounds().height + 4;	
 		}
 
 		if (manabox.getBounds() != null) {

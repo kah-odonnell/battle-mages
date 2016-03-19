@@ -1,22 +1,22 @@
 (function (window) {
-	var ActionILL002 = function(battleController, owner) {
+	var ActionILL005 = function(battleController, owner) {
 		this.bc = battleController;
 		this.initialize(owner);
 	}
-	var a = ActionILL002.prototype = new BattleControllerAction();
+	var a = ActionILL005.prototype = new BattleControllerAction();
 	a.initialize = function(owner) {
 		this.owner = owner;
 		this.unique_id = null; //set by BattleController;
 		this.chain = this.bc.chain;
 
-		this.catalog_id = "ILL002";
-		this.name = "Mana Tap";
+		this.catalog_id = "ILL005";
+		this.name = "Amplify Attack";
 		this.attribute = this.bc.ATTRIBUTE.ILLUSIONIST;
 		this.type = this.bc.TYPE.COUNTER;
-		this.cost_mana = 0;
-		this.description = "When this unit is targeted for an Attack, gain 2 Mana if the attacking unit has more Mana than this unit.";
-		this.token_img = "manatap";
-		this.mini_img = "small_manatap";
+		this.cost_mana = 1;
+		this.description = "When an opponent's unit chains a counter to this unit's attack, you can consume all Tokens in your hand to negate that counter.";
+		this.token_img = "amplifyattack";
+		this.mini_img = "small_amplifyattack";
 
 		this.is_resolved = false; //false for all Action Tokens, set_true by resolve()
 		this.can_resolve = false; //false only for counters, set true by activate()
@@ -26,39 +26,38 @@
 	//if this Action Token is a counter, and it is currently 'prepared' (in use) by a unit,
 	//this data will be compared to the data on the chain to determine whether this counter can be triggered
 	//arg "unit" is the unit to whom this counter belongs, not the unit triggering the counter.
-	ActionILL002.prototype.getTriggerData = function(unit) {
+	ActionILL005.prototype.getTriggerData = function(unit) {
 		trigger = {
-			action_type: this.bc.TYPE.ATTACK,
-			select_target: {
-				target_type: this.bc.chain.TARGET.OPPONENT_ALL,
-				target_unique_id: unit.unique_id,
+			action_type: this.bc.TYPE.COUNTER,
+			action_effect_type: this.bc.chain.EFFECT.ACTIVATE,
+			response_to: {
+				unit_unique_id: unit.unique_id,
+				action_type: this.bc.TYPE.ATTACK,
 			}
 		}
 		return trigger;
 	}
 	//counters might need additional condition checking
-	ActionILL002.prototype.meetsConditions = function(unit) {
+	ActionILL005.prototype.meetsConditions = function(unit) {
 		var data = this.getTriggerData(unit);
 		var trigger_data = this.bc.chain.getTriggeringDatasets(data);
 		if (trigger_data.length == 0 || unit == null) {
 			return false;
 		}
 		//conditionals should be calculated below
-		//i.e., opponent has more mana than this unit
 		var trigger_action = this.bc.getTokenByUniqueId(trigger_data[0].action_unique_id)
 		var trigger_unit = this.bc.getTokenByUniqueId(trigger_data[0].unit_unique_id)
 		var bool = true;
-		if (unit.mana >= trigger_unit.mana) bool = false; 
 		return bool;
 	}
-	ActionILL002.prototype.canTrigger = function(unit) {
+	ActionILL005.prototype.canTrigger = function(unit) {
 		if (this.meetsConditions(unit)){
 			return true;
 		} else {
 			return false;
 		}
 	}
-	ActionILL002.prototype.trigger = function() {
+	ActionILL005.prototype.trigger = function() {
 		//not used
 	}
 	/* ~~~~~~~~~ ACTIVATE (counters) ~~~~~~~~~~~~ */
@@ -66,7 +65,7 @@
 	//and it has been selected by the player (if activation is voluntary),
 	//this data will be sent to the chain where it is processed
 	//things like a variable mana cost will be paid here
-	ActionILL002.prototype.getActivateData = function(unit) {
+	ActionILL005.prototype.getActivateData = function(unit) {
 		activate = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
@@ -76,7 +75,7 @@
 		}
 		return activate;	
 	}
-	ActionILL002.prototype.canActivate = function(unit) {
+	ActionILL005.prototype.canActivate = function(unit) {
 		data = this.getActivateData(unit);
 		var is_prepared = (this.location == this.bc.LOCATION.UNIT);
 		if ((data != null) && (is_prepared) && (this.meetsConditions(unit))) {
@@ -85,7 +84,7 @@
 			return false;
 		}
 	}
-	ActionILL002.prototype.activate = function(unit) {
+	ActionILL005.prototype.activate = function(unit) {
 		var t = this.canTrigger(unit);
 		var a = this.canActivate(unit);
 		if (t && a) {
@@ -100,13 +99,14 @@
 	//if this Action Token is clicked and dragged to a compatible unit, 
 	//this data will be sent to the chain where it is processed
 	//if this Action Token is a counter, this data should never be given to opponent
-	ActionILL002.prototype.getUseData = function(unit) {
+	ActionILL005.prototype.getUseData = function(unit) {
 		use = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
 			action_effect_type: this.bc.chain.EFFECT.USE,
 			action_type: this.type,
-		}
+			change_mana: 0-this.cost_mana,
+		}		
 		return use;
 	}
 	/*
@@ -131,18 +131,21 @@
 	//if this Action Token is currently being resolved on the chain, 
 	//this Action Token's eventData (or ACTIVATE if counter) is replaced by this data. 
 	//The changed chain is rebroadcast so additional counters can be triggered
-	ActionILL002.prototype.getResolveData = function(unit) {
+	ActionILL005.prototype.getResolveData = function(unit) {
 		var short_term = this.bc.chain.short_term[this.unique_id];
 		resolve = {
 			unit_unique_id: unit.unique_id,
 			action_unique_id: this.unique_id,
 			action_effect_type: this.bc.chain.EFFECT.RESOLVE,
 			action_type: this.type,
-			change_mana: 2,
+			consume_hand: this.owner,
+			negate_action: {			
+				action_unique_id: short_term.response_to.action_unique_id,
+			} 
 		}
 		return resolve;
 	}
-	ActionILL002.prototype.canResolve = function(unit) {
+	ActionILL005.prototype.canResolve = function(unit) {
 		if (!(unit)) return false;
 		var data = this.getResolveData(unit);
 		if ((data != null) && this.can_resolve && (this.meetsConditions(unit)) && unit.is_active) {
@@ -161,5 +164,5 @@
 		}
 	}
 	*/
-	window.ActionILL002 = ActionILL002;
+	window.ActionILL005 = ActionILL005;
 } (window));

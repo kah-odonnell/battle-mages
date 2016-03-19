@@ -41,7 +41,7 @@
 		var offset2 = -20;
 		for (var i = 0; i < 4; i++) {
 			currentY = 200;
-			var objtext = new createjs.Text(this.obj.npcname, "32px crazycreation", "#000000");
+			var objtext = new createjs.Text(this.obj.name, "32px crazycreation", "#000000");
 			objtext.x = canvas.width/2 - objtext.getBounds().width/2 + offset1;
 			objtext.y = currentY;
 			objtext.shadow = new createjs.Shadow("#FFFFFF", 0, 0, 16);

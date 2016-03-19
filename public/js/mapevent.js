@@ -32,10 +32,12 @@
 				
 			}
 			if (key == "mapchange") {
-				for (var i = 0; i < level.maplist.length; i++) {
-					var entranceCoords = level.maplist[i].entrances[mapeventdict[key]];
-					if (!(entranceCoords === undefined) && (level.maplist[level.currentmap] != level.maplist[i])) {
-						level.changeMaps(mapeventdict[key], i);
+				var map_id_list = gamedata.maps.map_id_list;
+				for (var i = 0; i < map_id_list.length; i++) {
+					var map_i = map_id_list[i]
+					var entranceCoords = level.maplist[map_i].entrances[mapeventdict[key]];
+					if (!(entranceCoords === undefined) && (level.maplist[level.currentmap] != level.maplist[map_i])) {
+						level.changeMaps(mapeventdict[key], map_i);
 					}
 				}
 			}
@@ -45,7 +47,7 @@
 			if (key == "battleinit") {
 				var activeNPCs = level.maplist[level.currentmap].npcs
 				for (var i = 0; i < activeNPCs.length; i++ ) {
-					if (mapeventdict[key] == activeNPCs[i].npcname) {
+					if (mapeventdict[key] == activeNPCs[i].name) {
 						level.activebattle = new Battle(player, activeNPCs[i]);
 						level.activebattle.initialize();
 						break;

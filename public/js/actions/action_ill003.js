@@ -20,6 +20,7 @@
 
 		this.is_resolved = false; //false for all Action Tokens
 		this.can_resolve = true; //false only for counters, set true by activate()
+		this.resolve_failed = false; //false for all, set true by resolveChain()
 	}
 	/* ~~~~~~~~~ TRIGGER (counters) ~~~~~~~~~~~~ */
 	//if this Action Token is a counter, and it is currently 'prepared' (in use) by a unit,

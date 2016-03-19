@@ -46,9 +46,8 @@
 
 		for (var i = 0; i < this.characterList.length; i++) {
 			var characterName = this.characterList[i];
-			var moodData = this.setupdata[characterName];
 			var initData = this.setupdata["initialize"][characterName];
-			tempChar = new DialogChar(characterName, moodData, initData);
+			tempChar = new DialogChar(characterName, initData);
 			this.characters[characterName] = tempChar;
 		}
 
@@ -95,7 +94,7 @@
 
 		var arrow = new createjs.Bitmap(loader.getResult("dialogarrow"));
 		arrow.y = this.boxY - 16;
-		arrow.x = this.script[0]["dialogsetup"]["initialize"][this.currentspeaker.charName]["xPosition"];
+		arrow.x = this.script[0]["dialogsetup"]["initialize"][this.currentspeaker.charName]["position"].x;
 		this.addChild(arrow);
 		this.arrow = arrow;
 

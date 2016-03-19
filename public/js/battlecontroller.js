@@ -1,14 +1,14 @@
+//a singleton, responsible for the flow of battle (setBattleStage),
+//constructing each players deck, waiting for user/ai input, 
+//providing a means to manipulate BattleStage,
+//and consistent access to important enumerated types
+//most objs created in a battle set this obj as a property
+//
+//initialized by Battle()
+//
+//BattleController is the only class, other than BattleUnitGui, 
+//allowed to manipulate BattleStage
 (function (window) {
-	//a singleton, responsible for the flow of battle (setBattleStage),
-	//constructing each players deck, waiting for user/ai input, 
-	//providing a means to manipulate BattleStage, and consistent access to
-	//enumerated types that are referenced by several different classes
-	//
-	//initialized by Battle()
-	//
-	//BattleController is the only class, other than BattleUnitGui, 
-	//allowed to manipulate BattleStage
-	//
 	var BattleController = function(battleStage) {
 		this.STAGE = {
 			RPS: {string: "RPS"},
@@ -58,15 +58,20 @@
 		this.blue_done = false;
 		this.red_done = false;
 
+		//each token needs a unique idenitifier that can later be looked up
 		this.createUniqueIds();
 
 		this.blueHand = [];
 		this.redHand = [];
 		this.blueHand = this.newBlueHand();
 		this.redHand = this.newRedHand();
+
+		//create the chain, essentially the "effect calculator"
 		this.chain = new BattleControllerChain(this);
 
 		this.ai = new BattleAI(this);
+		
+		//start the battle with rock-paper-scissors
 		this.setBattleStage(this.STAGE.RPS);
 
 		//functions that need to be run with a delay will be added to this list
@@ -75,12 +80,15 @@
 		this.master_interval = 0;
 		this.tick2 = 0;
 	}
+	//update health/mana bars
 	BattleController.prototype.updateStage = function() {
 		var units = this.getAllUnits("all", true);
 		for (var i = 0; i < units.length; i++) {
 			units[i].guiUnit.updateStatusPane();
 		}
 	}
+	//increase mana at start of each Action Stage
+	//may want to fold into BattleControllerChain
 	BattleController.prototype.increaseAllMana = function() {
 		if (this.turnPlayer == "blue") {
 			var units = this.getAllUnits("blue", false);
@@ -98,6 +106,8 @@
 			}				
 		}
 	}
+	//destroy a BattleControllerUnit and update BattleStage
+	//may want to fold into BattleControllerChain
 	BattleController.prototype.destroy = function(unit) {
 		if (unit.owner == "red") {
 			this.gui.npcSwirl.destroyUnit();
@@ -127,6 +137,7 @@
 		unit.guiUnit.removeAllChildren();
 		this.gui.rearrangeUnits(unit.owner);
 	}
+	//each token needs a unique idenitifier that can later be looked up
 	BattleController.prototype.createUniqueIds = function() {
 		var collection = this.blueUnits;
 		for (var i = 0; i < collection.length; i++) {
@@ -145,6 +156,8 @@
 			collection[i].createUniqueId();
 		}		
 	}
+	//look up token based on unique_id
+	//not fastest algo but there will never be > 80 tokens per battle
 	BattleController.prototype.getTokenByUniqueId = function(id) {
 		var collection = this.blueUnits;
 		for (var i = 0; i < collection.length; i++) {
@@ -175,9 +188,9 @@
 			}
 		}
 		return null;
-	}
+	}		
+	//change battle stage > this.STAGE - RPS, START, EVOKING, ACTION, END
 	BattleController.prototype.setBattleStage = function(stage) {
-		//change battle stage > this.STAGE - RPS, START, EVOKING, ACTION, END
 		this.currentStage = stage;
 		if (stage == this.STAGE.START) {
 			this.gui.newDirectionPane("Start Stage", true);
@@ -197,10 +210,11 @@
 		}
 		return this.currentStage.string;
 	}
+	//returns a string indicating the current stage
 	BattleController.prototype.getBattleStage = function() {
-		//returns a string indicating the current stage
 		return this.currentStage.string;
 	}
+	//iterate through a player's unit_id list and initialize their Units
 	BattleController.prototype.setUnits = function(unit_id_list, owner) {
 		var units = [];
 		for (var i = 0; i < unit_id_list.length; i++) {
@@ -211,8 +225,10 @@
 		}
 		return units;
 	}
+	//returns list of all units belonging to red or blue or both
+	//red_blue_all is a string. minions are not yet implemented
 	BattleController.prototype.getAllUnits = function(red_blue_all, minions) {
-		//returns list of all units
+		//red_blue_all = "red" || "blue" || "all"
 		var units = []
 		if (red_blue_all == "red" || red_blue_all == "all") {
 			var collection = this.redUnits;
@@ -240,8 +256,8 @@
 		}
 		return units;
 	}
+	//same as getAllUnits, but only active units
 	BattleController.prototype.getActiveUnits = function(red_blue_all, minions) {
-		//returns list of all active units and minions
 		var units = []
 		if (red_blue_all == "red" || red_blue_all == "all") {
 			var collection = this.redUnits;
@@ -274,7 +290,6 @@
 		return units;
 	}
 	BattleController.prototype.getEvokeableUnits = function(red_blue_all, minions) {
-		//returns list of all active units and minions
 		var units = []
 		if (red_blue_all == "red" || red_blue_all == "all") {
 			var collection = this.redUnits;
@@ -306,12 +321,15 @@
 		}
 		return units;
 	}
-	BattleController.prototype.clearAllUnits = function() {
+	//remove the tokens that appear in front of BattleUnitGuis
+	//after all tokens on the chain have resolved
+	BattleController.prototype.clearAllGuiUnits = function() {
 		var units = this.getAllUnits("all", true);
 		for (var i = 0; i < units.length; i++) {
 			units[i].guiUnit.removeAllTokens();
 		}
 	}
+	//iterate through a player's action_id list and initialize Actions
 	BattleController.prototype.setActions = function(action_id_list, owner) {
 		var actions = [];
 		for (var i = 0; i < action_id_list.length; i++) {
@@ -328,6 +346,9 @@
 			if ("ILL004" === action_id_list[i]) {
 				action = new ActionILL004(this, owner);
 			}
+			if ("ILL005" === action_id_list[i]) {
+				action = new ActionILL005(this, owner);
+			}
 			if (action != null) {
 				action.location = this.LOCATION.DECK;
 				actions.push(action);				
@@ -343,7 +364,7 @@
 	BattleController.prototype.getActionsDeck = function() {
 		//returns list of tokens in deck (no prep'd-counters/in-chain/in-hand)
 	}
-	//returns a list of tokens in hand, excluding those currently being dragged
+	//returns a list of tokens in hand, excluding those currently being clickanddragged
 	BattleController.prototype.getHand = function(red_blue) {
 		if (red_blue == "blue") {
 			var newlist = [];
@@ -366,6 +387,7 @@
 			return newlist;
 		}
 	}
+	//called at red's end stage
 	BattleController.prototype.newRedHand = function() {
 		for (var i = 0; i < this.redHand.length; i++) {
 			var token = this.redHand[i];
@@ -386,6 +408,7 @@
 		}
 		return hand;
 	}
+	//called at blue's end stage
 	BattleController.prototype.newBlueHand = function() {
 		for (var i = 0; i < this.blueHand.length; i++) {
 			var token = this.blueHand[i];
@@ -472,24 +495,18 @@
 		else if (red_blue == "red") return "blue";
 		else return null;
 	}
-	//tl;dr - awaitInput() is a finite state machine dead end
+	//tl;dr - awaitInput<thing>() is a finite state machine dead end
+	//as far as BattleController's role is concerned
 	//
 	//when input is needed by the player or ai,
-	//apart from the regular evoking/action input of the evoking/action stages,
-	//B..C..Chain() will define which player can input (this.red/blue_done = false)
+	//BCChain() will define which player can input (<red/blue>_done = false)
 	//and call this function.
-	//a button or the ai will then be able to call this function again,
-	//until both red and blue have had a chance to respond or decline
 	//
-	//awaitInput("counter",...) is run when the chain changes (by chain.addToChain())
-	//has a delay so the player can read token effects
-	//ai or actionPane button will set blue/red_done = true and call awaitInput()
-	//function repeats until both blue and red cannot or will not respond
+	//this function adds a func to the timeline that gets processed by the game loop
 	//
-	//awaitInput("target",...) is run by chain.finalizeData()
-	//the ai or actionPane button will then add a unit to short term memory  
-	//
-	//called by BattleControllerChain, BattleAI, and BattleButton
+	//a BattleButton or the BattleAI will then have to activate a counter or decline doing so,
+	//or if either player cannot do anything (<red/blue>_done = true)
+	//we return to the doActionStage() cycle
 	BattleController.prototype.awaitInputCounter = function(red_blue) {
 		this.acceptingInput = false;
 		var bc = this;
@@ -557,12 +574,14 @@
 		}
 		this.addToTimeline(counterSink);
 	}
-	//awaitInputTarget("blue", 0, this.chain.TARGET.OPPONENT_ALL, data)
-	//BattleButton or BattleAI will save data to this.chain.short_term = {}
-	//and call this.chain.finalizeData(data)
+	//same as awaitInputCounter, but instead of selecting a counter,
+	//we are selecting from a list of units
 	//
-	//unlike awaitInputCounter(), this function doesn't get called by
-	//BattleButton() or BattleAI(). instead, they will call this.chain.finalizeData
+	//the BattleButton or BattleAI needs to save some data to the short_term object on the chain
+	// red_blue = "red" || "blue"
+	// memory_id = the key in the data (see below) that needs to be set upon target selection
+	// range = the player's choice of targets (OPPONENT_ALL || OWNER_MINIONS || etc)
+	// data = the key/value pair of the action token we are currently selecting a target for
 	BattleController.prototype.awaitInputTarget = function(red_blue, memory_id, range, data) {			
 		this.acceptingInput = false;
 		var bc = this;
@@ -652,7 +671,7 @@
 				}
 				this.addToTimeline(aiAction);
 			}
-			this.clearAllUnits();
+			this.clearAllGuiUnits();
 		} else {
 			this.is_resolving = true;
 			var bc = this;
@@ -678,9 +697,6 @@
 		}
 		else if (this.turnPlayer == "red") {
 			this.redHand = this.newRedHand();
-			for (var i = 0; i < this.redActions; i++) {
-				console.log(this.redActions[i].location.string);
-			}
 			var bc = this;
 			var goToStartBlue = function() {
 				bc.turnPlayer = "blue";
@@ -717,6 +733,7 @@
 			this.master_timeline[this.master_interval]();
 			this.master_interval++;
 			//if victory conditions are met, the next item in timeline ends the battle
+			//a very sloppy way of ending the battle for now
 			if (this.getAllUnits("red", false).length < 1) {
 				var battleVictory = function() {
 					level.activebattle.initEndDialog();
@@ -726,7 +743,10 @@
 			if (this.getAllUnits("blue", false).length < 1) {
 				var color1 = "#FF0000"
 				$("#lose").css("color",color1).html("You aren't supposed to lose yet!");
-				init();
+				var battleLoss = function() {
+					init();
+				}
+				this.master_timeline[this.master_interval] = battleLoss;
 			}
 		}
 	}

@@ -1,7 +1,11 @@
+/*
+
+*/
 "use strict";
 var canvas;
 var stage, w, h, loader;
 var player;
+var gamedata;
 var map;
 var level;
 var mouseX, mouseY;
@@ -48,14 +52,18 @@ function dict1_subsetOf_dict2(dict1, dict2) {
 			return false;
 		}
 		else if (key in dict2) {
-			var both_objects = (isObject(dict2[key]) && isObject(dict1[key]));
+			var value1 = dict1[key];
+			var value2 = dict2[key];
+			var both_objects = (isObject(value1) && isObject(value2));
 			if (both_objects) {
-				isSubset = dict1_subsetOf_dict2(dict1[key], dict2[key]);
+				if (!dict1_subsetOf_dict2(value1, value2)) {
+					return false;
+				}
 			}
-			else if (!(both_objects) && (dict1[key] == dict2[key])) {
+			else if (!(both_objects) && (value1 == value2)) {
 
 			}
-			else if (!(both_objects) && (dict1[key] != dict2[key])) {
+			else if (!(both_objects) && (value1 != value2)) {
 				isSubset = false;
 			}
 		}
@@ -163,6 +171,8 @@ function init() {
 		{src:"../imgs/battles/actions/small_mirrorforce.png", id:"small_mirrorforce"},
 		{src:"../imgs/battles/actions/manatap.png", id:"manatap"},
 		{src:"../imgs/battles/actions/small_manatap.png", id:"small_manatap"},
+		{src:"../imgs/battles/actions/amplifyattack.png", id:"amplifyattack"},
+		{src:"../imgs/battles/actions/small_amplifyattack.png", id:"small_amplifyattack"},
 		//~~~ battle backgrounds
 		{src:"../imgs/battles/backgrounds/battlebkgd1.png", id:"battlebkgd1"},
 	];
@@ -187,7 +197,8 @@ function handleComplete(event) {
 	stage.update(event);
 	document.getElementById("loader").className = "";
 	stage.removeChild(loadBar);
-	level = new Level(level1maps);
+	gamedata = new GameData();
+	level = new Level(gamedata);
 	player = level.initPlayer();
 	stage.addChild(level);
 	createjs.Ticker.setFPS(60);

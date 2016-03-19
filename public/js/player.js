@@ -26,7 +26,8 @@
 			DOWN: {xFootWidth: 6, yFootWidth: 0, xOffset: 3, yOffset: 0, movingOffset: 0}
 		}
 		this.spriteDirection = this.FACING.SIDE;
-		this.currentAnimation = "";
+		this.currentAnimation;
+		//if up || down && left || right keys pressed, use side animation
 		this.doubleKeys = false;
 
 		this.isMoving = false;

@@ -1,57 +1,49 @@
 /**
- * prologueknight.js
+ * NPCKnight.js
  * 
  * An npc exclusive to the prologue
  *
  * Constructor takes a dictionary (retrieved from the global leveldata variable by Level.initialize) 
  * containing this npc's DNA - name, path, personality, interaction dialog, and, 
  * since hostile, opening/closing battle remarks and battle library information.
- * Other details of the PrologueKnight are hardcoded in the constructor.
+ * Other details of the NPCKnight are hardcoded in the constructor.
  *
- * A PrologueKnight is initialized by Level.getNPCs(),
+ * A NPCKnight is initialized by Level.getNPCs(),
  * then stored in the list Level.maplist[mapindex].npcs
  *
 **/
 
 (function (window) {
-	var PrologueKnight = function(npc_data, host_map){
+	var NPCKnight = function(npc_data, host_map){
 		this.initialize(npc_data, host_map);
 	}
-	var g = PrologueKnight.prototype = new createjs.Container();
-
+	var g = NPCKnight.prototype = new createjs.Container();
 	g.Container_initialize = g.initialize;
-	//
-	//
-	//
-	//
 	g.initialize = function(npc_data, host_map) {
 		this.Container_initialize();
 		this.npc_id = npc_data.id;
 		this.name = npc_data.name;
-		this.formalname = "Ser" + this.name;
-		this.x = npc_data.start_tile.x;
-		this.y = npc_data.start_tile.y;
+		this.formalname = this.name;
+		this.x = npc_data.start_tile.x*40 + 20;
+		this.y = npc_data.start_tile.y*40 + 20;
 		this.path = npc_data.path;
+		this.host_map = host_map;
 
-		this.battleStartDialog
-		this.battleEndDialog
-		this.interactDialog
-		this.battleLibrary
+		this.battleStartDialogScript = gamedata.dialogs.getDialogData(this.npc_id, "battle_start");
+		this.battleEndDialogScript = gamedata.dialogs.getDialogData(this.npc_id, "battle_end");
+		this.interactDialogScript = gamedata.dialogs.getDialogData(this.npc_id, "interact");
+		this.battleLibrary = npc_data.token_library;
 
 		this.TYPE = host_map.INTERACTABLE.NPC;
-		this.npcname = name
-		this.formalname = name
-		this.x = (path[0][0]*40) + 20;
-		this.y = (path[0][1]*40) + 20;
-
+		//this npc will battle the opponent if true
 		this.isHostile = true;
+		//this npc has been beaten
 		this.isBeaten = false;
 		this.hasPaused = false;
-		this.path = path;
-		this.personality = personality;
-		this.hostmap = hostmap;
+		//this npc iterates through its path, a list of coordinates
+		//currentPath is the current index of the path 
 		this.currentPath = 0;
-		this.scaleX = (this.personality == "faceLeft")*2 - 1;
+		this.scaleX = (this.start_facing == "left")*2 - 1;
 		this.paused = false;
 		this.xVelocity = 1;
 		this.yVelocity = 1;
@@ -61,16 +53,18 @@
 		this.direction;
 		this.seesPlayer = false;
 
+		this.footprintData = host_map.footprints;
 		this.footprintCounter = 0;
 		this.footprintArray = []
-		this.maxFootprints = 20;
 		this.hasIdleFootprints = false;
 		this.FACING = {
 			SIDE: {xFootWidth: 10, yFootWidth: 1, xOffset: 0, yOffset: 1, movingOffset: 5},
-			UP: {xFootWidth: 6, yFootWidth: 0, xOffset: 3, yOffset: 0, movingOffset: 0},
+			UP: {xFootWidth: 6, yFootWidth: 0, xOffset: 3, yOffset: 2, movingOffset: 0},
 			DOWN: {xFootWidth: 6, yFootWidth: 0, xOffset: 3, yOffset: 0, movingOffset: 0}
 		}
 		this.spriteDirection = this.FACING.SIDE;
+		this.currentAnimation;
+		this.doubleKeys = false;
 
 		this.isMoving = false;
 		this.isMovingX = false;
@@ -95,20 +89,16 @@
 			},
 			"framerate": 10
 		});
-		this.idleSide = new createjs.Sprite(data, "idleSide");
-		this.idleUp = new createjs.Sprite(data, "idleUp");
-		this.idleDown = new createjs.Sprite(data, "idleDown");
-		this.runSide = new createjs.Sprite(data, "runSide");
-		this.runUp = new createjs.Sprite(data, "runUp");
-		this.runDown = new createjs.Sprite(data, "runDown");
+		this.sprite = new createjs.Sprite(data);
+		this.addChild(this.sprite);
 
-		this.scanner = new Scanner(this, hostmap);
+		this.scanner = new Scanner(this, host_map);
 		this.chaseReady; this.bestX; this.bestY;
-		hostmap.addChild(this.scanner);
+		host_map.addChild(this.scanner);
 
 		this.setIdle();
 	}
-	PrologueKnight.prototype.tick = function() {
+	NPCKnight.prototype.tick = function() {
 		this.tileX = Math.floor(this.x/40);
 		this.tileY = Math.floor(this.y/40);
 
@@ -127,30 +117,35 @@
 			}
 			if (!(map.alarm)) this.scanner.tick(this.tileX, this.tileY);
 
-			//Footprint logic
-			if (this.footprintCounter == 0) this.footprintCounter++;
-			else if (this.footprintCounter == 60) this.footprintCounter = 0;
-			else this.footprintCounter++;			
-			if (this.footprintArray.length > this.maxFootprints) {
-				this.hostmap.removeChild(this.footprintArray[0]);
+
+			if (this.footprintCounter == 0) {
+				this.footprintCounter++;
+			}
+			else if (this.footprintCounter == 60*this.xVelocity) {
+				this.footprintCounter = 0;
+			} 
+			else {
+				this.footprintCounter++;			
+			}
+			if (this.footprintArray.length > this.footprintData.footprintMax) {
+				map.removeChild(this.footprintArray[0]);
 				this.footprintArray.shift()					
+			}
+			if (this.footprintCounter % 12 == 0) {
+				this.hasIdleFootprints = false;
 			}
 			this.makeFootprints();
 		}
-
 		this.attemptPrompt();
-
-		
 	}
-
-	PrologueKnight.prototype.attemptPrompt = function() {
+	NPCKnight.prototype.attemptPrompt = function() {
 		if (!(map.alarm) && (level.promptEnabled)) {
 			var c = Math.sqrt(Math.pow(player.x-this.x,2)+Math.pow(player.y-this.y,2));
 			if ((c <= 40)) {
 				var PromptLog; 
-				if (!this.isHostile) PromptLog = this.interactDialog;
-				else if (this.isHostile && this.isBeaten) PromptLog = this.battleEndDialog;
-				else if (this.isHostile && !this.isBeaten) PromptLog = this.battleStartDialog;
+				if (!this.isHostile) PromptLog = this.interactDialogScript;
+				else if (this.isHostile && this.isBeaten) PromptLog = this.battleEndDialogScript;
+				else if (this.isHostile && !this.isBeaten) PromptLog = this.battleStartDialogScript;
 				if (level.activeprompt == null) {
 					level.activeprompt = new InteractPrompt(PromptLog, this);
 				}
@@ -165,83 +160,78 @@
 			}
 		}		
 	}
-
-	PrologueKnight.prototype.setIdle = function() {
+	NPCKnight.prototype.setIdle = function() {
 		this.isMoving = false;
 		this.isMovingX = false;
-		this.removeChild(this.runSide);
-		this.removeChild(this.runUp);
-		this.removeChild(this.runDown);
 		if (this.spriteDirection == this.FACING.SIDE) {
-			this.addChild(this.idleSide);
-			this.removeChild(this.idleUp);
-			this.removeChild(this.idleDown);
+			var anim = "idleSide";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.UP) {
-			this.removeChild(this.idleSide);
-			this.addChild(this.idleUp);
-			this.removeChild(this.idleDown);
+			var anim = "idleUp";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.DOWN) {
-			this.removeChild(this.idleSide);
-			this.removeChild(this.idleUp);
-			this.addChild(this.idleDown);
+			var anim = "idleDown";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 	}
-	PrologueKnight.prototype.setRun = function() {
+	NPCKnight.prototype.setRun = function() {
 		this.isMoving = true;
 		this.hasIdleFootprints = false;
-		this.removeChild(this.idleSide);
-		this.removeChild(this.idleUp);
-		this.removeChild(this.idleDown);
 		if (this.spriteDirection == this.FACING.SIDE) {
 			this.isMovingX = true;
-			this.addChild(this.runSide);
-			this.removeChild(this.runUp);
-			this.removeChild(this.runDown);
+			var anim = "runSide";
+			if (this.currentAnimation != anim) {
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.UP) {
-			this.isMovingX = false;
-			this.removeChild(this.runSide);
-			this.addChild(this.runUp);
-			this.removeChild(this.runDown);
+			var anim = "runUp";
+			if ((this.currentAnimation != anim) && (!this.doubleKeys)) {
+				this.isMovingX = false;
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 		if (this.spriteDirection == this.FACING.DOWN) {
-			this.isMovingX = false;
-			this.removeChild(this.runSide);
-			this.removeChild(this.runUp);
-			this.addChild(this.runDown);
+			var anim = "runDown";
+			if ((this.currentAnimation != anim) && (!this.doubleKeys)) {
+				this.isMovingX = false;
+				this.sprite.gotoAndPlay(anim);
+				this.currentAnimation = anim;
+			}
 		}
 	}
-	PrologueKnight.prototype.move = function(){
+	NPCKnight.prototype.move = function(){
 		this.setRun();
 	}
-	PrologueKnight.prototype.makeFootprints = function(){
+	NPCKnight.prototype.makeFootprints = function(mapchange){
 		var footprintInterval = 10;
+
+		//if moving, attempt to create a footprint
 		if (this.isMoving) {
+			//every 'footprintInterval' number of ticks, make a new footprint
 			if (this.footprintCounter % footprintInterval == 0) {
-				var color = '#D3EAEA'
+				var color = this.footprintData.footprintColor;
+				var duration = this.footprintData.footprintDelay;
+
 				var shape = new createjs.Shape();
 				shape.graphics.beginFill(color).drawCircle(0, 0, 4);
 				shape.regY = -6
-				//Determine x and y coords of both prints
+				//if footprintCounter is an even multiple of footprintInterval, the created footprint will be offset south
+				//set X and Y of the south footprint (West/East determined mathematically)
 				if (this.footprintCounter % (2*footprintInterval) == 0){
-					shape.x = (
-						this.x + 
-						this.scaleX*(
-							this.spriteDirection.xFootWidth/4 + 1 + 
-							this.xVelocity/2 + 
-							this.spriteDirection.xOffset -
-							this.isMovingX*(this.spriteDirection.movingOffset + 2)
-						)
-					);
-					shape.y = (
-						this.y + 
-						this.spriteDirection.yFootWidth + 
-						shape.regY + 
-						this.spriteDirection.yOffset/2
-					);
-				} else {
 					shape.x = (
 						this.x + 
 						this.scaleX*(
@@ -252,7 +242,25 @@
 						)
 					);
 					shape.y = (
-						this.y + 
+						this.y - 1 + 
+						this.spriteDirection.yFootWidth + 
+						shape.regY + 
+						this.spriteDirection.yOffset/2
+					);
+				//else: if footprintCounter is an odd multiple of footprintInterval, the created footprint will be offset north
+				//set X and Y of the north footprint (West/East determined mathematically)
+				} else {
+					shape.x = (
+						this.x + 
+						this.scaleX*(
+							this.spriteDirection.xFootWidth/4 + 1 + 
+							this.xVelocity/2 + 
+							this.spriteDirection.xOffset -
+							this.isMovingX*(this.spriteDirection.movingOffset + 2)
+						)
+					);
+					shape.y = (
+						this.y - 1 + 
 						shape.regY - 
 						this.spriteDirection.yOffset
 					);
@@ -263,75 +271,135 @@
 				createjs.Tween.get(
 					this.footprintArray[this.footprintArray.length - 1]
 				).to(
-					{alpha:0,visible:false},this.maxFootprints*100
+					{alpha:0,visible:false}, duration
 				);
 
 				map.addChild(this.footprintArray[this.footprintArray.length - 1])
 			}					
 		} 
-		if (!(this.isMoving) && !(this.hasIdleFootprints)) {
-			var color = '#C5D8D8'
+		//if "idle" footprints havent been generated since this object became idle, create both footprints
+		if ((!(this.isMoving) && !(this.hasIdleFootprints)) || mapchange) {
+			var color = this.footprintData.footprintColorIdle;
+			var duration = this.footprintData.footprintDelayIdle;
+
+			//south footprint appearance
 			var shape1 = new createjs.Shape();
 			shape1.graphics.beginFill(color).drawCircle(0, 0, 4);
 			shape1.regY = -4
-			shape1.x = (
-				this.x + 
-				this.scaleX*(
+			//south footprint - X and Y Position
+			if (this.spriteDirection == this.FACING.SIDE) {
+				shape1.x = this.x + this.scaleX*(
+					this.spriteDirection.xFootWidth/4 + 4 + 
+					this.xVelocity/2 + 
+					this.spriteDirection.xOffset
+				)
+				shape1.y = (
+					this.y - 2 +
+					this.spriteDirection.yFootWidth + 
+					shape1.regY + 
+					this.spriteDirection.yOffset/2
+				);
+			}
+			else {
+				shape1.x = this.x + this.scaleX*(
 					this.spriteDirection.xFootWidth/4 + 1 + 
 					this.xVelocity/2 + 
 					this.spriteDirection.xOffset
 				)
-			);
-			shape1.y = (
-				this.y + 
-				this.spriteDirection.yFootWidth + 
-				shape1.regY + 
-				this.spriteDirection.yOffset/2
-			);
+				shape1.y = (
+					this.y - 1 + 
+					this.spriteDirection.yFootWidth + 
+					shape1.regY + 
+					this.spriteDirection.yOffset/2
+				);
+			}
+			//Add south footprint to our footprintArray and begin to fade out
 			this.footprintArray.push(shape1);
 			createjs.Tween.get(
 				this.footprintArray[this.footprintArray.length - 1]
 			).to(
-				{alpha:0,visible:false},this.maxFootprints*150
+				{alpha:0,visible:false}, duration
 			);
+			//Add south footprint to map container
 			map.addChild(this.footprintArray[this.footprintArray.length - 1])
 
+			//north footprint appearance
 			var shape2 = new createjs.Shape();
 			shape2.graphics.beginFill(color).drawCircle(0, 0, 4);
 			shape2.regY = -5;
-			shape2.x = (
-				this.x + 
-				this.scaleX*(
+			//north footprint - X Position
+			if (this.spriteDirection == this.FACING.SIDE) {
+				shape2.x = this.x + this.scaleX*(
+					this.spriteDirection.xFootWidth/4 - 6 + 
+					this.xVelocity/2 + 
+					this.spriteDirection.xOffset
+				)
+			}
+			else {
+				shape2.x = this.x + this.scaleX*(
 					this.spriteDirection.xFootWidth/4 - 7 + 
 					this.xVelocity/2 + 
 					this.spriteDirection.xOffset
 				)
-			);
+			}
+			//north footprint - Y Position
 			shape2.y = (
-				this.y + 
+				this.y - 1 + 
 				shape2.regY - 
 				this.spriteDirection.yOffset
 			);
-
+			//Add north footprint to our footprintArray and begin to fade out
 			this.footprintArray.push(shape2);
 			createjs.Tween.get(
 				this.footprintArray[this.footprintArray.length - 1]
 			).to(
-				{alpha:0,visible:false},this.maxFootprints*150
+				{alpha:0,visible:false}, duration
 			);
+			//Add north footprint to map container
 			map.addChild(this.footprintArray[this.footprintArray.length - 1])
-
 			this.hasIdleFootprints = true;
+
+			if (mapchange) {
+				for (var i = 0; i < 4; i++) {
+					var shape3 = new createjs.Shape();
+					shape3.graphics.beginFill(color).drawCircle(0, 0, 4);
+					shape3.regY = -4
+					shape3.x = shape1.x;
+					shape3.y = shape1.y;
+
+					this.footprintArray.push(shape3);
+					createjs.Tween.get(
+						this.footprintArray[this.footprintArray.length - 1]
+					).to(
+						{alpha:0,visible:false}, duration
+					);
+					map.addChild(this.footprintArray[this.footprintArray.length - 1])
+
+					var shape4 = new createjs.Shape();
+					shape4.graphics.beginFill(color).drawCircle(0, 0, 4);
+					shape4.regY = -5
+					shape4.x = shape2.x;
+					shape4.y = shape2.y;
+
+					this.footprintArray.push(shape4);
+					createjs.Tween.get(
+						this.footprintArray[this.footprintArray.length - 1]
+					).to(
+						{alpha:0,visible:false}, duration
+					);
+					map.addChild(this.footprintArray[this.footprintArray.length - 1])
+				}
+			}
 		}
 	}
-	PrologueKnight.prototype.nextPath = function() {
+	NPCKnight.prototype.nextPath = function() {
 		if (this.currentPath < (this.path.length - 1)){
 			this.currentPath++;
 		} else {
 			this.currentPath = 0;
 		}
 	}
-	PrologueKnight.prototype.patrol = function(){
+	NPCKnight.prototype.patrol = function(){
 		if (this.path[this.currentPath] != "pause"){
 			this.paused = false;
 			this.moveTo(
@@ -348,7 +416,7 @@
 		}
 	}
 	// not relevant to non-hostile npcs
-	PrologueKnight.prototype.chase = function(){
+	NPCKnight.prototype.chase = function(){
 		if (!(this.paused)) {
 		if (this.chaseReady == true){
 			var tileSet = []
@@ -416,7 +484,7 @@
 		}
 	}
 
-	PrologueKnight.prototype.initiateBattle = function(){
+	NPCKnight.prototype.initiateBattle = function(){
 		this.xVelocity = 1.5;
 		this.yVelocity = 1.25;
 		if (this.hasPaused == true) {
@@ -426,7 +494,7 @@
 				this.chase();
 			} else {
 		 		this.setIdle();
-				level.addDialog(this.battleStartDialog);
+				level.addDialog(this.battleStartDialogScript);
 			}
 		} else {
 			this.setIdle();
@@ -455,7 +523,7 @@
 		}
 	}
 
-	PrologueKnight.prototype.randDirection = function(){
+	NPCKnight.prototype.randDirection = function(){
 		var direction = Math.floor((Math.random()*4)+1)
 		if (direction == 1) this.direction = "west";
 		if (direction == 2) this.direction = "east";
@@ -463,7 +531,7 @@
 		if (direction == 4) this.direction = "south";
 	}
 
-	PrologueKnight.prototype.setTarget = function(){
+	NPCKnight.prototype.setTarget = function(){
 		var targetX = player.x;
 		var targetY = player.y;
 		if (Math.abs(this.x - targetX) > 720) {
@@ -488,7 +556,7 @@
 		this.targetY = targetY;
 	}
 
-	PrologueKnight.prototype.moveTo = function(tileX, tileY) {
+	NPCKnight.prototype.moveTo = function(tileX, tileY) {
 		var xTrue, yTrue;
 		if ((Math.floor((this.x/40) + this.offsetX)) != tileX) {
 			xTrue = false;
@@ -515,6 +583,7 @@
 			yTrue = true;
 		}
 		if (xTrue && yTrue) {
+			this.doubleKeys = false;
 			if (!(map.alarm)){
 				this.setIdle();
 			}
@@ -522,11 +591,16 @@
 				this.nextPath();
 			}
 			this.chaseReady = true;
+		} else if (!xTrue && !yTrue) {
+			this.doubleKeys = true;
+		} else {
+			this.doubleKeys = false;
 		}
 	}
 
-	PrologueKnight.prototype.moveLeft = function() {
+	NPCKnight.prototype.moveLeft = function() {
 		this.scaleX = 1;
+		this.spriteDirection = this.FACING.SIDE;
 		this.scanner.lookLeft();
 		this.direction = "west";
 		if (map.notBoundary(this.x, this.y, "left")){
@@ -535,8 +609,9 @@
 			this.move();
 		}
 	};
-	PrologueKnight.prototype.moveRight = function() {
+	NPCKnight.prototype.moveRight = function() {
 		this.scaleX = -1;
+		this.spriteDirection = this.FACING.SIDE;
 		this.scanner.lookRight();
 		this.direction = "east";
 		if (map.notBoundary(this.x, this.y, "right")){
@@ -545,8 +620,9 @@
 	  		this.move();
 		}
 	};
-	PrologueKnight.prototype.moveUp = function() {
+	NPCKnight.prototype.moveUp = function() {
 		this.scanner.lookUp();
+		this.spriteDirection = this.FACING.UP;
 		this.direction = "north";
 		if (map.notBoundary(this.x, this.y, "up")){
 			this.spriteDirection = this.FACING.UP;
@@ -554,8 +630,9 @@
 			this.move();
 		}
 	};
-	PrologueKnight.prototype.moveDown = function() {
+	NPCKnight.prototype.moveDown = function() {
 		this.scanner.lookDown();
+		this.spriteDirection = this.FACING.DOWN;
 		this.direction = "south";
 		if (map.notBoundary(this.x, this.y, "down")){
 			this.spriteDirection = this.FACING.DOWN;
@@ -563,5 +640,5 @@
 			this.move();
 		}
 	};
-	window.PrologueKnight = PrologueKnight;
+	window.NPCKnight = NPCKnight;
 } (window));		

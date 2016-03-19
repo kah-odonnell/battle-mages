@@ -1,27 +1,25 @@
+//a singleton, responsible for making changes to the chain,
+//processing events on the chain, 
+//and determining the legality of action tokens
+//
+//initialized by BattleController()
 (function (window) {
-	//a singleton, responsible for making changes to the chain,
-	//processing events on the chain, and determining the legality of action tokens
-	//
-	//initialized by BattleController()
-	//
-	//this is the only class that should change a unit's health,
-	//inflict conditions, or compile lists of targets/counters/etc
 	var BattleControllerChain = function(bc) {
 		this.TARGET = {
-			ALL: {string: ""},
-			OPPONENT_ALL: {string: ""},
-			OPPONENT_UNITS: {string: ""},
-			OPPONENT_MINIONS: {string: ""},
-			OWNER_ALL: {string: ""},
-			OWNER_UNITS: {string: ""},
-			OWNER_MINIONS: {string: ""},
+			ALL: {string: "ALL"},
+			OPPONENT_ALL: {string: "OPPONENT_ALL"},
+			OPPONENT_UNITS: {string: "OPPONENT_UNITS"},
+			OPPONENT_MINIONS: {string: "OPPONENT_MINIONS"},
+			OWNER_ALL: {string: "OWNER_ALL"},
+			OWNER_UNITS: {string: "OWNER_UNITS"},
+			OWNER_MINIONS: {string: "OWNER_MINIONS"},
 		}
 		this.EFFECT = {
-			USE: {string: ""},
-			RESOLVE: {string: ""},
-			PREPARE: {string: ""},
-			ACTIVATE: {string: ""},
-			TRIGGER: {string: ""},
+			USE: {string: "USE"},
+			RESOLVE: {string: "RESOLVE"},
+			PREPARE: {string: "PREPARE"},
+			ACTIVATE: {string: "ACTIVATE"},
+			TRIGGER: {string: "TRIGGER"},
 		}
 		this.bc = bc;
 		this.initialize();
@@ -42,6 +40,13 @@
 		if ("select_target" in data) {
 			var range = data["select_target"].target_type;
 			if (this.getPossibleTargets(range, unit.owner).length < 1) {
+				return false;
+			}
+		}
+		if ("response_to" in data) {
+			var d = action.getTriggerData(unit);
+			var triggering_datasets = this.getTriggeringDatasets(d);
+			if (triggering_datasets.length == 0) {
 				return false;
 			}
 		}
@@ -84,6 +89,16 @@
 				//this.short_term.action_id.memory[1] = 7SADK83MD02..
 			}
 		}
+		if ("response_to" in data) {
+			var in_memory = false;
+			if (memory["response_to"]) in_memory = true;
+			if (!(in_memory)) {
+				var d = action.getTriggerData(unit);
+				var triggering_datasets = this.getTriggeringDatasets(d);
+				var resp = triggering_datasets[0];
+				memory["response_to"] = resp;
+			}
+		}
 		this.addToChain(data)
 		return true;
 	}
@@ -106,6 +121,16 @@
 			var target_id = data.attack.target_unique_id;
 			var target_unit = this.bc.getTokenByUniqueId(target_id);
 			unit.attack(target_unit, power);
+		}
+		if ("negate_action" in data) {
+			var target_action = this.bc.getTokenByUniqueId(data["negate_action"].action_unique_id);
+			target_action.negate();
+		}
+		if ("consume_hand" in data) {
+			var hand = this.bc.getHand(data["consume_hand"]);
+			for (var i = 0; i < hand.length; i++) {
+				this.bc.removeFromHand(hand[i]);
+			}
 		}
 		if ("action_type" in data) {
 			var is_prep_counter = (
@@ -167,16 +192,28 @@
 		//	}
 		};
 	}
-	BattleControllerChain.prototype.getTriggeringAction = function(trigger_data) {
+	BattleControllerChain.prototype.getTriggeringDatasets = function(trigger_data) {
+		var list = []
+		for (var i = this.chain.length - 1; i >= 0; i--) {
+			var action_data = this.chain[i];
+			var match = dict1_subsetOf_dict2(trigger_data, action_data);
+			if (match) {				
+				list.push(action_data);
+			}
+		}
+		return list;
+	}
+	BattleControllerChain.prototype.getTriggeringActions = function(trigger_data) {
+		var list = []
 		for (var i = this.chain.length - 1; i >= 0; i--) {
 			var action_data = this.chain[i];
 			var match = dict1_subsetOf_dict2(trigger_data, action_data);
 			if (match) {
 				var action = this.bc.getTokenByUniqueId(this.chain[i].action_unique_id);				
-				return action;
+				list.push(action);
 			}
 		}
-		return null;
+		return list;
 	}
 	/*
 	trigger_data = {
@@ -184,16 +221,42 @@
 		action_type: this.bc.TYPE.ATTACK,
 	}
 	*/
-	BattleControllerChain.prototype.getTriggeringUnit = function(trigger_data) {
+	BattleControllerChain.prototype.getTriggeringUnits = function(trigger_data) {
+		var list = [];
 		for (var i = this.chain.length - 1; i >= 0; i--) {
 			var action_data = this.chain[i];
 			var match = dict1_subsetOf_dict2(trigger_data, action_data);
 			if (match) {
 				var unit = this.bc.getTokenByUniqueId(this.chain[i].unit_unique_id);				
-				return unit;
+				list.push(unit);
 			}
 		}
-		return null;
+		return list;
+	}
+	BattleControllerChain.prototype.getUnitFromActiveActionUniqueId = function(action_unique_id) {
+		var list = []
+		for (var i = this.chain.length - 1; i>=0; i--) {
+			var action_data = this.chain[i];
+			if (action_data.unique_id == action_unique_id) {
+				var unit = this.bc.getTokenByUniqueId(action_data.unit_unique_id)
+				list.push(unit);
+			}
+		}
+		if (list.length == 0) return null;
+		else if (list.length == 1) return list[0];
+		else {
+			//console log an error if this list has more than one unique unit
+			var most_recent = list[0];
+			for (var i = 0; i < list.length; i++) {
+				if (list[i] == most_recent) {
+					most_recent = list[i];
+				}
+				else {
+					console.log("ERROR: Two units are claiming the same action")
+				}
+			}
+			return most_recent;
+		}
 	}
 	BattleControllerChain.prototype.cleanShortTermData = function() {
 		this.short_term = {};
@@ -241,11 +304,14 @@
 			var mr_unit_id = this.chain[i].unit_unique_id;
 			var mr_action = this.bc.getTokenByUniqueId(mr_action_id);
 			var mr_unit = this.bc.getTokenByUniqueId(mr_unit_id);
-			var can_resolve = mr_action.canResolve(mr_unit);
+			var can_resolve;
 			var is_prep_counter = (
 				(mr_data.action_type == this.bc.TYPE.COUNTER) && 
 				(mr_data.action_effect_type == this.EFFECT.USE)
 			);
+			if (!(is_prep_counter)) {
+				can_resolve = mr_action.canResolve(mr_unit)
+			}
 			if (!(mr_action.is_resolved) && (can_resolve)) {
 				can_clear = false;
 				mr_action.resolve(mr_unit);
@@ -256,7 +322,11 @@
 				console.log(mr_action.name + " could not resolve!");
 				this.bc.awaitInputCounter(mr_action.owner);
 				return false;
-			} else {
+			} 
+			else if (is_prep_counter) {
+				can_clear = true;
+			} 
+			else {
 
 			}
 		}
@@ -270,19 +340,25 @@
 		if (red_blue == "red") this.bc.red_done = true;
 		else if (red_blue == "blue") this.bc.blue_done = true;
 	}
-	BattleControllerChain.prototype.getTriggeredCounters = function(red_blue) {
-		var t_counters = [];
-		var units = this.bc.getActiveUnits(red_blue, true);
-		for (var i = 0; i < units.length; i++) {
-			var unit = units[i];
-			for (var j = 0; j < unit.counters.length; j++) {
-				var counter = unit.counters[j];
-				if (counter.canActivate(unit) && counter.canTrigger(unit)) {
-					t_counters.push(counter);
+	BattleControllerChain.prototype.getTriggeredCounters = function(red_blue_both) {
+		if (red_blue_both == "both") {
+			var both = this.getTriggeredCounters("red").concat(this.getTriggeredCounters("blue"));
+			return both;
+		} else {
+			var t_counters = [];
+			var red_blue = red_blue_both;
+			var units = this.bc.getActiveUnits(red_blue, true);
+			for (var i = 0; i < units.length; i++) {
+				var unit = units[i];
+				for (var j = 0; j < unit.counters.length; j++) {
+					var counter = unit.counters[j];
+					if (counter.canActivate(unit) && counter.canTrigger(unit)) {
+						t_counters.push(counter);
+					}
 				}
 			}
+			return t_counters;	
 		}
-		return t_counters;
 	}
 	BattleControllerChain.prototype.getCounterUnit = function(red_blue, action) {
 		var counters = [];
