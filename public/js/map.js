@@ -71,6 +71,7 @@
 	m.Container_initialize = m.initialize;
 	m.initialize = function(mapdata){
 		this.Container_initialize();
+		this.background_color = mapdata.background;
 		this.starttile = mapdata.starttile;
 		this.array = mapdata.maparray;
 		this.tileData = mapdata.maptiles;
@@ -122,19 +123,18 @@
 	}
 
 	Map.prototype.checkExit = function(tileX, tileY) {
-		for (var key in this.exits) {
-			if (!this.exits[key]["isDoor"]) {
-				if ((this.exits[key]["x"] == tileX) && (this.exits[key]["y"] == tileY)) {
-					if (level.activeprompt != null) {
-						level.activeprompt.breakdown();
-					}
-					var mapEventDict = {
-						"mapchange": key
-					}
-					var mapEvent = new MapEvent(mapEventDict);
+		for (var i = this.exitObjs.length - 1; i >= 0; i--) {
+			var exit = this.exitObjs[i]
+			if ((exit.tileX == tileX) && (exit.tileY == tileY) && (!(level.isChanging)) && (!(exit.isDoor))) {
+				if (level.activeprompt != null) {
+					level.activeprompt.breakdown();
 				}
+				var mapEventDict = {
+					"mapchange": exit.routename
+				}
+				var mapEvent = new MapEvent(mapEventDict);
 			}
-		}		
+		}
 	}
 
 	Map.prototype.tileOpen = function(x, y){
@@ -168,69 +168,77 @@
 			for (var x = 0; x <= mapRow.length - 1; x++) {
 				var tileNo = mapArray[y][x];
 				var newTile;
-					if (!(this.tileFloor(tileNo))){
-						newTile = new createjs.Bitmap(
-							loader.getResult(tileData[tileNo.toString()])
-						);
-						newTile.x = x*tileX;
-						newTile.y = y*tileY + tileY;
-						newTile.regY = newTile.getBounds().height;
-						if (newTile.getBounds().width > 80) newTile.regX = tileX;
-						//The y and regY offset give walls a higher z-index than floors
-						this.addChild(newTile);
-						newTile.cache(0,0,newTile.getBounds().width, newTile.regY);
-					} 
-					else {
-						newTile = new createjs.Bitmap(
-							loader.getResult(tileData[tileNo.toString()])
-						);
-						newTile.x = x*tileX;
-						newTile.y = y*tileY;
-						newTile.regY = 0;
-						alphaBackground.addChild(newTile);	
-					}
-					//Create a container for each exit against which we can test proximity
-					for (var key in this.exits) {
-						if ((x == this.exits[key]["x"]) && (y == this.exits[key]["y"])) {
+				if (!(this.tileFloor(tileNo))){
+					newTile = new createjs.Bitmap(
+						loader.getResult(tileData[tileNo.toString()])
+					);
+					newTile.x = x*tileX;
+					newTile.y = y*tileY + tileY;
+					newTile.regY = newTile.getBounds().height;
+					if (newTile.getBounds().width > 80) newTile.regX = tileX;
+					//The y and regY offset give walls a higher z-index than floors
+					this.addChild(newTile);
+					newTile.cache(0,0,newTile.getBounds().width, newTile.regY);
+				} 
+				else {
+					newTile = new createjs.Bitmap(
+						loader.getResult(tileData[tileNo.toString()])
+					);
+					newTile.x = x*tileX;
+					newTile.y = y*tileY;
+					newTile.regY = 0;
+					alphaBackground.addChild(newTile);	
+				}
+				//Create a container for each exit against which we can test proximity
+				for (var key in this.exits) {
+					var exitGroup = this.exits[key];
+					var thisGroup = [];
+					for (var e in exitGroup) {
+						if ((x == exitGroup[e]["x"]) && (y == exitGroup[e]["y"])) {
 							var exitObj = new createjs.Container();
 							exitObj.routename = key;
-							exitObj.formalname = this.exits[key]["name"];
+							exitObj.routekey = e;
+							exitObj.formalname = exitGroup[e]["name"];
 							exitObj.isExit = true;
-							exitObj.isDoor = this.exits[key]["isDoor"];
+							exitObj.isDoor = exitGroup[e]["isDoor"];
 							if (exitObj.isDoor) {
 								exitObj.TYPE = this.INTERACTABLE.DOOR;
 							} else {
 								exitObj.TYPE = this.INTERACTABLE.WALKOUT;
 							}
 							exitObj.set = [];
-							if (!(this.exits[key]["set"] === undefined)) {
-								for (var i = 0; i < this.exits[key]["set"].length; i++) {
-									for (var j = 0; j < this.exitObjs.length; j++) {
-										if (this.exitObjs[j].routename == this.exits[key]["set"][i]) {
-											this.exitObjs[j].set.push(exitObj);
-											exitObj.set.push(this.exitObjs[j]);
-										}
-									}
-								}
-							}
+							exitObj.tileX = x;
+							exitObj.tileY = y;
 							exitObj.x = x*tileX + 20;
 							exitObj.y = y*tileY + 20;
 							this.exitObjs.push(exitObj);
+							thisGroup.push(exitObj);
 						}
 					}
+					//exitObjs in the same group need to be aware of their neighboring exitObjs
+					//this is so that the interaction prompt is consistent (not jittery)
+					//across all exits in set
+					for (var i = thisGroup.length - 1; i >= 0; i--) {
+						for (var j = 0; j < this.exitObjs.length; j++) {
+							var exitToAdd = thisGroup[i];
+							var exitToUpdate = this.exitObjs[j];
+							if (exitToUpdate.routename == exitToAdd.routename) {
+								if (exitToUpdate.routekey != exitToAdd.routekey) {
+									exitToUpdate.set.push(exitToAdd);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		//There are transparent gaps between tiles; fill them with the color of the foundation tile
-		var color = '#FFFFFF'
+		var color = this.background_color;
 		var shape = new createjs.Shape();
 		shape.graphics.beginFill(color).drawRect(0, 0, mapWidth, mapHeight);
 		shape.regY = 0;
 		shape.y = 0;
 		alphaBackground.addChildAt(shape);
-		/* Is a lot of small things worse than one big thing? yes
-		var city = new createjs.Bitmap(loader.getResult("city"));
-		alphaBackground.addChild(city);
-		*/
 		this.addChild(alphaBackground);
 		alphaBackground.cache(0,0, mapWidth, mapHeight)
 	}
@@ -296,7 +304,7 @@
 			Math.pow(player.y-doorObj.y,2)
 		);
 		if (c <= 40) {
-			var mapPromptLog = this.exits[doorObj.routename];
+			var mapPromptLog = this.exits[doorObj.routename][doorObj.routekey];
 			if (level.activeprompt == null) {
 				level.activeprompt = new InteractPrompt(mapPromptLog, doorObj);
 			}
@@ -310,7 +318,7 @@
 	Map.prototype.exitPrompt = function(exitObj) {
 		//Tile based - disappears when player is not facing the exit 
 		//prompt must persist even when the player moves between two distinct exits with the same destination
-		var exitData = this.exits[exitObj.routename];
+		var exitData = this.exits[exitObj.routename][exitObj.routekey];
 		var inTileY = (player.tileY <= exitData["y"] + 2) && (player.tileY >= exitData["y"] - 2) && (player.tileX == exitData["x"]);
 		var inTileX = (player.tileX <= exitData["x"] + 2) && (player.tileX >= exitData["x"] - 2) && (player.tileY == exitData["y"]);
 		if (level.activeprompt == null) {
@@ -323,13 +331,16 @@
 				var currentObj = level.activeprompt.obj;
 				if (currentObj === exitObj) {
 					var hasSet = (exitObj.set.length > 0);
-					if ((!(inTileX || inTileY) || !this.isFacing(player,exitObj)) && !hasSet) level.activeprompt.breakdown();
+					if ((!(inTileX || inTileY) || !this.isFacing(player,exitObj)) && !hasSet) {
+						level.activeprompt.breakdown();
+					} 
 					else if (hasSet) {
 						var hasAlternate = false;
 						for (var i = 0; i < exitObj.set.length; i++) {
 							if (this.isFacing(player,exitObj.set[i])) {
 								level.activeprompt.obj = exitObj.set[i];
 								hasAlternate = true;
+								break;
 							}
 						}
 						if (!(hasAlternate)) level.activeprompt.breakdown();
@@ -340,15 +351,15 @@
 	}
 	Map.prototype.isFacing = function(player, obj) {
 		var isFacing = false;
-		if ((player.spriteDirection == player.FACING.UP) && (obj.y < player.y)) {
+		if ((player.spriteDirection == player.FACING.UP) && (obj.y < player.y + 20)) {
 			isFacing = true;
 		} 
-		else if ((player.spriteDirection == player.FACING.DOWN) && (obj.y > player.y)) {
+		else if ((player.spriteDirection == player.FACING.DOWN) && (obj.y > player.y - 20)) {
 			isFacing = true;
 		} 
 		else if (player.spriteDirection == player.FACING.SIDE) {
-			if ((player.scaleX == -1) && (obj.x > player.x)) isFacing = true;
-			if ((player.scaleX == 1) && (obj.x < player.x)) isFacing = true;
+			if ((player.scaleX == -1) && (obj.x > player.x - 20)) isFacing = true;
+			if ((player.scaleX == 1) && (obj.x < player.x + 20)) isFacing = true;
 		}
 		return isFacing;
 	}

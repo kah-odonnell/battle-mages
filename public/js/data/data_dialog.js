@@ -161,7 +161,135 @@
 						},
 					}
 				},
-				["Rosa", "Yeah, you beat me. Please stop rubbing it in my face. I might be in a suit of metal, but underneath is a man with feelings. "],
+				["Rosa", "Ok, you beat me. Please don't rub it in my face. I might be in a suit of metal, but underneath is a woman with feelings. "],
+			],
+		},
+		"harmon": {
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interact, Harmon
+			"interact": [
+				{
+					"dialogsetup": {
+						"characters": ["Harmon","Morgan"],
+						"initialize": {
+							"Harmon": {
+								"position": POSITION.OFFSTAGE_R,
+								"facing": "left",
+								"mood": "NEUTRAL",
+								"sprites": KNIGHT,
+							},
+							"Morgan": {
+								"position": POSITION.OFFSTAGE_L,
+								"facing": "right",
+								"mood": "NEUTRAL",
+								"sprites": MORGAN,
+							},
+							"background": {
+								"xPosition": 0,
+								"yPosition": 0,
+								"hasBackground": false,
+								"isAnimated": false,
+								"animationqueue": null,
+							},
+							"openingline": 2,
+						}
+					}
+				},
+				{
+					"transition": {
+						"Morgan": {
+							"position": POSITION.STAGE_L,
+						},
+						"Harmon": {
+							"position": POSITION.STAGE_R,
+						},
+					}
+				},
+				["Harmon","Interact dialog! "],
+			],
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Battle Start, Harmon
+			"battle_start": [
+				{
+					"dialogsetup": {
+						"characters": ["Harmon","Morgan"],
+						"initialize": {
+							"Harmon": {
+								"position": POSITION.OFFSTAGE_R,
+								"facing": "left",
+								"mood": "NEUTRAL",
+								"sprites": KNIGHT,
+							},
+							"Morgan": {
+								"position": POSITION.OFFSTAGE_L,
+								"facing": "right",
+								"mood": "NEUTRAL",
+								"sprites": MORGAN,
+							},
+							"background": {
+								"xPosition": 0,
+								"yPosition": 0,
+								"hasBackground": false,
+								"isAnimated": false,
+								"animationqueue": null,
+							},
+							"openingline": 2,
+						}
+					}
+				},
+				{
+					"transition": {
+						"Morgan": {
+							"position": POSITION.STAGE_L,
+						},
+						"Harmon": {
+							"position": POSITION.STAGE_R,
+						},
+					}
+				},
+				["Harmon","Battle start dialog! "],
+				{"event": 
+					{"battleinit": "Harmon", }
+				},
+			],
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Battle End, Harmon
+			"battle_end": [
+				{
+					"dialogsetup": {
+						"characters": ["Harmon","Morgan"],
+						"initialize": {
+							"Harmon": {
+								"position": POSITION.OFFSTAGE_R,
+								"facing": "left",
+								"mood": "NEUTRAL",
+								"sprites": KNIGHT,
+							},
+							"Morgan": {
+								"position": POSITION.OFFSTAGE_L,
+								"facing": "right",
+								"mood": "NEUTRAL",
+								"sprites": MORGAN,
+							},
+							"background": {
+								"xPosition": 0,
+								"yPosition": 0,
+								"hasBackground": false,
+								"isAnimated": false,
+								"animationqueue": null,
+							},
+							"openingline": 2,
+						}
+					}
+				},
+				{
+					"transition": {
+						"Morgan": {
+							"position": POSITION.STAGE_L,
+						},
+						"Harmon": {
+							"position": POSITION.STAGE_R,
+						},
+					}
+				},
+				["Harmon", "'Tis but a scratch! "],
 			],
 		}
 	}

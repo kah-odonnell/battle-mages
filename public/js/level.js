@@ -54,12 +54,14 @@
 	}
 	Level.prototype.setNPCs = function(npcData, map_id) {
 		this.maplist[map_id].npcs = [];
-		for (var i = npcData.length - 1; i >= 0; i--) {
-			var newNpcData = npcData[i];
-			if (newNpcData["type"] == "knight") {
-				newNpc = new NPCKnight(newNpcData, this.maplist[map_id]);
-				this.maplist[map_id].addChild(newNpc);
-				this.maplist[map_id].npcs.push(newNpc);
+		if (!(npcData === undefined)) {
+			for (var i = npcData.length - 1; i >= 0; i--) {
+				var newNpcData = npcData[i];
+				if (newNpcData["type"] == "knight") {
+					newNpc = new NPCKnight(newNpcData, this.maplist[map_id]);
+					this.maplist[map_id].addChild(newNpc);
+					this.maplist[map_id].npcs.push(newNpc);
+				}
 			}
 		}
 	}
@@ -129,7 +131,7 @@
 				g.oldMap = map;
 				g.removeChild(map);
 				g.currentmap = mapIndex;
-
+				console.log(mapIndex);
 				var newMap = g.maplist[mapIndex];
 				map = newMap;
 				map.x = 0;

@@ -36,7 +36,7 @@
 				for (var i = 0; i < map_id_list.length; i++) {
 					var map_i = map_id_list[i]
 					var entranceCoords = level.maplist[map_i].entrances[mapeventdict[key]];
-					if (!(entranceCoords === undefined) && (level.maplist[level.currentmap] != level.maplist[map_i])) {
+					if (!(entranceCoords === undefined) && (level.currentmap != map_i)) {
 						level.changeMaps(mapeventdict[key], map_i);
 					}
 				}
