@@ -1,12 +1,19 @@
 (function (window) {
 	var BattleStage = function(){
 		this.initialize();
-		this.PROMPT = {
+		this.DIRECTION_PANE_STATE = {
 			RPS: {value: 0},
 			TARGET: {value: 0},
 			EVOKE: {value: 0},
 			COUNTER: {value: 0},
 			INACTIVE: {value: 0},
+		}
+		this.ACTION_PANE_STATE = {
+			HAND: {value: 0},
+			COUNTER: {value: 0},
+			TARGET: {value: 0},
+			EVOKING: {value: 0},
+			RPS: {value: 0},
 		}
 		this.SPOT = {
 			UNIT_A: {value: 0},
@@ -16,7 +23,8 @@
 			MINION_C: {value: 0},
 			NONE: {value: 0},
 		}
-		this.CURRENTPROMPT = this.PROMPT.INACTIVE;
+		this.CURRENT_DIRECTION_STATE = this.DIRECTION_PANE_STATE.INACTIVE;
+		this.CURRENT_ACTION_STATE = this.ACTION_PANE_STATE.ACTION;
 	}
 	var t = BattleStage.prototype = new createjs.Container();
 	t.Container_initialize = t.initialize;
@@ -34,6 +42,7 @@
 		this.infoPaneButtons = new createjs.Container();
 		this.playerSwirlPane = new createjs.Container();
 		this.npcSwirlPane = new createjs.Container();
+		this.chainPane = new BattleChainGui();
 
 		this.actionPane.y = 240;
 		this.directionPane.y = 3;
@@ -50,6 +59,7 @@
 		this.actionPane.addChild(this.actionPaneButton);
 		this.addChild(this.playerSwirlPane);
 		this.addChild(this.npcSwirlPane);
+		this.addChild(this.chainPane);
 		this.addChild(this.directionPane);
 		this.addChild(this.curtainContainer);
 	}
@@ -145,43 +155,49 @@
 		}	
 		this.directionPane.addChild(paneHead);
 	}
-	BattleStage.prototype.newActionPane = function(type) {
-		if (type == "evoking") {
-			this.actionPane.removeChild(this.actionPaneActive);
-			this.actionPane.removeChild(this.actionPaneButton);
-			this.actionPaneActive = this.buildEvokePane();
-			this.actionPaneActive.y -= 36;
-			this.actionPane.addChild(this.actionPaneActive);
+	BattleStage.prototype.updateActionPane = function() {
+		if (this.CURRENT_ACTION_STATE == this.ACTION_PANE_STATE.EVOKING) this.newActionPaneEvoking();
+		else if (this.CURRENT_ACTION_STATE == this.ACTION_PANE_STATE.HAND) this.newActionPaneHand();
+		else if (this.CURRENT_ACTION_STATE == this.ACTION_PANE_STATE.TARGET) this.newActionPaneTarget();
+		else if (this.CURRENT_ACTION_STATE == this.ACTION_PANE_STATE.COUNTER) this.newActionPaneCounter();
+	}
+	BattleStage.prototype.newActionPaneEvoking = function() {
+		this.CURRENT_ACTION_STATE = this.ACTION_PANE_STATE.EVOKING;
+		this.actionPane.removeChild(this.actionPaneActive);
+		this.actionPane.removeChild(this.actionPaneButton);
+		this.actionPaneActive = this.buildEvokePane();
+		this.actionPaneActive.y -= 36;
+		this.actionPane.addChild(this.actionPaneActive);
 
-			if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Evoking")) {
-				var activeUnits = this.bc.getActiveUnits("blue", false);
-				if (activeUnits.length > 0) {
-					var continueButton = new BattleButton(true, "continue")
-					continueButton.x = 700;
-					continueButton.y = -18;
-					this.actionPaneButton = continueButton;
-					this.actionPane.addChild(this.actionPaneButton);
-				}
+		if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Evoking")) {
+			var activeUnits = this.bc.getActiveUnits("blue", false);
+			if (activeUnits.length > 0) {
+				var continueButton = new BattleButton(true, "continue")
+				continueButton.x = 700;
+				continueButton.y = -18;
+				this.actionPaneButton = continueButton;
+				this.actionPane.addChild(this.actionPaneButton);
 			}
 		}
-		if (type == "action") {
-			this.actionPane.removeChild(this.actionPaneActive);
-			this.actionPane.removeChild(this.actionPaneButton);
-			this.actionPaneActive = this.buildHandPane();
-			this.actionPaneActive.y -= 36;
-			this.actionPane.addChild(this.actionPaneActive);
+	}
+	BattleStage.prototype.newActionPaneHand = function() {
+		this.CURRENT_ACTION_STATE = this.ACTION_PANE_STATE.HAND;
+		this.actionPane.removeChild(this.actionPaneActive);
+		this.actionPane.removeChild(this.actionPaneButton);
+		this.actionPaneActive = this.buildHandPane();
+		this.actionPaneActive.y -= 36;
+		this.actionPane.addChild(this.actionPaneActive);
 
-			if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Action")) {
-				var activeUnits = this.bc.getActiveUnits("blue", false);
-				if ((activeUnits.length > 0) && (this.bc.chain.chain.length == 0)){
-					var continueButton = new BattleButton(true, "continue")
-					continueButton.x = 700;
-					continueButton.y = -18;
-					this.actionPaneButton = continueButton;
-					this.actionPane.addChild(this.actionPaneButton);
-				}
+		if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Action")) {
+			var activeUnits = this.bc.getActiveUnits("blue", false);
+			if ((activeUnits.length > 0) && (this.bc.chain.chain.length == 0) && !(this.bc.is_resolving)){
+				var continueButton = new BattleButton(true, "continue")
+				continueButton.x = 700;
+				continueButton.y = -18;
+				this.actionPaneButton = continueButton;
+				this.actionPane.addChild(this.actionPaneButton);
 			}
-		}
+		}		
 	}
 	//called by bc.awaitInputTarget() when some data requires player to select a target
 	//this function generates the buttons that:
@@ -193,6 +209,7 @@
 	//spec: this.bc.chain.TARGET.OPPONENT_ALL
 	//data: the data that must be finalized before it can be added to chain
 	BattleStage.prototype.newActionPaneTarget = function(memory_id, range, data) {
+		this.CURRENT_ACTION_STATE = this.ACTION_PANE_STATE.TARGET;
 		var action_id = data.action_unique_id;		
 		var action = this.bc.getTokenByUniqueId(action_id);
 		this.newDirectionPane("Select a Target for " + action.name, true);
@@ -203,6 +220,7 @@
 		this.actionPane.addChild(this.actionPaneActive);
 	}
 	BattleStage.prototype.newActionPaneCounter = function() {
+		this.CURRENT_ACTION_STATE = this.ACTION_PANE_STATE.COUNTER;
 		this.newDirectionPane("Activate a Counter", true);
 		this.actionPane.removeChild(this.actionPaneActive);
 		this.actionPane.removeChild(this.actionPaneButton);

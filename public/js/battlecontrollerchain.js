@@ -89,6 +89,8 @@
 				//this.short_term.action_id.memory[1] = 7SADK83MD02..
 			}
 		}
+		//if the action being evaluated has "response_to" : null, we must replace null
+		//with the data that triggered this action
 		if ("response_to" in data) {
 			var in_memory = false;
 			if (memory["response_to"]) in_memory = true;
@@ -102,6 +104,27 @@
 		this.addToChain(data)
 		return true;
 	}
+	//adds finalized data to the chain
+	//called by this.resolveChain() -> this.finalizeData()
+	//or BattleControllerAction.use()/.activate() -> this.finalizeData(),
+	//but only after the data has all the input it needs to process
+	BattleControllerChain.prototype.addToChain = function(data) {
+		this.chain.push(data);
+		this.processData(data);
+		var action = this.bc.getTokenByUniqueId(data.action_unique_id);
+		//determine whether we should wait for inputs
+		var red_l = this.getTriggeredCounters("red").length;
+		var blue_l = this.getTriggeredCounters("blue").length;
+		if (red_l < 1) this.bc.red_done = true;
+		else this.bc.red_done = false;
+		if (blue_l < 1) this.bc.blue_done = true;
+		else this.bc.blue_done = false;
+		//determine user of action
+		var owner = this.bc.getTokenByUniqueId(data.unit_unique_id).owner;
+		//put game in a awaiting-input FSM state
+		//input by the opponent of the owner of this unit is prioritized
+		this.bc.awaitInputCounter(owner);
+	}
 	//gives/takes mana from units, inflicts damage, etc.
 	//new token effects must be added to this function
 	BattleControllerChain.prototype.processData = function(data) {
@@ -110,7 +133,6 @@
 		var unit = this.bc.getTokenByUniqueId(unit_id);
 		var owner = unit.owner;
 		var action = this.bc.getTokenByUniqueId(action_id);
-		this.bc.removeFromHand(action);
 		var memory = this.short_term[action_id];
 		if ("change_mana" in data) {
 			unit.changeMana(data["change_mana"]);
@@ -151,29 +173,15 @@
 			//preping a counter should add the counter to a unit
 			//
 			if (is_prep_counter) {
-				unit.addCounter(action);
-				if (action.owner == "red") {
-					this.bc.gui.npcSwirl.addCounter();
-				} else {
-					this.bc.gui.playerSwirl.addCounter();
-				}
 				action.location = this.bc.LOCATION.UNIT;
 			}
 			if (is_use_action || is_activate_counter) {
-				unit.guiUnit.useToken(action);
 				action.location = this.bc.LOCATION.CHAIN;
 			}
 			if (is_resolve_action) {
-				unit.guiUnit.resolveToken(action);
 				action.location = this.bc.LOCATION.DECK;
 			}
 			if (is_activate_counter) {
-				if (action.owner == "red") {
-					this.bc.gui.npcSwirl.removeCounter();
-				} 
-				else if (action.owner == "blue"){
-					this.bc.gui.playerSwirl.removeCounter();
-				} else console.log(action.name + " has no owner");
 				unit.removeCounter(action);
 			}
 			if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {
@@ -181,6 +189,98 @@
 			}
 		}
 		this.bc.resetActionPane();
+	}
+	BattleControllerChain.prototype.prepareUse = function(action, unit) {
+		if (!(action.canUse(unit))) return false;
+		var chain_gui = this.bc.gui.chainPane;
+		this.bc.is_resolving = true;
+		this.bc.removeFromHand(action);
+		if (action.type != this.bc.TYPE.COUNTER) {
+			//token appears in front of unit
+			var appear = function() {
+				chain_gui.appearToken(action, unit);
+			}
+			//token moves to battlechaingui
+			var move = function() {
+				chain_gui.moveTokenToChain(action, unit);
+			}
+			//process data
+			var dodata = function() {
+				action.use(unit);
+			}
+			this.bc.addToTimeline(appear, 0);
+			this.bc.addToTimeline(dodata, 0);
+			this.bc.addToTimeline(move);
+		} else {
+			//counter prepare animation
+			//maybe a sigil under the players themselves?
+			unit.addCounter(action);
+			if (action.owner == "red") {
+				this.bc.gui.npcSwirl.addCounter();
+			} else {
+				this.bc.gui.playerSwirl.addCounter();
+			}
+			var prepareAnimation = function() {
+				var x;
+			}
+			//process data
+			var dodata = function() {
+				action.use(unit);
+			}
+			this.bc.addToTimeline(dodata, 0);
+		}
+	}
+	BattleControllerChain.prototype.prepareActivate = function(action, unit) {
+		if (!(action.canActivate(unit))) return false;
+		var chain_gui = this.bc.gui.chainPane;
+		this.bc.is_resolving = true;
+		this.bc.resetHand();
+		if (action.owner == "red") {
+			this.bc.gui.npcSwirl.removeCounter();
+		} 
+		else if (action.owner == "blue"){
+			this.bc.gui.playerSwirl.removeCounter();
+		} else console.log(action.name + " has no owner");
+		this.bc.resetHand();
+		//token appears in front of unit
+		var appear = function() {
+			chain_gui.appearToken(action, unit);
+		}
+		//token moves to battlechaingui
+		var move = function() {
+			chain_gui.moveTokenToChain(action, unit);
+		}
+		//activate animation
+		var animation = function() {
+			var x;
+		}
+		//process data
+		var dodata = function() {
+			action.activate(unit);
+		}
+		this.bc.addToTimeline(appear, 0);
+		this.bc.addToTimeline(move);
+		this.bc.addToTimeline(dodata);
+	}
+	BattleControllerChain.prototype.prepareResolve = function(action, unit) {
+		if (!(action.canResolve(unit))) return false;
+		var chain_gui = this.bc.gui.chainPane;
+		this.bc.is_resolving = true;
+		this.bc.resetHand();
+		//token says "resolved" on the chain
+		var changeChain = function() {
+			chain_gui.resolveTokenOnChain(action, unit);
+		}
+		//resolve animation
+		var animation = function() {
+			var x;
+		}
+		//process resolve data
+		var dodata = function() {
+			action.resolve(unit);
+		}
+		this.bc.addToTimeline(changeChain);
+		this.bc.addToTimeline(dodata);
 	}
 	BattleControllerChain.prototype.initialize = function() {
 		this.chain = [];
@@ -261,27 +361,6 @@
 	BattleControllerChain.prototype.cleanShortTermData = function() {
 		this.short_term = {};
 	}
-	//adds finalized data to the chain
-	//called by this.resolveChain() -> this.finalizeData()
-	//or BattleControllerAction.use()/.activate() -> this.finalizeData(),
-	//but only after the data has all the input it needs to process
-	BattleControllerChain.prototype.addToChain = function(data) {
-		this.chain.push(data);
-		this.processData(data);
-		var action = this.bc.getTokenByUniqueId(data.action_unique_id);
-		//determine whether we should wait for inputs
-		var red_l = this.getTriggeredCounters("red").length;
-		var blue_l = this.getTriggeredCounters("blue").length;
-		if (red_l < 1) this.bc.red_done = true;
-		else this.bc.red_done = false;
-		if (blue_l < 1) this.bc.blue_done = true;
-		else this.bc.blue_done = false;
-		//determine user of action
-		var owner = this.bc.getTokenByUniqueId(data.unit_unique_id).owner;
-		//put game in a awaiting-input FSM state
-		//input by the opponent of the owner of this unit is prioritized
-		this.bc.awaitInputCounter(owner);
-	}
 	//returns a list of dictionaries
 	//each dictionary represents the effect each Action Token currently has on the chain
 	//unresolved tokens return their getUseData() (from chain, after data is finalized)
@@ -314,7 +393,7 @@
 			}
 			if (!(mr_action.is_resolved) && (can_resolve)) {
 				can_clear = false;
-				mr_action.resolve(mr_unit);
+				this.prepareResolve(mr_action, mr_unit);
 				return true;
 			}
 			else if (!(mr_action.is_resolved) && !(mr_action.resolve_failed) && !(can_resolve) && !(is_prep_counter)) {
@@ -334,8 +413,12 @@
 			this.chain = [];
 			this.short_term = {};
 			this.bc.doActionStage();
+			var chain_gui = this.bc.gui.chainPane;
+			chain_gui.removeChain();
 		}
 	}
+	//makes red/blue unwilling to respond to actions on the chain
+	//called by red/blue dismissing the counter activation menu
 	BattleControllerChain.prototype.makeDone = function(red_blue) {
 		if (red_blue == "red") this.bc.red_done = true;
 		else if (red_blue == "blue") this.bc.blue_done = true;

@@ -72,7 +72,7 @@
 				for (var i = 0; i < units.length; i++) {
 					var unit = units[i];
 					if (action.canUse(unit)) {
-						action.use(unit);
+						bc.chain.prepareUse(action, unit);
 						return true;
 					} 
 				}
@@ -85,7 +85,7 @@
 				var j = Math.floor(Math.random() * (counters.length))
 				var counter = counters[j];
 				var unit = bc.chain.getCounterUnit("red", counter);
-				counter.activate(unit);
+				bc.chain.prepareActivate(counter, unit);
 			} else {
 				bc.red_done = true;
 				bc.awaitInputCounter("red");		

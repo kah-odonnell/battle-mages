@@ -38,6 +38,7 @@
 	BattleUnitGui.prototype.tick = function() {
 
 	}
+	/*
 	//useToken creates a mini token image infront of a unit
 	//the x position of this token depends on how many tokens are in use by this unit
 	BattleUnitGui.prototype.useToken = function(action) {
@@ -57,7 +58,9 @@
 		});
 		this.num_tokens_active++;
 		this.addChild(token);
-	}
+	} 
+	*/
+	/*
 	BattleUnitGui.prototype.resolveToken = function(action) {
 		var l = this.active_tokens.indexOf(action);
 		var old_img = this.active_token_imgs[l];
@@ -87,6 +90,7 @@
 			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
 		});
 	}
+	*/
 	BattleUnitGui.prototype.removeAllTokens = function() {
 		for (var i = 0; i < this.active_token_imgs.length; i++) {
 			this.removeChild(this.active_token_imgs[i]);

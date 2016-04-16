@@ -441,6 +441,11 @@
 				action.location == this.LOCATION.DECK;
 			}
 		}
+		this.gui.updateActionPane();
+	}
+	BattleController.prototype.resetHand = function() {
+		if (this.getBattleStage() == "Evoking") this.gui.newActionPaneEvoking();
+		else if (this.getBattleStage() == "Action") this.gui.newActionPaneHand();
 	}
 	BattleController.prototype.evoke = function(bcunit) {
 		if ((bcunit.owner == "blue") && (this.getBattleStage() == "Evoking")) {
@@ -603,13 +608,12 @@
 		targetSink();
 	}
 	BattleController.prototype.resetActionPane = function() {
-		this.updateStage();
 		if (this.getBattleStage() == "Evoking") {
-			this.gui.newActionPane("evoking");
+			this.gui.newActionPaneEvoking();
 			this.gui.newDirectionPane("Evoking Stage", false);
 		}
 		else if (this.getBattleStage() == "Action") {
-			this.gui.newActionPane("action");
+			this.gui.newActionPaneHand();
 			this.gui.newDirectionPane("Action Stage", false);
 		}
 	}
@@ -633,10 +637,10 @@
 	//to advance the game from the Evoking Stage
 	BattleController.prototype.doEvokingStage = function() {
 		if (this.turnPlayer == "blue") {
-			this.gui.newActionPane("evoking");
+			this.gui.newActionPaneEvoking();
 		} 
 		else if (this.turnPlayer == "red") {
-			this.gui.newActionPane("action");
+			this.gui.newActionPaneHand();
 			var bc = this;
 			var aiEvoke = function() {
 				bc.ai.doEvokingStageAI();
@@ -660,7 +664,7 @@
 	BattleController.prototype.doActionStage = function() {
 		if (this.chain.chain.length == 0) {
 			this.is_resolving = false;
-			this.gui.newActionPane("action");
+			this.gui.newActionPaneHand();
 			if (this.turnPlayer == "blue") {
 
 			} 
@@ -680,10 +684,10 @@
 			}
 			this.addToTimeline(resolveStep);
 		}
-		this.gui.newActionPane("action");
+		this.gui.newActionPaneHand();
 	}
 	BattleController.prototype.doEndStage = function() {
-		this.gui.newActionPane("action");
+		this.gui.newActionPaneHand();
 		this.gui.newDirectionPane("End Stage", true);
 		if (this.turnPlayer == "blue") {
 			this.blueHand = this.newBlueHand();
@@ -693,7 +697,7 @@
 				bc.setBattleStage(bc.STAGE.START);
 			}
 			this.addToTimeline(goToStartRed);
-			this.gui.newActionPane("action");
+			this.gui.newActionPaneHand();
 		}
 		else if (this.turnPlayer == "red") {
 			this.redHand = this.newRedHand();
@@ -703,7 +707,7 @@
 				bc.setBattleStage(bc.STAGE.START);
 			}
 			this.addToTimeline(goToStartBlue);
-			this.gui.newActionPane("action");
+			this.gui.newActionPaneHand();
 		} else {
 			console.log("doEndStage doesn't know whose turn it is")
 		}
@@ -713,41 +717,52 @@
 		this.red_done = true;
 		//if (string == "rock" || ...) {
 		this.turnPlayer = "blue";
-		this.gui.newActionPane("action");
+		this.gui.newActionPaneHand();
 		this.setBattleStage(this.STAGE.START);
 	}
-	BattleController.prototype.addToTimeline = function(func) {
-		this.master_timeline.push(func);
+	BattleController.prototype.addToTimeline = function(func, tick_delay) {
+		if (tick_delay === undefined) {
+			var item = {func: func, delay: 45};
+			this.master_timeline.push(item);
+		} else {
+			var item = {func: func, delay: tick_delay};
+			this.master_timeline.push(item);
+		}
 		this.tick2 = 0;
 	}
 	BattleController.prototype.tick = function() {
-		//Do footprints on an interval
 		this.updateStage();
-		if (this.tick2 < 45) {
-			this.tick2++;
-		}
-		else if (this.tick2 == 45) {
-			this.tick2 = 0;
-		} 
-		if ((this.master_interval < this.master_timeline.length) && (this.tick2 == 0)) {
-			this.master_timeline[this.master_interval]();
-			this.master_interval++;
-			//if victory conditions are met, the next item in timeline ends the battle
-			//a very sloppy way of ending the battle for now
-			if (this.getAllUnits("red", false).length < 1) {
-				var battleVictory = function() {
-					level.activebattle.initEndDialog();
-				}
-				this.master_timeline[this.master_interval] = battleVictory;
-			} 
-			if (this.getAllUnits("blue", false).length < 1) {
-				var color1 = "#FF0000"
-				$("#lose").css("color",color1).html("You aren't supposed to lose yet!");
-				var battleLoss = function() {
-					init();
-				}
-				this.master_timeline[this.master_interval] = battleLoss;
+		var item = this.master_timeline[this.master_interval];
+		if (item) {
+			var delay = item.delay;
+			var func = item.func;
+			if (this.tick2 < delay) {
+				this.tick2++;
 			}
+			else if (this.tick2 == delay) {
+				this.tick2 = 0;
+				if (this.master_interval < this.master_timeline.length) {
+					if (func) func();
+					else console.log("Something went wrong. BattleController attempted to call a non-function.")
+					this.master_interval++;
+					//if victory conditions are met, the next item in timeline ends the battle
+				}
+			}
+		}
+	}
+	BattleController.prototype.decideBattleOutcome = function() {
+		var red_defeated = (this.getAllUnits("red", false).length < 1);
+		var blue_defeated = (this.getAllUnits("blue", false).length < 1);
+		if (red_defeated && blue_defeated) {
+			console.log("Draw?!");
+		}
+		else if (red_defeated) {
+			level.activebattle.initEndDialog();
+		} 
+		else if (blue_defeated) {
+			var color1 = "#FF0000"
+			$("#lose").css("color",color1).html("You aren't supposed to lose yet!");
+			init()
 		}
 	}
 	window.BattleController = BattleController;

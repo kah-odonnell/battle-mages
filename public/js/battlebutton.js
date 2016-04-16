@@ -133,7 +133,7 @@
 						}
 					}
 					if (best_unit != null) {
-						action.use(best_unit);
+						g.bc.chain.prepareUse(action, best_unit);
 					} else {
 						action.location = g.bc.LOCATION.HAND;
 					}
@@ -194,7 +194,7 @@
 				level.activebattle.battleStage.newInfoPane("action_hand_info", action);
 				var unit_c = g.bc.chain.getCounterUnit("blue", action);
 				unit_c.guiUnit.markerOff();
-				action.activate(unit_c);
+				g.bc.chain.prepareActivate(action, unit_c);
 			});
 		}
 	}

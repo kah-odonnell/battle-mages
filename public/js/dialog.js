@@ -262,10 +262,12 @@
 	}
 	Dialog.prototype.setleft = function() {
 		this.speakertext.text = this.script[this.currentline][0];
+		this.speakertext.x = this.canvasBounds.width/2 - this.speakertext.getBounds().width/2;
 		createjs.Tween.get(this.arrow, {loop: false}).to({x:150},500,createjs.Ease.getPowInOut(4));
 	}
 	Dialog.prototype.setright = function() {
-		this.speakertext.text = this.script[this.currentline][0];w
+		this.speakertext.text = this.script[this.currentline][0];
+		this.speakertext.x = this.canvasBounds.width/2 - this.speakertext.getBounds().width/2;
 		createjs.Tween.get(this.arrow, {loop: false}).to({x:600},500,createjs.Ease.getPowInOut(4));
 	}
 	Dialog.prototype.setboth = function() {
