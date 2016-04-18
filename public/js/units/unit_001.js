@@ -16,7 +16,22 @@
 		this.base_stat_attack = 90;
 		this.base_stat_defense = 95;
 		this.base_stat_luck = 60;
-		this.unit_img = "renmei";
+		var scale = 2;
+		var sprite_data = new createjs.SpriteSheet({
+			"images": [loader.getResult("shiren_sprite")],
+			"frames": {
+				"width": 50*scale, 
+				"height": 60*scale, 
+				"count": 14, 
+				"regX": 28*scale, 
+				"regY": 60*scale
+			},
+			"animations": {
+				"idle": [1, 11, true, .25], 
+			},
+			"framerate": 10
+		});
+		var sprite = new createjs.Sprite(sprite_data);
 		this.token_img = "token_renmei";
 
 		this.mana = 0;
@@ -34,7 +49,7 @@
 
 		this.is_minion = false;
 		this.is_active = false;
-		this.guiUnit = new BattleUnitGui(this.unit_img, player, this);
+		this.guiUnit = new BattleUnitGui(sprite, player, this);
 	}
 	window.Unit001 = Unit001;
 } (window));

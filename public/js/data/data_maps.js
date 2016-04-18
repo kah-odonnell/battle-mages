@@ -132,25 +132,25 @@
 					"x": 9, 
 					"y": 13, 
 					"isDoor": false,
-					"name": "Forest - South"
+					"name": "Forest, South"
 				},
 				"b": {
 					"x": 10, 
 					"y": 13, 
 					"isDoor": false,
-					"name": "Forest - South"
+					"name": "Forest, South"
 				},
 				"c": {
 					"x": 9, 
 					"y": 12, 
 					"isDoor": false,
-					"name": "Forest - South"
+					"name": "Forest, South"
 				},
 				"d": {
 					"x": 10, 
 					"y": 12, 
 					"isDoor": false,
-					"name": "Forest - South"
+					"name": "Forest, South"
 				},
 			}
 		},
@@ -223,25 +223,25 @@
 					"x": 9, 
 					"y": 1, 
 					"isDoor": false,
-					"name": "Forest - North"
+					"name": "Forest, North"
 				},
 				"b": {
 					"x": 9, 
 					"y": 0, 
 					"isDoor": false,
-					"name": "Forest - North"
+					"name": "Forest, North"
 				},
 				"c": {
 					"x": 10, 
 					"y": 1, 
 					"isDoor": false,
-					"name": "Forest - North"
+					"name": "Forest, North"
 				},
 				"d": {
 					"x": 10, 
 					"y": 0, 
 					"isDoor": false,
-					"name": "Forest - North"
+					"name": "Forest, North"
 				},
 			}
 		},

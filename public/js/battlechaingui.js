@@ -27,7 +27,7 @@
 		token.regX = t_bounds.width/2;
 		token.regY = t_bounds.height/2;
 		token.x = x;
-		token.y = y - guiUnit.regY + guiUnit.image.getBounds().height/2 - 5;
+		token.y = y - guiUnit.sprite.getBounds().height/2;
 		if (unit.owner == "red") {
 			token.scaleX = -1;
 			token.x -= 40;

@@ -87,7 +87,7 @@
 				this.on("mousedown", function(evt) {
 					//remove the bitmap represented by this class, and add it to battleStage
 					//that way, we can use the native mouseX and mouseY values, without
-					//having to translate into a different set of coordinates. thats like, hard.
+					//having to translate into a different set of coordinates. 
 					evt.currentTarget.removeChild(this.buttonChild);
 					level.activebattle.battleStage.addChild(this.buttonChild);	
 					var buttonBounds = evt.currentTarget.buttonChild.getBounds()

@@ -1,13 +1,12 @@
 (function (window) {
-	var BattleUnitGui = function(img_name, owner, bcunit) {
-		this.initialize(img_name, owner, bcunit);
+	var BattleUnitGui = function(sprite, owner, bcunit) {
+		this.initialize(sprite, owner, bcunit);
 	}
 	var bu = BattleUnitGui.prototype = new createjs.Container();
 	bu.Container_initialize = bu.initialize;
-	bu.initialize = function(img_name, owner, bcunit) {
+	bu.initialize = function(sprite, owner, bcunit) {
 		this.Container_initialize();
 		this.bcunit = bcunit;
-		this.img_name = img_name;
 		this.num_tokens_active = 0;
 		this.active_tokens = [];
 		this.active_token_imgs = [];
@@ -15,13 +14,12 @@
 		this.marker_on = false;
 		this.marker_id = 0;
 
-		this.image = new createjs.Bitmap(loader.getResult(img_name));
-		this.addChild(this.image);
-		this.image.on("click", function(event) {
+		this.sprite = sprite;
+		this.sprite.gotoAndPlay("idle");
+		this.addChild(this.sprite);
+		this.sprite.on("mouseover", function(event) {
 			level.activebattle.battleStage.newInfoPane("unit_stats", bcunit)
 		});
-		this.regX = this.image.getBounds().width/2;
-		this.regY = this.image.getBounds().height;
 
 		this.status_pane = new createjs.Container();
 		this.healthbar = new createjs.Bitmap(loader.getResult("healthbar"));
@@ -30,6 +28,8 @@
 
 		this.status_pane.addChild(this.healthbar);
 		this.status_pane.addChild(this.healthempty);
+		this.status_pane.x = 0 - 50;
+		this.status_pane.y = 0 - 100;
 		this.addChild(this.status_pane);
 
 		this.owner = owner;
@@ -38,59 +38,6 @@
 	BattleUnitGui.prototype.tick = function() {
 
 	}
-	/*
-	//useToken creates a mini token image infront of a unit
-	//the x position of this token depends on how many tokens are in use by this unit
-	BattleUnitGui.prototype.useToken = function(action) {
-		var token = new createjs.Bitmap(loader.getResult(action.mini_img));
-		var bounds = token.getBounds();
-		this.active_tokens.push(action);
-		this.active_token_imgs.push(token);
-		token.x = 75;
-		token.y = this.image.getBounds().height/2 - bounds.height/2;
-		token.x += this.num_tokens_active * 10;
-		if (this.owner == "red") {
-			token.x += bounds.width;
-			token.scaleX = -1;
-		}
-		token.on("mouseover", function(evt) {
-			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
-		});
-		this.num_tokens_active++;
-		this.addChild(token);
-	} 
-	*/
-	/*
-	BattleUnitGui.prototype.resolveToken = function(action) {
-		var l = this.active_tokens.indexOf(action);
-		var old_img = this.active_token_imgs[l];
-		var token = this.active_tokens[l];
-		var coords = {x: old_img.x, y: old_img.y};
-		this.active_tokens.slice(l, 1);
-		this.active_token_imgs.slice(l, 1);
-		this.removeChild(old_img);
-		var imagename = token.mini_img;
-		var image = new createjs.Bitmap(loader.getResult(imagename));
-		var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
-		image.filters = [
-		    new createjs.ColorMatrixFilter(matrix)
-		];
-		var bounds = image.getBounds();
-		image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
-		this.active_token_imgs.push(image);
-		this.active_tokens.push(token);
-		this.addChild(image);
-		image.x = coords.x;
-		image.y = coords.y;
-		if (this.owner == "red") {
-			image.x += bounds.width;
-			image.scaleX = -1;
-		}
-		image.on("mouseover", function(evt) {
-			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
-		});
-	}
-	*/
 	BattleUnitGui.prototype.removeAllTokens = function() {
 		for (var i = 0; i < this.active_token_imgs.length; i++) {
 			this.removeChild(this.active_token_imgs[i]);
@@ -114,40 +61,31 @@
 		this.status_pane.addChild(this.manabox);
 	}
 	BattleUnitGui.prototype.greyOut = function() {
-		this.image.uncache();
-		this.removeChild(this.image);
-		var image = new createjs.Bitmap(loader.getResult(this.img_name));
+		this.sprite.uncache();
+		this.sprite.stop();
+		var image = this.sprite;
 		var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
 		image.filters = [
 		    new createjs.ColorMatrixFilter(matrix)
 		];
 		var bounds = image.getBounds();
-		image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
-		this.image = image;
-		this.addChildAt(this.image, 0);
+		image.cache(bounds.x, bounds.y, bounds.width, bounds.height);
+		this.sprite = image;
 	}
 	BattleUnitGui.prototype.highlight = function() {
-		this.image.uncache();
-		this.removeChild(this.image);
-		var image = new createjs.Bitmap(loader.getResult(this.img_name));
+		this.sprite.uncache();
+		var image = this.sprite;
 		var matrix = new createjs.ColorMatrix().adjustSaturation(0);
 		image.filters = [
 		    new createjs.ColorMatrixFilter(matrix)
 		];
 		var bounds = image.getBounds();
 		image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
-		this.image = image;
-		this.addChildAt(this.image, 0);
+		this.sprite = image;
 	}
 	BattleUnitGui.prototype.unGrey = function() {
-		this.removeChild(this.image);
-		var image = new createjs.Bitmap(loader.getResult(this.img_name));
-		this.image = image;
-		var g = this;
-		this.image.on("click", function(event) {
-			level.activebattle.battleStage.newInfoPane("unit_stats", g.bcunit)
-		});
-		this.addChildAt(this.image, 0);
+		this.sprite.uncache();
+		this.sprite.play();
 	}
 	BattleUnitGui.prototype.markerOn = function() {
 		if (!this.marker_on) {
@@ -163,16 +101,16 @@
 			}		
 			this.marker = marker_container;	
 			var marker_b = this.marker.getBounds();
-			var image_b = this.image.getBounds();
-			this.marker.x = this.image.x + image_b.width/2 - marker_b.width/2 + 5;
-			this.marker.y = this.image.y + image_b.height + 25; 
+			this.marker.regX = marker_b.width/2;
+			this.marker.x = this.sprite.x;
+			this.marker.y = this.sprite.y + 25; 
 			this.marker.alpha = 0;
-			var g = this;
-			var new_y = g.image.y + image_b.height - 25;
+			var ui_unit = this;
+			var new_y = ui_unit.sprite.y - 25;
 			createjs.Tween.get(this.marker).to({alpha:1},300);
 			createjs.Tween.get(this.marker).to({y:new_y},300).call(
 				function() {
-					g.markerUp(id)
+					ui_unit.markerUp(id)
 				}
 			);
 			this.addChild(this.marker);
@@ -186,25 +124,23 @@
 
 	}
 	BattleUnitGui.prototype.markerUp = function(id) {
+		var ui_unit = this;
 		if (this.marker_on && (id == this.marker_id)) {
-			var image_b = this.image.getBounds();
-			var g = this;
-			var new_y = g.image.y + image_b.height;
+			var new_y = this.sprite.y + 15;
 			createjs.Tween.get(this.marker).to({y:new_y},500).call(
 				function() {
-					g.markerDown(id)
+					ui_unit.markerDown(id)
 				}
 			);
 		}
 	}
 	BattleUnitGui.prototype.markerDown = function(id) {
-		if (this.marker_on && (id == this.marker_id)) {
-			var image_b = this.image.getBounds();
-			var g = this;
-			var new_y = g.image.y + image_b.height - 25;
+		var ui_unit = this;
+		if (ui_unit.marker_on && (id == ui_unit.marker_id)) {
+			var new_y = this.sprite.y - 15;
 			createjs.Tween.get(this.marker).to({y:new_y},500).call(
 				function() {
-					g.markerUp(id)
+					ui_unit.markerUp(id)
 				}
 			);
 		}

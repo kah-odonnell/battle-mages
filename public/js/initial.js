@@ -156,6 +156,7 @@ function init() {
 		{src:"../imgs/battles/gui/scissorsbutton.png", id:"scissorsbutton"},
 		{src:"../imgs/battles/gui/cancel.png", id:"cancelbutton"},
 		//~~~ battle units and unit tokens
+		{src:"../imgs/battles/units/shiren_sprite.png", id:"shiren_sprite"},
 		{src:"../imgs/battles/units/renmei.png", id:"renmei"},
 		{src:"../imgs/battles/units/token_renmei.png", id:"token_renmei"},
 		{src:"../imgs/battles/units/ajai.png", id:"ajai"},
