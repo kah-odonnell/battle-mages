@@ -1,5 +1,5 @@
 var player1library = {
-	units: ["001","001"],
+	units: ["001","003"],
 	actions: [
 		"ILL001","ILL001","ILL003","ILL002","ILL004",
 		"ILL001","ILL003","ILL002","ILL002","ILL004",
@@ -8,7 +8,7 @@ var player1library = {
 }
 
 var player2library = {
-	units: ["001","001"],
+	units: ["001","003"],
 	actions: [
 		"ILL001","ILL001","ILL003","ILL002","ILL004",
 		"ILL001","ILL003","ILL002","ILL002","ILL004",

@@ -80,6 +80,14 @@
 		this.master_interval = 0;
 		this.tick2 = 0;
 	}
+	BattleController.prototype.endBattle = function() {
+		var units = this.getAllUnits("all", true);
+		for (var i = 0; i < units.length; i++) {
+			units[i].guiUnit.removeChild(units[i].guiUnit.sprite);
+			units[i].guiUnit.sprite = null;
+			units[i].guiUnit = null;
+		}
+	}
 	//update health/mana bars
 	BattleController.prototype.updateStage = function() {
 		var units = this.getAllUnits("all", true);
@@ -221,6 +229,7 @@
 			var unit;
 			if ("001" == unit_id_list[i]) unit = new Unit001(this, owner);
 			else if ("002" == unit_id_list[i]) unit = new Unit002(this, owner);
+			else if ("003" == unit_id_list[i]) unit = new Unit003(this, owner);
 			units.push(unit);
 		}
 		return units;

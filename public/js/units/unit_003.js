@@ -1,38 +1,38 @@
 (function (window) {
-	var Unit001 = function(battleController, player) {
+	var Unit003 = function(battleController, player) {
 		this.bc = battleController;
 		this.initialize(player);
 	};
-	var u = Unit001.prototype = new BattleControllerUnit();
+	var u = Unit003.prototype = new BattleControllerUnit();
 	u.initialize = function(player) {
 		this.owner = player;
 		this.unique_id = null;
 		this.catalog_id = "001";
-		this.name = "Shiren";
-		this.title = "the Veiled";
+		this.name = "Pyraprimsa";
+		this.title = "";
 		this.attributes = [this.bc.ATTRIBUTE.ILLUSIONIST];
 		this.level = 5;
-		this.base_stat_health = 60;
-		this.base_stat_attack = 90;
-		this.base_stat_defense = 95;
+		this.base_stat_health = 90;
+		this.base_stat_attack = 50;
+		this.base_stat_defense = 120;
 		this.base_stat_luck = 60;
 		var scale = 2;
 		var sprite_data = new createjs.SpriteSheet({
-			"images": [loader.getResult("shiren_sprite")],
+			"images": [loader.getResult("palaprisma_sprite")],
 			"frames": {
-				"width": 50*scale, 
+				"width": 60*scale, 
 				"height": 60*scale, 
-				"count": 14, 
-				"regX": 28*scale, 
+				"count": 32, 
+				"regX": 35*scale, 
 				"regY": 60*scale
 			},
 			"animations": {
-				"idle": [1, 11, true, .25], 
+				"idle": [0, 29, true, .5], 
 			},
-			"framerate": 10
+			"framerate": 24
 		});
 		var sprite = new createjs.Sprite(sprite_data);
-		this.token_img = "token_renmei";
+		this.token_img = "token_palaprisma";
 
 		this.mana = 0;
 		this.counters = [];
@@ -51,5 +51,5 @@
 		this.is_active = false;
 		this.guiUnit = new BattleUnitGui(sprite, player, this);
 	}
-	window.Unit001 = Unit001;
+	window.Unit003 = Unit003;
 } (window));

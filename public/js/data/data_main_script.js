@@ -7,13 +7,13 @@ var data_script = {
 					"position": "offstage_r",
 					"facing": "left",
 					"spritesheet": "knight",
-				}
+				},
 				"PlayerF": {
 					"position": "offstage_l",
 					"facing": "left",
 					"spritesheet": "player_f",
-				}
-			}
+				},
+			},
 			"script": [
 				{"transition": 
 					{"PlayerF": 

@@ -155,12 +155,17 @@ function init() {
 		{src:"../imgs/battles/gui/rockbutton.png", id:"rockbutton"},
 		{src:"../imgs/battles/gui/scissorsbutton.png", id:"scissorsbutton"},
 		{src:"../imgs/battles/gui/cancel.png", id:"cancelbutton"},
+		{src:"../imgs/battles/gui/health.png", id:"health_icon"},
+		{src:"../imgs/battles/gui/attack.png", id:"attack_icon"},
+		{src:"../imgs/battles/gui/defense.png", id:"defense_icon"},
 		//~~~ battle units and unit tokens
 		{src:"../imgs/battles/units/shiren_sprite.png", id:"shiren_sprite"},
 		{src:"../imgs/battles/units/renmei.png", id:"renmei"},
 		{src:"../imgs/battles/units/token_renmei.png", id:"token_renmei"},
 		{src:"../imgs/battles/units/ajai.png", id:"ajai"},
 		{src:"../imgs/battles/units/token_ajai.png", id:"token_ajai"},
+		{src:"../imgs/battles/units/palaprisma_sprite.png", id:"palaprisma_sprite"},
+		{src:"../imgs/battles/units/token_palaprisma.png", id:"token_palaprisma"},
 		//~~~ battle action tokens, big and small
 		{src:"../imgs/battles/actions/neurolyse.png", id:"neurolyse"},
 		{src:"../imgs/battles/actions/small_neurolyse.png", id:"small_neurolyse"},

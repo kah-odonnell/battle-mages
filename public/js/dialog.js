@@ -119,7 +119,7 @@
 				if (createjs.Ticker.getTicks() % this.textspeed == 0) {
 					var currentcharacter = this.script[this.currentline][1][this.currentcharacter-1]
 					var punctuation = [",", ".", "?", ";", ":", "!"];
-					var isPunctuation = punctuation.contains(currentcharacter);
+					var isPunctuation = (punctuation.indexOf(currentcharacter) != -1);
 					var shouldspeak = (!(isPunctuation) && !(this.speechpause))
 					if (shouldspeak) this.updateText();
 					else {

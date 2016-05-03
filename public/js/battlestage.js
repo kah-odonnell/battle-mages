@@ -29,6 +29,7 @@
 	var t = BattleStage.prototype = new createjs.Container();
 	t.Container_initialize = t.initialize;
 	t.initialize = function(){
+		this.Container_initialize();
 		this.curtainContainer = new createjs.Container();
 		this.directionPane = new createjs.Container();
 		this.actionPane = new createjs.Container();
@@ -262,8 +263,7 @@
 		var masterContainer = new createjs.Container();
 		var uniticon = new BattleButton(true, "unit_token", unit);
 		uniticon.x += 4;
-		uniticon.y += 4;
-		masterContainer.addChild(uniticon);
+		uniticon.y -= 8;
 
 		var thumbnailbox = new createjs.Container();
 		// Create the title text to be displayed
@@ -283,7 +283,22 @@
 		thumbnailbox.addChild(nametext);
 		thumbnailbox.addChild(attributetext);
 		thumbnailbox.y = (uniticon.getBounds().height)/2 - thumbnailbox.getBounds().height/2
+		thumbnailbox.addChild(uniticon);
+		thumbnailbox.x = canvas.width/2 - canvas.width/5;
 		masterContainer.addChild(thumbnailbox);
+
+		var health = new BattleStat(unit, "health");
+		var attack = new BattleStat(unit, "attack");
+		var defense = new BattleStat(unit, "defense");
+		var statbox = new createjs.Container();
+		attack.x = health.x + health.getBounds().width;
+		defense.x = attack.x + attack.getBounds().width;
+		statbox.addChild(health);
+		statbox.addChild(attack);
+		statbox.addChild(defense);
+		statbox.x = canvas.width/2 - statbox.getBounds().width/2;
+		statbox.y = thumbnailbox.y + thumbnailbox.getBounds().height;
+		masterContainer.addChild(statbox);
 
 		return masterContainer;
 	}
@@ -291,8 +306,7 @@
 		var masterContainer = new createjs.Container();
 		var actionicon = new BattleButton(true, "action_info", action);
 		actionicon.x += 4;
-		actionicon.y += 4;
-		masterContainer.addChild(actionicon);
+		actionicon.y -= 8;
 
 		var thumbnailbox = new createjs.Container();
 		var message = action.name;
@@ -315,7 +329,7 @@
 		thumbnailbox.addChild(nametext);
 		thumbnailbox.addChild(attributetext);
 		thumbnailbox.addChild(manabox);
-		thumbnailbox.x = 0;
+		thumbnailbox.x = canvas.width/2 - canvas.width/5;
 		//if this token doesn't have mana, we must remove the y offset
 		if (manabox.getBounds() != null) {
 			thumbnailbox.y = (
@@ -329,6 +343,7 @@
 				thumbnailbox.getBounds().height/2
 			);			
 		}
+		thumbnailbox.addChild(actionicon);
 		//centering objects in a pane. offset should be set at xOffset
 		//text to be centered - desc;
 		var desc = action.description;
@@ -399,6 +414,7 @@
 		}
 		var bounds1 = desctext1.getBounds();
 		var bounds2 = desctext2.getBounds();
+		var bounds3 = desctext3.getBounds();
 		if (bounds1 != null) {
 			desctext2.y = desctext1.y + desctext1.getBounds().height + 4;
 		}
@@ -407,11 +423,11 @@
 		}
 
 		if (manabox.getBounds() != null) {
-			descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 8;	
+			descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 7;	
 		} else {
-			descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 22 + 8;
+			descbox.y = thumbnailbox.y + thumbnailbox.getBounds().height + 8;
 		}
-
+		descbox.x = canvas.width/2 - descbox.getBounds().width/2;
 		masterContainer.addChild(thumbnailbox);
 		masterContainer.addChild(descbox);
 

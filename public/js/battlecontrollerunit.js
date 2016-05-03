@@ -52,6 +52,22 @@
 		var luck = Math.floor(2*this.base_stat_luck*(this.level/100)) + 5;
 		return luck;
 	}
+	BattleControllerUnit.prototype.getCurrentHealth = function() {
+		var health = Math.floor(2*this.base_stat_health*(this.level/100)) + this.level + 10;
+		return health;
+	}
+	BattleControllerUnit.prototype.getCurrentAttack = function() {
+		var attack = this.raw_attack*(1+.5*this.stage_attack);
+		return attack;
+	}
+	BattleControllerUnit.prototype.getCurrentDefense = function() {
+		var defense = this.raw_defense*(1+.5*this.stage_defense);
+		return defense;
+	}
+	BattleControllerUnit.prototype.getCurrentLuck = function() {
+		var luck = Math.floor(2*this.base_stat_luck*(this.level/100)) + 5;
+		return luck;
+	}
 	BattleControllerUnit.prototype.createUniqueId = function() {
 		var id = "";
 		var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
