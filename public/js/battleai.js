@@ -12,15 +12,17 @@
 		this.evokeRandom = function() {
 			var units = bc.getAllUnits("red", false);
 			var active_units = bc.getActiveUnits("red", false);
-			var numtoadd = Math.floor(Math.random() * units.length);
+			var num_to_add = Math.floor(Math.random() * units.length);
 			var canEvoke = true;
 			for (var i = 0; i < active_units.length; i++) {
-				if (units[numtoadd] == active_units[i]) {
+				if (units[num_to_add] == active_units[i]) {
 					canEvoke = false;
 				}
 			}
+			var locs = bc.getAvailableLocations("red");
+			var location_to_summon = Math.floor(Math.random() * locs.length);
 			if (canEvoke) {
-				bc.evoke(units[numtoadd]);
+				bc.chain.prepareSummon(units[num_to_add], locs[location_to_summon]);
 			} else {
 				this.evokeRandom();
 			}

@@ -99,7 +99,7 @@ function init() {
 		//~~~ character sprites 
 		{src:"../imgs/sprites/knight_92.png", id:"knight"},
 		{src:"../imgs/sprites/audrey_92.png", id:"audrey"},
-		{src:"../imgs/sprites/audrey_p_92.png", id:"audreyparserrokah"},
+		{src:"../imgs/sprites/audrey_92.png", id:"audreyparserrokah"},
 		//~~~ temple tiles
 		{src:"../imgs/tiles/spaceTileLarge.png", id:"spaceTile"},
 		{src:"../imgs/tiles/blackTile.png", id:"blackTile"},
@@ -160,12 +160,14 @@ function init() {
 		{src:"../imgs/battles/gui/defense.png", id:"defense_icon"},
 		//~~~ battle units and unit tokens
 		{src:"../imgs/battles/units/shiren_sprite.png", id:"shiren_sprite"},
-		{src:"../imgs/battles/units/renmei.png", id:"renmei"},
-		{src:"../imgs/battles/units/token_renmei.png", id:"token_renmei"},
+		{src:"../imgs/battles/units/shiren.png", id:"shiren"},
+		{src:"../imgs/battles/units/token_shiren.png", id:"token_shiren"},
+		{src:"../imgs/battles/units/small_shiren.png", id:"small_shiren"},
 		{src:"../imgs/battles/units/ajai.png", id:"ajai"},
 		{src:"../imgs/battles/units/token_ajai.png", id:"token_ajai"},
-		{src:"../imgs/battles/units/palaprisma_sprite.png", id:"palaprisma_sprite"},
-		{src:"../imgs/battles/units/token_palaprisma.png", id:"token_palaprisma"},
+		{src:"../imgs/battles/units/pyraprisma_sprite.png", id:"pyraprisma_sprite"},
+		{src:"../imgs/battles/units/token_pyraprisma.png", id:"token_pyraprisma"},
+		{src:"../imgs/battles/units/small_pyraprisma.png", id:"small_pyraprisma"},
 		//~~~ battle action tokens, big and small
 		{src:"../imgs/battles/actions/neurolyse.png", id:"neurolyse"},
 		{src:"../imgs/battles/actions/small_neurolyse.png", id:"small_neurolyse"},
@@ -180,7 +182,7 @@ function init() {
 		{src:"../imgs/battles/actions/amplifyattack.png", id:"amplifyattack"},
 		{src:"../imgs/battles/actions/small_amplifyattack.png", id:"small_amplifyattack"},
 		//~~~ battle backgrounds
-		{src:"../imgs/battles/backgrounds/battlebkgd1.png", id:"battlebkgd1"},
+		{src:"../imgs/battles/backgrounds/battlebkgd2.png", id:"battlebkgd1"},
 	];
 
 	loader = new createjs.LoadQueue(false);
@@ -188,7 +190,6 @@ function init() {
 	loader.on("progress", handleProgress);
 	loader.on("complete", handleComplete);
 	loader.loadManifest(manifest);
-	
 }
 
 function handleProgress(event) {

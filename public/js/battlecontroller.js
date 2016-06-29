@@ -30,6 +30,7 @@
 			ATTACK: {string: "Attack"},
 			SKILL: {string: "Skill"},
 			COUNTER: {string: "Counter"},
+			UNIT: {string: "Unit"},
 		}
 		this.LOCATION = {
 			DECK: {string: "Deck"},
@@ -79,6 +80,8 @@
 		this.master_timeline = [];
 		this.master_interval = 0;
 		this.tick2 = 0;
+
+		this.ghosts = [];
 	}
 	BattleController.prototype.endBattle = function() {
 		var units = this.getAllUnits("all", true);
@@ -205,7 +208,7 @@
 			this.doStartStage();
 		}
 		else if (stage == this.STAGE.EVOKING) {
-			this.gui.newDirectionPane("Evoking Stage", true);
+			this.gui.newDirectionPane("Summoning Stage", true);
 			this.doEvokingStage();
 		}
 		else if (stage == this.STAGE.ACTION) {
@@ -329,6 +332,44 @@
 			}
 		}
 		return units;
+	}
+	BattleController.prototype.getAvailableLocations = function(owner) {
+		var locs = [];
+		if (owner == "blue") {
+			if (this.gui.LOCATION.A.BLUE.occupied == false) {
+				locs.push(this.gui.LOCATION.A);
+			}
+			if (this.gui.LOCATION.B.BLUE.occupied == false) {
+				locs.push(this.gui.LOCATION.B);
+			}
+			if (this.gui.LOCATION.C.BLUE.occupied == false) {
+				locs.push(this.gui.LOCATION.C);
+			}
+			if (this.gui.LOCATION.D.BLUE.occupied == false) {
+				locs.push(this.gui.LOCATION.D);
+			}
+			if (this.gui.LOCATION.E.BLUE.occupied == false) {
+				locs.push(this.gui.LOCATION.E);
+			}
+		}
+		if (owner == "red") {
+			if (this.gui.LOCATION.A.RED.occupied == false) {
+				locs.push(this.gui.LOCATION.A);
+			}
+			if (this.gui.LOCATION.B.RED.occupied == false) {
+				locs.push(this.gui.LOCATION.B);
+			}
+			if (this.gui.LOCATION.C.RED.occupied == false) {
+				locs.push(this.gui.LOCATION.C);
+			}
+			if (this.gui.LOCATION.D.RED.occupied == false) {
+				locs.push(this.gui.LOCATION.D);
+			}
+			if (this.gui.LOCATION.E.RED.occupied == false) {
+				locs.push(this.gui.LOCATION.E);
+			}
+		}
+		return locs;
 	}
 	//remove the tokens that appear in front of BattleUnitGuis
 	//after all tokens on the chain have resolved
@@ -619,7 +660,7 @@
 	BattleController.prototype.resetActionPane = function() {
 		if (this.getBattleStage() == "Evoking") {
 			this.gui.newActionPaneEvoking();
-			this.gui.newDirectionPane("Evoking Stage", false);
+			this.gui.newDirectionPane("Summoning Stage", false);
 		}
 		else if (this.getBattleStage() == "Action") {
 			this.gui.newActionPaneHand();
@@ -645,16 +686,26 @@
 	//it is the responsibility of BattleButton (blue's turn) or BattleAI
 	//to advance the game from the Evoking Stage
 	BattleController.prototype.doEvokingStage = function() {
-		if (this.turnPlayer == "blue") {
-			this.gui.newActionPaneEvoking();
-		} 
-		else if (this.turnPlayer == "red") {
-			this.gui.newActionPaneHand();
-			var bc = this;
-			var aiEvoke = function() {
-				bc.ai.doEvokingStageAI();
+		if (this.chain.chain.length == 0) {
+			this.is_resolving = false;
+			if (this.turnPlayer == "blue") {
+				this.gui.newActionPaneEvoking();
+			} 
+			else if (this.turnPlayer == "red") {
+				this.gui.newActionPaneHand();
+				var bc = this;
+				var aiEvoke = function() {
+					bc.ai.doEvokingStageAI();
+				}
+				this.addToTimeline(aiEvoke);
 			}
-			this.addToTimeline(aiEvoke);
+		} else {
+			this.is_resolving = true;
+			var bc = this;
+			var resolveStep = function() {
+				bc.chain.resolveChain();
+			}
+			this.addToTimeline(resolveStep);
 		}
 	}
 	//this function is called when battlestage is set to ACTION

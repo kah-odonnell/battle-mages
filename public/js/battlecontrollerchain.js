@@ -20,6 +20,7 @@
 			PREPARE: {string: "PREPARE"},
 			ACTIVATE: {string: "ACTIVATE"},
 			TRIGGER: {string: "TRIGGER"},
+			SUMMON: {string: "SUMMON"},
 		}
 		this.bc = bc;
 		this.initialize();
@@ -28,8 +29,10 @@
 	BattleControllerChain.prototype.isPossible = function(data) {
 		var unit = this.bc.getTokenByUniqueId(data.unit_unique_id);
 		var action = this.bc.getTokenByUniqueId(data.action_unique_id);
-		if (unit.attributes.indexOf(action.attribute) == -1) {
-			return false;
+		if (action != null) {
+			if (unit.attributes.indexOf(action.attribute) == -1) {
+				return false;
+			}
 		}
 		if ("change_mana" in data) {
 			var effective_cost = data["change_mana"]
@@ -47,6 +50,11 @@
 			var d = action.getTriggerData(unit);
 			var triggering_datasets = this.getTriggeringDatasets(d);
 			if (triggering_datasets.length == 0) {
+				return false;
+			}
+		}
+		if ("summon_location" in data) {
+			if (this.bc.getAvailableLocations(unit.owner).length < 1) {
 				return false;
 			}
 		}
@@ -170,25 +178,74 @@
 			var is_resolve_action = (
 				(data.action_effect_type == this.EFFECT.RESOLVE)
 			);
-			//preping a counter should add the counter to a unit
-			//
-			if (is_prep_counter) {
-				action.location = this.bc.LOCATION.UNIT;
-			}
-			if (is_use_action || is_activate_counter) {
-				action.location = this.bc.LOCATION.CHAIN;
-			}
-			if (is_resolve_action) {
-				action.location = this.bc.LOCATION.DECK;
-			}
-			if (is_activate_counter) {
-				unit.removeCounter(action);
-			}
-			if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {
+			var is_summon_success_unit = (
+				(data.action_effect_type == this.EFFECT.RESOLVE) &&
+				(data.action_type == this.bc.TYPE.UNIT)
+			);
+			if (!(data.action_type == this.bc.TYPE.UNIT)) {
+				if (is_prep_counter) {
+					action.location = this.bc.LOCATION.UNIT;
+				}
+				if (is_use_action || is_activate_counter) {
+					action.location = this.bc.LOCATION.CHAIN;
+				}
+				if (is_resolve_action) {
+					action.location = this.bc.LOCATION.DECK;
+				}
+				if (is_activate_counter) {
+					unit.removeCounter(action);
+				}
+				if (is_resolve_action && (action.type == this.bc.TYPE.COUNTER)) {
 
+				}
+			} else {
+				if (is_summon_success_unit) {
+					var loc = data.summon_location;
+					this.bc.gui.summonToField(unit, loc);
+				}
 			}
 		}
 		this.bc.resetActionPane();
+	}
+	BattleControllerChain.prototype.prepareSummon = function(unit, location) {
+		if (!(unit.canSummon(location))) return false;
+		var chain_gui = this.bc.gui.chainPane;
+		this.bc.is_resolving = true;
+		//token appears in front of unit
+		var appear = function() {
+			chain_gui.appearUnitToken(unit);
+		}
+		//token moves to battlechaingui
+		var move = function() {
+			chain_gui.moveUnitTokenToChain(unit);
+		}
+		//process data
+		var dodata = function() {
+			unit.summon(location);
+		}
+		this.bc.addToTimeline(appear, 0);
+		this.bc.addToTimeline(dodata, 0);
+		this.bc.addToTimeline(move);
+	}
+	BattleControllerChain.prototype.prepareResolveSummon = function(unit, location) {
+		if (!(unit.can_resolve)) return false;
+		var chain_gui = this.bc.gui.chainPane;
+		this.bc.is_resolving = true;
+		this.bc.resetHand();
+		//token says "resolved" on the chain
+		var changeChain = function() {
+			chain_gui.resolveUnitTokenOnChain(unit);
+		}
+		//resolve animation
+		var animation = function() {
+			var x;
+		}
+		//process resolve data
+		var dodata = function() {
+			unit.resolveSummon(location);
+		}
+		this.bc.addToTimeline(changeChain);
+		this.bc.addToTimeline(dodata);
 	}
 	BattleControllerChain.prototype.prepareUse = function(action, unit) {
 		if (!(action.canUse(unit))) return false;
@@ -388,31 +445,39 @@
 				(mr_data.action_type == this.bc.TYPE.COUNTER) && 
 				(mr_data.action_effect_type == this.EFFECT.USE)
 			);
-			if (!(is_prep_counter)) {
-				can_resolve = mr_action.canResolve(mr_unit)
-			}
-			if (!(mr_action.is_resolved) && (can_resolve)) {
+			if ((mr_data.action_effect_type == this.EFFECT.SUMMON) && (!(mr_unit.is_resolved) && (mr_unit.can_resolve))) {
 				can_clear = false;
-				this.prepareResolve(mr_action, mr_unit);
+				this.prepareResolveSummon(mr_unit, mr_data.summon_location);
 				return true;
 			}
-			else if (!(mr_action.is_resolved) && !(mr_action.resolve_failed) && !(can_resolve) && !(is_prep_counter)) {
-				mr_action.resolve_failed = true;
-				console.log(mr_action.name + " could not resolve!");
-				this.bc.awaitInputCounter(mr_action.owner);
-				return false;
-			} 
-			else if (is_prep_counter) {
-				can_clear = true;
-			} 
-			else {
+			if (mr_data.action_type != this.bc.TYPE.UNIT) {				
+				if (!(is_prep_counter)) {
+					can_resolve = mr_action.canResolve(mr_unit)
+				}
+				if (!(mr_action.is_resolved) && (can_resolve)) {
+					can_clear = false;
+					this.prepareResolve(mr_action, mr_unit);
+					return true;
+				}
+				else if (!(mr_action.is_resolved) && !(mr_action.resolve_failed) && !(can_resolve) && !(is_prep_counter)) {
+					mr_action.resolve_failed = true;
+					console.log(mr_action.name + " could not resolve!");
+					this.bc.awaitInputCounter(mr_action.owner);
+					return false;
+				} 
+				else if (is_prep_counter) {
+					can_clear = true;
+				} 
+				else {
 
+				}
 			}
 		}
 		if (can_clear) {
 			this.chain = [];
 			this.short_term = {};
-			this.bc.doActionStage();
+			if (this.bc.getBattleStage() == "Action") this.bc.doActionStage();
+			else if (this.bc.getBattleStage() == "Evoking") this.bc.doEvokingStage();
 			var chain_gui = this.bc.gui.chainPane;
 			chain_gui.removeChain();
 		}

@@ -8,6 +8,10 @@
 		this.Container_initialize();
 		this.battlename = "Audrey";
 
+		this.num_tokens_active = 0;
+		this.active_tokens = [];
+		this.active_token_imgs = [];
+		
 		this.makeSprites();
 		this.setIdle();
 		this.x = 75;

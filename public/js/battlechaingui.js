@@ -43,6 +43,84 @@
 		guiUnit.num_tokens_active++;
 		this.addChild(token);
 	}
+	BattleChainGui.prototype.appearUnitToken = function(unit) {
+		var guiUnit = null;
+		if (unit.owner == "red") {
+			guiUnit = level.activebattle.getNPC();
+		} else {
+			guiUnit = level.activebattle.getPlayer();
+		}
+		var x = guiUnit.x;
+		var y = guiUnit.y;
+		var token = new createjs.Bitmap(loader.getResult(unit.small_token_img));
+		var t_bounds = token.getBounds();
+		token.regX = t_bounds.width/2;
+		token.regY = t_bounds.height/2;
+		token.x = x;
+		token.y = y - guiUnit.sprite.getBounds().height/2;
+		if (unit.owner == "red") {
+			token.scaleX = -1;
+			token.x -= 40;
+		} else {
+			token.scaleX = 1;
+			token.x += 40;
+		}
+		guiUnit.active_tokens.push(unit);
+		guiUnit.active_token_imgs.push(token);
+		token.on("mouseover", function(evt) {
+			level.activebattle.battleStage.newInfoPane("unit_info", unit);
+		});
+		guiUnit.num_tokens_active++;
+		this.addChild(token);
+	}
+	BattleChainGui.prototype.moveUnitTokenToChain = function(unit) {
+		var guiUnit = null;
+		if (unit.owner == "red") {
+			guiUnit = level.activebattle.getNPC();
+		} else {
+			guiUnit = level.activebattle.getPlayer();
+		}
+		var l = guiUnit.active_tokens.indexOf(unit);
+		var image = guiUnit.active_token_imgs[l];
+		var token = guiUnit.active_tokens[l];
+		var coords = {
+			x: canvas.width/2 - 100, 
+			y: 40*this.chain_size + 60
+		};
+		this.chain_size++;
+		image.on("mouseover", function(evt) {
+			level.activebattle.battleStage.newInfoPane("unit_info", unit);
+		});
+		var g = this;
+		createjs.Tween.get(image).to({x: coords.x, y: coords.y},300).call(
+			function() {
+				var name_container = new createjs.Container();
+				for (var i = 0; i < 16; i++) {
+					var nametext1 = new createjs.Text(unit.name + " is summoned!", "26px crazycreation", "#000000");			
+					var color = "#FFFFFF";
+					nametext1.shadow = new createjs.Shadow(color, 0, 0, 4);
+					name_container.addChild(nametext1);
+				}
+				var tween_size = 20
+				var b = name_container.getBounds();
+				name_container.regY = b.height/2
+				name_container.x = coords.x + 22 + tween_size;
+				name_container.y = coords.y - 2;
+				name_container.alpha = 0;
+				g.addChild(name_container);
+
+				var invis_shape = new createjs.Graphics().beginFill("#FFFFFF").drawRect(coords.x - 20, coords.y - 20, 225, 36);
+				var invis_box = new createjs.Shape(invis_shape);
+				invis_box.alpha = 0.01;
+				invis_box.on("mouseover", function(evt) {
+					level.activebattle.battleStage.newInfoPane("unit_info", unit);
+				});
+				g.addChild(invis_box);
+
+				createjs.Tween.get(name_container).to({x: name_container.x - tween_size, alpha: 1}, 200);
+			}
+		);
+	}
 	BattleChainGui.prototype.moveTokenToChain = function(action, unit) {
 		var guiUnit = unit.guiUnit;
 		var l = guiUnit.active_tokens.indexOf(action);
@@ -119,6 +197,46 @@
 
 		token.on("mouseover", function(evt) {
 			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
+		});
+	}
+	BattleChainGui.prototype.resolveUnitTokenOnChain = function(unit) {
+		var guiUnit = null;
+		if (unit.owner == "red") {
+			guiUnit = level.activebattle.getNPC();
+		} else {
+			guiUnit = level.activebattle.getPlayer();
+		}
+		var l = guiUnit.active_tokens.indexOf(unit);
+		var old_img = guiUnit.active_token_imgs[l];
+		var old_token = guiUnit.active_tokens[l];
+		var coords = {x: old_img.x, y: old_img.y};
+		guiUnit.active_tokens.slice(l, 1);
+		guiUnit.active_token_imgs.slice(l, 1);
+
+		this.removeChild(old_img);
+		var imagename = old_token.small_token_img;
+		var token = new createjs.Bitmap(loader.getResult(imagename));
+		var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
+		token.filters = [
+		    new createjs.ColorMatrixFilter(matrix)
+		];
+		var t_bounds = token.getBounds();
+		token.regX = t_bounds.width/2;
+		token.regY = t_bounds.height/2;
+		token.x = coords.x;
+		token.y = coords.y;
+		if (unit.owner == "red") {
+			token.scaleX = -1;
+		} else {
+			token.scaleX = 1;
+		}
+		token.cache(t_bounds.x, t_bounds.y, t_bounds.width, t_bounds.height)
+		guiUnit.active_token_imgs.push(token);
+		guiUnit.active_tokens.push(old_token);
+		this.addChild(token);
+
+		token.on("mouseover", function(evt) {
+			level.activebattle.battleStage.newInfoPane("unit_info", unit);
 		});
 	}
 	BattleChainGui.prototype.removeChain = function() {

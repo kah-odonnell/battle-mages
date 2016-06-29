@@ -8,6 +8,10 @@
 		this.Container_initialize();
 		this.battlename = npc.formalname;
 
+		this.num_tokens_active = 0;
+		this.active_tokens = [];
+		this.active_token_imgs = [];
+
 		this.makeSprites();
 		this.setIdle();
 		this.x = canvas.width - 75;
@@ -38,16 +42,22 @@
 			},
 			"framerate": 10
 		});
-		this.idleSide = new createjs.Sprite(data, "idleSide");
-		this.runSide = new createjs.Sprite(data, "runSide");
+		this.sprite = new createjs.Sprite(data);
+		this.addChild(this.sprite);
 	}
 	BattleNPC.prototype.setIdle = function() {
-		this.removeChild(this.runSide);
-		this.addChild(this.idleSide);
+		var anim = "idleSide";
+		if (this.currentAnimation != anim) {
+			this.sprite.gotoAndPlay(anim);
+			this.currentAnimation = anim;
+		}
 	}
 	BattleNPC.prototype.setRun = function() {
-		this.removeChild(this.idleSide);
-		this.addChild(this.runSide);
+		var anim = "runSide";
+		if (this.currentAnimation != anim) {
+			this.sprite.gotoAndPlay(anim);
+			this.currentAnimation = anim;
+		}
 	}
 	window.BattleNPC = BattleNPC;
 } (window));	

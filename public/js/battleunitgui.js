@@ -10,7 +10,7 @@
 		this.num_tokens_active = 0;
 		this.active_tokens = [];
 		this.active_token_imgs = [];
-		this.spot = level.activebattle.battleStage.SPOT.NONE;
+		this.location = level.activebattle.battleStage.LOCATION.NONE;
 		this.marker_on = false;
 		this.marker_id = 0;
 
@@ -18,7 +18,7 @@
 		this.sprite.gotoAndPlay("idle");
 		this.addChild(this.sprite);
 		this.sprite.on("mouseover", function(event) {
-			level.activebattle.battleStage.newInfoPane("unit_stats", bcunit)
+			level.activebattle.battleStage.newInfoPane("unit_info", bcunit)
 		});
 
 		this.status_pane = new createjs.Container();
@@ -37,6 +37,15 @@
 	}
 	BattleUnitGui.prototype.tick = function() {
 
+	}
+	BattleUnitGui.prototype.setLocation = function(location) {
+		if (this.owner == "blue") {
+			this.x = location.BLUE.x;
+			this.y = location.BLUE.y;
+		} else {
+			this.x = location.RED.x;
+			this.y = location.RED.y;
+		}
 	}
 	BattleUnitGui.prototype.removeAllTokens = function() {
 		for (var i = 0; i < this.active_token_imgs.length; i++) {

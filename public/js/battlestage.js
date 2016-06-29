@@ -1,6 +1,8 @@
 (function (window) {
 	var BattleStage = function(){
 		this.initialize();
+		var unit_spacing_x = 50;
+		var unit_spacing_y = 25;
 		this.DIRECTION_PANE_STATE = {
 			RPS: {value: 0},
 			TARGET: {value: 0},
@@ -15,12 +17,67 @@
 			EVOKING: {value: 0},
 			RPS: {value: 0},
 		}
-		this.SPOT = {
-			UNIT_A: {value: 0},
-			UNIT_B: {value: 0},
-			MINION_A: {value: 0},
-			MINION_B: {value: 0},
-			MINION_C: {value: 0},
+		this.LOCATION = {
+			A: {
+				BLUE: {
+					x: 265, 
+					y: 130, 
+					occupied: false,
+				},
+				RED: {
+					x: 535, 
+					y: 130,
+					occupied: false,
+				},
+			},
+			B: {
+				BLUE: {
+					x: 265 - unit_spacing_x*1, 
+					y: 130 + unit_spacing_y*1, 
+					occupied: false,
+				},
+				RED: {
+					x: 535 + unit_spacing_x*1, 
+					y: 130 + unit_spacing_y*1,
+					occupied: false,
+				}
+			},
+			C: {
+				BLUE: {
+					x: 265 - unit_spacing_x*2, 
+					y: 130 + unit_spacing_y*2, 
+					occupied: false,
+				},
+				RED: {
+					x: 535 + unit_spacing_x*2, 
+					y: 130 + unit_spacing_y*2,
+					occupied: false,
+				}
+			},
+			D: {
+				BLUE: {
+					x: 265 - unit_spacing_x*3, 
+					y: 130 + unit_spacing_y*3, 
+					occupied: false,
+				},
+				RED: {
+					x: 535 + unit_spacing_x*3, 
+					y: 130 + unit_spacing_y*3,
+					occupied: false,
+				}
+			},
+			E: {
+				BLUE: {
+					x: 265 - unit_spacing_x*4,
+					y: 130 + unit_spacing_y*4,
+					occupied: false,
+				},
+				RED: {
+					x: 535 + unit_spacing_x*4, 
+					y: 130 + unit_spacing_y*4,
+					occupied: false,
+				}
+			},
 			NONE: {value: 0},
 		}
 		this.CURRENT_DIRECTION_STATE = this.DIRECTION_PANE_STATE.INACTIVE;
@@ -63,6 +120,32 @@
 		this.addChild(this.chainPane);
 		this.addChild(this.directionPane);
 		this.addChild(this.curtainContainer);
+
+		this.ghosts = [];
+	}
+	//show the potential summoning locations for a unit by placing ghosts
+	BattleStage.prototype.makeSummoningGhosts = function(owner, bcunit) {
+		this.ghosts = [];
+		if (owner == "blue") {
+			var locs = level.activebattle.battleController.getAvailableLocations(owner);
+			for (var i = 0; i < locs.length; i++) {
+				var ghost = new BattleUnitGhost(owner, bcunit, locs[i]);
+				ghost.x = locs[i].BLUE.x;
+				ghost.y = locs[i].BLUE.y; 
+				this.fieldPane.addChild(ghost);
+				ghost.markerOn();
+				ghost.greyOut();
+				this.ghosts.push(ghost);
+			}
+		}
+	}
+	BattleStage.prototype.getSummoningGhosts = function(owner) {
+		return this.ghosts;
+	}
+	BattleStage.prototype.removeSummoningGhosts = function() {
+		for (var i = this.ghosts.length - 1; i >= 0; i--) {
+			this.fieldPane.removeChild(this.ghosts[i]);
+		}
 	}
 	BattleStage.prototype.changeDisplay = function(player, npc) {
 		this.setUpFieldPane(player, npc);
@@ -104,13 +187,13 @@
 		this.newDirectionPane(message, false);
 	}
 	BattleStage.prototype.setUpActionPane = function() {
-		var color = '#FFFFFF'
-		var bordercolor = '#000000'
-		var paneBodyBox = new createjs.Shape();
-		paneBodyBox.graphics.beginStroke(bordercolor);
-		paneBodyBox.graphics.setStrokeStyle(2);
-		paneBodyBox.graphics.beginFill(color).drawRect(0, 0, canvas.width, 36);
-		this.actionPaneBkgd.addChild(paneBodyBox);
+		//var color = '#FFFFFF'
+		//var bordercolor = '#000000'
+		//var paneBodyBox = new createjs.Shape();
+		//paneBodyBox.graphics.beginStroke(bordercolor);
+		//paneBodyBox.graphics.setStrokeStyle(2);
+		//paneBodyBox.graphics.beginFill(color).drawRect(0, 0, canvas.width, 36);
+		//this.actionPaneBkgd.addChild(paneBodyBox);
 
 		var buttonContainer = this.buildRockPaperScissors();
 		buttonContainer.y -= 36;
@@ -230,17 +313,19 @@
 		this.actionPane.addChild(this.actionPaneActive);
 	}
 	BattleStage.prototype.newInfoPane = function(type, obj) {
-		if (type == "unit_stats") {
+		if (type == "unit_info") {
 			this.infoPane.removeChild(this.infoPaneActive);
 			this.infoPane.removeChild(this.infoPaneButton);
 			this.infoPaneActive = this.buildUnitStatsPane(obj);
 			this.infoPane.addChild(this.infoPaneActive);
 		}
-		if (type == "action_hand_info") {
+		else if (type == "action_hand_info") {
 			this.infoPane.removeChild(this.infoPaneActive);
 			this.infoPane.removeChild(this.infoPaneButton);
 			this.infoPaneActive = this.buildActionInfoPane(obj);
 			this.infoPane.addChild(this.infoPaneActive);
+		} else {
+			throw "ERROR: " + type + " is not a valid infoPane type."
 		}
 	}
 	BattleStage.prototype.buildRockPaperScissors = function() {
@@ -438,18 +523,20 @@
 		var playerUnits = this.bc.getAllUnits("blue", false);
 		for (var i = 0; i < playerUnits.length; i++) {
 			var unit = playerUnits[i]
-			if (!(unit.is_active)) buttons.push(new BattleButton(true, "unitevoke", playerUnits[i]));
-			else if (unit.is_active) buttons.push(new BattleButton(true, "unitrevoke", playerUnits[i]));
+			if (!(unit.is_active)) buttons.push(new BattleButton(true, "unit_summon", playerUnits[i]));
 		}
 		var buttonContainer = new createjs.Container();
-		for (var i = 0; i < buttons.length; i++) {
+		var i = 0;
+		for (i = 0; i < buttons.length; i++) {
 			var bcWidth = 0;
 			var currentButton = buttons[i];
 			if (buttonContainer.getBounds() != null) bcWidth = buttonContainer.getBounds().width + 8;
 			currentButton.x = bcWidth;
 			buttonContainer.addChild(currentButton);
 		}
-		buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;
+		if (i != 0) {
+			buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;		
+		}
 
 		return buttonContainer;
 	}
@@ -517,10 +604,10 @@
 		buttonContainer.x = canvas.width/2 - buttonContainer.getBounds().width/2;
 		return buttonContainer;
 	}
-	BattleStage.prototype.evoke = function(bcunit) {
-		var unit = bcunit.guiUnit;
-		this.fieldPane.addChild(unit);
-		this.rearrangeUnits(bcunit.owner);
+	BattleStage.prototype.summonToField = function(bcunit, location) {
+		var guiUnit = bcunit.guiUnit;
+		guiUnit.setLocation(location);
+		this.fieldPane.addChild(guiUnit);
 	}
 	BattleStage.prototype.revoke = function(bcunit) {
 		var unit = bcunit.guiUnit;
@@ -639,7 +726,7 @@
 	}
 	*/
 	BattleStage.prototype.tick = function() {
-
+		this.fieldPane.sortChildren(sortFunction);
 	}
 	window.BattleStage = BattleStage;
 } (window));		

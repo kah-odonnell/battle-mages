@@ -2,6 +2,76 @@
 	var BattleControllerUnit = function() {
 
 	};
+
+	///////////////////////// BattleControllerChain Interaction /////////////////////////
+	/* ~~~~~~~~~ SUMMON ~~~~~~~~~~~~ */
+	//summoning a unit is done via the BattleControllerChain (the same mechanism used by Action Tokens)
+	//if this unit is summoned, this data will be sent to the chain where it is processed
+	//this method is to be overridden by the individual unit classes.
+	BattleControllerUnit.prototype.getSummonData = function(location) {
+		/*
+		summon = {
+			unit_unique_id: this.unique_id,
+			action_effect_type: this.bc.chain.EFFECT.SUMMON,
+			action_type: this.type,
+			summon_location: location;
+		}
+		return summon;
+		*/
+		return null;
+	}
+	BattleControllerUnit.prototype.canSummon = function(location) {
+		var data = this.getSummonData(location);
+		if (data != null) {
+			return this.bc.chain.isPossible(data);
+		} else {
+			return false;
+		}
+	}
+	BattleControllerUnit.prototype.summon = function(location) {
+		var t = this.canSummon(location);
+		if (t) {
+			var data = this.getSummonData(location);
+			this.bc.chain.finalizeData(data);
+		}
+	}
+	/* ~~~~~~~~~ RESOLVE ~~~~~~~~~~~~ */
+	BattleControllerUnit.prototype.getResolveSummonData = function(location) {
+		/*
+		summon = {
+			unit_unique_id: this.unique_id,
+			action_effect_type: this.bc.chain.EFFECT.SUMMON,
+			action_type: this.type,
+			summon_location: location;
+		}
+		return summon;
+		*/
+		return null;
+	}
+	BattleControllerUnit.prototype.canResolveSummon = function(location) {
+		var data = this.getResolveSummonData(location);
+		if (data != null) {
+			return this.bc.chain.isPossible(data);
+		} else {
+			return false;
+		}
+	}
+	BattleControllerUnit.prototype.resolveSummon = function(location) {
+		var t = this.getResolveSummonData(location);
+		if (t) {
+			this.is_active = true;
+			this.is_resolved = true;
+			if (this.owner == "red") {
+				location.RED.occupied = true;
+			} else {
+				location.BLUE.occupied = true;
+			}
+			var data = this.getResolveSummonData(location);
+			this.bc.chain.finalizeData(data);
+		}
+	}
+	///////////////////////// End of BattleControllerChain Interaction /////////////////////////
+
 	BattleControllerUnit.prototype.removeCounter = function(action) {
 		var i = this.counters.indexOf(action);
 		this.counters.splice(i, 1);
@@ -11,10 +81,6 @@
 	}
 	BattleControllerUnit.prototype.increaseMana = function() {
 		this.mana++;
-	}
-	BattleControllerUnit.prototype.evoke = function() {
-		this.is_active = true;
-		return true;
 	}
 	BattleControllerUnit.prototype.revoke = function() {
 		this.is_active = false;
