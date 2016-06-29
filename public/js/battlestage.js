@@ -609,120 +609,12 @@
 		guiUnit.setLocation(location);
 		this.fieldPane.addChild(guiUnit);
 	}
+	/*
 	BattleStage.prototype.revoke = function(bcunit) {
 		var unit = bcunit.guiUnit;
 		unit.spot = this.SPOT.NONE;
 		this.fieldPane.removeChild(unit);
 		this.rearrangeUnits(bcunit.owner);
-	}
-	BattleStage.prototype.isTaken = function(owner, spot) {
-		var units = this.bc.getAllUnits(owner, true);
-		for (var i = 0; i < units.length; i++) {
-			var bcunit = units[i];
-			if (bcunit.guiUnit.spot == spot) {
-				return true;
-			}
-		}
-		return false;
-	}
-	BattleStage.prototype.rearrangeUnits = function(red_blue) {
-		var units;
-		var owner;
-		var spacing = 75;
-		if (red_blue == "red") {
-			units = this.bc.getActiveUnits("red", false);	
-			owner = level.activebattle.getNPC();
-			for (var j = 0; j < units.length; j++) {
-				var bcunit = units[j];
-				if (bcunit.guiUnit.spot == this.SPOT.NONE) {
-					if (!this.isTaken(red_blue, this.SPOT.UNIT_A)) {
-						bcunit.guiUnit.spot = this.SPOT.UNIT_A;
-						var i = 0;
-						bcunit.guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
-						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
-					}
-					else if (!this.isTaken(red_blue, this.SPOT.UNIT_B)) {
-						bcunit.guiUnit.spot = this.SPOT.UNIT_B;
-						var i = 1;
-						bcunit.guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
-						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
-					}
-				}
-			}
-		} 
-		else if (red_blue == "blue"){
-			units = this.bc.getActiveUnits("blue", false);	
-			owner = level.activebattle.getPlayer();
-			for (var j = 0; j < units.length; j++) {
-				var bcunit = units[j];
-				if (bcunit.guiUnit.spot == this.SPOT.NONE) {
-					if (!this.isTaken(red_blue, this.SPOT.UNIT_A)) {
-						bcunit.guiUnit.spot = this.SPOT.UNIT_A;
-						var i = 0;
-						bcunit.guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
-						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
-					}
-					else if (!this.isTaken(red_blue, this.SPOT.UNIT_B)) {
-						bcunit.guiUnit.spot = this.SPOT.UNIT_B;
-						var i = 1;
-						bcunit.guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
-						bcunit.guiUnit.y = owner.y - 25 + 50*(i);
-					}
-				}
-			}
-		}
-		this.fieldPane.sortChildren(sortFunction);
-	}
-	/*
-	BattleStage.prototype.rearrangeUnits = function(red_blue) {
-		var units;
-		var owner;
-		var spacing = 75;
-		if (red_blue == "red") {
-			units = this.bc.getActiveUnits("red", false);	
-			owner = level.activebattle.getNPC();
-			if (units.length == 1) {
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
-					units[i].guiUnit.y = owner.y - 25 + 50*(i);
-				}				
-			}
-			else if (units.length == 2) {
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - (75 + spacing/2) + spacing*(i) - 25;
-					units[i].guiUnit.y = owner.y - 25 + 50*(i);
-				}				
-			}
-			else if (units.length == 3) {
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x - (75 + spacing) + spacing*(i) - 25;
-					units[i].guiUnit.y = owner.y - 50 + 50*(i);
-				}				
-			}	
-		} 
-		else if (red_blue == "blue"){
-			units = this.bc.getActiveUnits("blue", false);	
-			owner = level.activebattle.getPlayer();
-			if (units.length == 1) {
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
-					units[i].guiUnit.y = owner.y - 25 + 50*(i);
-				}		
-			}
-			else if (units.length == 2) {
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + (75 + spacing/2) - spacing*(i) + 25;
-					units[i].guiUnit.y = owner.y - 25 + 50*(i);
-				}				
-			}
-			else if (units.length == 3) {
-				for (var i = 0; i < units.length; i++) {
-					units[i].guiUnit.x = owner.x + (75 + spacing) - spacing*(i) + 25;
-					units[i].guiUnit.y = owner.y - 50 + 50*(i);
-				}				
-			}
-		}
-		this.fieldPane.sortChildren(sortFunction);
 	}
 	*/
 	BattleStage.prototype.tick = function() {

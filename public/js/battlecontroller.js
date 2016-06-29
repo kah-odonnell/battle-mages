@@ -144,9 +144,8 @@
 			this.blueUnits.splice(i, 1);
 			unit.is_active = false;
 		}
-		unit.guiUnit.spot = this.gui.SPOT.NONE;
+		unit.guiUnit.location = this.gui.LOCATION.NONE;
 		unit.guiUnit.removeAllChildren();
-		this.gui.rearrangeUnits(unit.owner);
 	}
 	//each token needs a unique idenitifier that can later be looked up
 	BattleController.prototype.createUniqueIds = function() {
@@ -689,10 +688,10 @@
 		if (this.chain.chain.length == 0) {
 			this.is_resolving = false;
 			if (this.turnPlayer == "blue") {
+				this.gui.newActionPaneHand();
 				this.gui.newActionPaneEvoking();
 			} 
 			else if (this.turnPlayer == "red") {
-				this.gui.newActionPaneHand();
 				var bc = this;
 				var aiEvoke = function() {
 					bc.ai.doEvokingStageAI();
