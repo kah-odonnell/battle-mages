@@ -20,7 +20,8 @@
 			PREPARE: {string: "PREPARE"},
 			ACTIVATE: {string: "ACTIVATE"},
 			TRIGGER: {string: "TRIGGER"},
-			SUMMON: {string: "SUMMON"},
+			NORMAL_SUMMON: {string: "NORMAL_SUMMON"},
+			SPECIAL_SUMMON: {string: "SPECIAL_SUMMON"},
 		}
 		this.bc = bc;
 		this.initialize();
@@ -30,7 +31,14 @@
 		var unit = this.bc.getTokenByUniqueId(data.unit_unique_id);
 		var action = this.bc.getTokenByUniqueId(data.action_unique_id);
 		if (action != null) {
-			if (unit.attributes.indexOf(action.attribute) == -1) {
+			var attrs = action.attributes;
+			var unit_has_attribute = false;
+			for (var i = attrs.length - 1; i >= 0; i--) {
+				if (unit.attributes.indexOf(attrs[i]) != -1) {
+					unit_has_attribute = true;
+				}
+			}
+			if (!unit_has_attribute) {
 				return false;
 			}
 		}
@@ -55,6 +63,9 @@
 		}
 		if ("summon_location" in data) {
 			if (this.bc.getAvailableLocations(unit.owner).length < 1) {
+				return false;
+			}
+			if (this.bc.getPlayer(unit.owner).has_normal_summoned && (data.action_effect_type == this.EFFECT.NORMAL_SUMMON)) {
 				return false;
 			}
 		}
@@ -202,6 +213,7 @@
 				if (is_summon_success_unit) {
 					var loc = data.summon_location;
 					this.bc.gui.summonToField(unit, loc);
+					this.bc.getPlayer(unit.owner).has_normal_summoned = true;
 				}
 			}
 		}
@@ -445,7 +457,12 @@
 				(mr_data.action_type == this.bc.TYPE.COUNTER) && 
 				(mr_data.action_effect_type == this.EFFECT.USE)
 			);
-			if ((mr_data.action_effect_type == this.EFFECT.SUMMON) && (!(mr_unit.is_resolved) && (mr_unit.can_resolve))) {
+			if ((mr_data.action_effect_type == this.EFFECT.NORMAL_SUMMON) && (!(mr_unit.is_resolved) && (mr_unit.can_resolve))) {
+				can_clear = false;
+				this.prepareResolveSummon(mr_unit, mr_data.summon_location);
+				return true;
+			}
+			else if ((mr_data.action_effect_type == this.EFFECT.SPECIAL_SUMMON) && (!(mr_unit.is_resolved) && (mr_unit.can_resolve))) {
 				can_clear = false;
 				this.prepareResolveSummon(mr_unit, mr_data.summon_location);
 				return true;
@@ -531,6 +548,9 @@
 			else console.log("invalid owner");
 
 			list = this.bc.getActiveUnits(side, true);
+			if ((list.length == 0) && (this.bc.turn_number != 0)) {
+				list.push(this.bc.getPlayer(side));
+			}
 			return list;
 		}
 		else if (target == this.TARGET.OPPONENT_UNITS) {
@@ -539,6 +559,9 @@
 			else console.log("invalid owner");
 
 			list = this.bc.getActiveUnits(side, false);
+			if ((list.length == 0) && (this.bc.turn_number != 0)) {
+				list.push(this.bc.getPlayer(side));
+			}
 			return list;			
 		}
 		else if (target == this.TARGET.OPPONENT_MINIONS) {
@@ -557,12 +580,18 @@
 			side = owner;
 
 			list = this.bc.getActiveUnits(side, true);
+			if ((list.length == 0) && (this.bc.turn_number != 0)) {
+				list.push(this.bc.getPlayer(side));
+			}
 			return list;
 		}
 		else if (target == this.TARGET.OWNER_UNITS) {
 			side = owner;
 
 			list = this.bc.getActiveUnits(side, false);
+			if ((list.length == 0) && (this.bc.turn_number != 0)) {
+				list.push(this.bc.getPlayer(side));
+			}
 			return list;			
 		}
 		else if (target == this.TARGET.OWNER_MINIONS) {

@@ -131,7 +131,6 @@
 				g.oldMap = map;
 				g.removeChild(map);
 				g.currentmap = mapIndex;
-				console.log(mapIndex);
 				var newMap = g.maplist[mapIndex];
 				map = newMap;
 				map.x = 0;

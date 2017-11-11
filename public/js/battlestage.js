@@ -102,9 +102,9 @@
 		this.npcSwirlPane = new createjs.Container();
 		this.chainPane = new BattleChainGui();
 
-		this.actionPane.y = 240;
+		this.actionPane.y = 232;
 		this.directionPane.y = 3;
-		this.infoPane.y = this.actionPane.y + 36;
+		this.infoPane.y = this.actionPane.y + 44;
 
 		this.addChild(this.fieldPane);
 		this.addChild(this.infoPane);
@@ -122,6 +122,7 @@
 		this.addChild(this.curtainContainer);
 
 		this.ghosts = [];
+		this.current_gui_hand = [];
 	}
 	//show the potential summoning locations for a unit by placing ghosts
 	BattleStage.prototype.makeSummoningGhosts = function(owner, bcunit) {
@@ -152,8 +153,8 @@
 		this.setUpDirectionPane();
 		this.setUpActionPane();
 		this.setUpInfoPane();
-		this.playerSwirl = new BattleInfoSwirl(this.bc, player);
-		this.npcSwirl = new BattleInfoSwirl(this.bc, npc);
+		this.playerSwirl = new BattleInfoSwirl(this.bc, player.bcunit);
+		this.npcSwirl = new BattleInfoSwirl(this.bc, npc.bcunit);
 		this.playerSwirlPane.addChild(this.playerSwirl);
 		this.npcSwirlPane.addChild(this.npcSwirl);
 	}
@@ -168,6 +169,46 @@
 			function() {
 				var thisStage = level.activebattle.battleStage;
 				thisStage.fadeIn();
+			}
+		);
+
+	}
+	BattleStage.prototype.fadeIn = function() {
+		level.activebattle.changeDisplay();
+		createjs.Tween.get(this.curtain).to({alpha:0},1000).call(
+			function() {
+				var thisStage = level.activebattle.battleStage;
+				thisStage.curtainContainer.removeChild(this.curtain);
+				level.activebattle.encounterStart();
+			}
+		);
+	}
+	BattleStage.prototype.endBattle = function() {
+		var color = '#000000'
+		var curtain = new createjs.Shape();
+		curtain.graphics.beginFill(color).drawRect(0, 0, canvas.width, canvas.height);
+		curtain.alpha = 0;
+		this.curtain = curtain;
+		this.curtainContainer.addChild(this.curtain);
+		bstage = this;
+		createjs.Tween.get(bstage.curtain).to({alpha:1},1000).call(
+			function() {	
+				bstage.removeChild(bstage.fieldPane);
+				bstage.removeChild(bstage.infoPane);
+				bstage.removeChild(bstage.actionPane);
+				bstage.removeChild(bstage.playerSwirlPane);
+				bstage.removeChild(bstage.npcSwirlPane);
+				bstage.removeChild(bstage.chainPane);
+				bstage.removeChild(bstage.directionPane);
+				level.activebattle.battleController.endBattle();
+				createjs.Tween.get(bstage.curtain).to({alpha:0},1000).call(
+					function() {
+						bstage.removeAllChildren();
+						level.activebattle.battleStage = null;
+						level.activebattle.battleController = null;
+						level.activebattle = null;
+					}
+				);
 			}
 		);
 
@@ -253,28 +294,32 @@
 		this.actionPaneActive.y -= 36;
 		this.actionPane.addChild(this.actionPaneActive);
 
-		if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Evoking")) {
-			var activeUnits = this.bc.getActiveUnits("blue", false);
-			if (activeUnits.length > 0) {
-				var continueButton = new BattleButton(true, "continue")
-				continueButton.x = 700;
-				continueButton.y = -18;
-				this.actionPaneButton = continueButton;
-				this.actionPane.addChild(this.actionPaneButton);
-			}
+		if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Evoking") && !(this.bc.is_resolving)) {
+			var continueButton = new BattleButton(true, "continue")
+			continueButton.x = 700;
+			continueButton.y = -18;
+			this.actionPaneButton = continueButton;
+			this.actionPane.addChild(this.actionPaneButton);
 		}
 	}
-	BattleStage.prototype.newActionPaneHand = function() {
+	BattleStage.prototype.newActionPaneHand = function(draw) {
 		this.CURRENT_ACTION_STATE = this.ACTION_PANE_STATE.HAND;
 		this.actionPane.removeChild(this.actionPaneActive);
 		this.actionPane.removeChild(this.actionPaneButton);
 		this.actionPaneActive = this.buildHandPane();
 		this.actionPaneActive.y -= 36;
+		if (draw) {
+			this.actionPaneActive.x -= canvas.width;
+			createjs.Tween.get(this.actionPaneActive).to({x: this.actionPaneActive.x + canvas.width},500).call(
+				function() {
+					
+				}
+			);
+		}
 		this.actionPane.addChild(this.actionPaneActive);
 
 		if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Action")) {
-			var activeUnits = this.bc.getActiveUnits("blue", false);
-			if ((activeUnits.length > 0) && (this.bc.chain.chain.length == 0) && !(this.bc.is_resolving)){
+			if ((this.bc.chain.chain.length == 0) && !(this.bc.is_resolving)){
 				var continueButton = new BattleButton(true, "continue")
 				continueButton.x = 700;
 				continueButton.y = -18;
@@ -282,6 +327,22 @@
 				this.actionPane.addChild(this.actionPaneButton);
 			}
 		}		
+	}
+	BattleStage.prototype.returnHand = function() {
+		for (var i = 0; i < this.current_gui_hand.length; i++) {
+			this.returnCard(this.current_gui_hand[i]);
+		}
+	}
+	BattleStage.prototype.returnCard = function(card_button) {
+		var g = this;
+		createjs.Tween.get(card_button).to({x: card_button.x - canvas.width},500).call(
+			function() {
+				
+			}
+		);
+	}
+	BattleStage.prototype.drawHand = function() {
+		this.newActionPaneHand(true)
 	}
 	//called by bc.awaitInputTarget() when some data requires player to select a target
 	//this function generates the buttons that:
@@ -369,7 +430,9 @@
 		thumbnailbox.addChild(attributetext);
 		thumbnailbox.y = (uniticon.getBounds().height)/2 - thumbnailbox.getBounds().height/2
 		thumbnailbox.addChild(uniticon);
-		thumbnailbox.x = canvas.width/2 - canvas.width/5;
+		var center_factor = 4;
+		if (unit.attributes.length > 2) center_factor = 3;
+		thumbnailbox.x = canvas.width/2 - canvas.width/center_factor;
 		masterContainer.addChild(thumbnailbox);
 
 		var health = new BattleStat(unit, "health");
@@ -398,7 +461,11 @@
 		var nametext = new createjs.Text(message, "32px crazycreation", "#000000");
 		nametext.x = actionicon.x + actionicon.getBounds().width + 8;
 
-		var message2 = action.attribute.string + " " + action.type.string;
+		var attr_collected_text = action.attributes[0].string;
+		for (var i = 1; i < action.attributes.length; i++) {
+			attr_collected_text += (" / " + action.attributes[i])
+		}
+		var message2 = attr_collected_text + " " + action.type.string;
 		attributetext = new createjs.Text(message2, "26px crazycreation", "#000000");
 		attributetext.x = actionicon.x + actionicon.getBounds().width + 8;
 		attributetext.y = nametext.y + nametext.getBounds().height;
@@ -414,7 +481,7 @@
 		thumbnailbox.addChild(nametext);
 		thumbnailbox.addChild(attributetext);
 		thumbnailbox.addChild(manabox);
-		thumbnailbox.x = canvas.width/2 - canvas.width/5;
+		thumbnailbox.x = canvas.width/2 - canvas.width/4;
 		//if this token doesn't have mana, we must remove the y offset
 		if (manabox.getBounds() != null) {
 			thumbnailbox.y = (
@@ -581,6 +648,7 @@
 		if (b != null) offset = b.width/2;
 		else offset = 0;
 		buttonContainer.x = canvas.width/2 - offset;
+		this.current_gui_hand = buttons;
 		return buttonContainer;
 	}
 	//buildTargetPane("one", this.bc.chain.TARGET.OPPONENT_ALL);
@@ -605,9 +673,13 @@
 		return buttonContainer;
 	}
 	BattleStage.prototype.summonToField = function(bcunit, location) {
-		var guiUnit = bcunit.guiUnit;
-		guiUnit.setLocation(location);
-		this.fieldPane.addChild(guiUnit);
+		if (!bcunit.is_player) {
+			var guiUnit = bcunit.guiUnit;
+			guiUnit.setLocation(location);
+			this.fieldPane.addChild(guiUnit);
+		} else {
+			bcunit.stepForward(location);
+		}
 	}
 	/*
 	BattleStage.prototype.revoke = function(bcunit) {

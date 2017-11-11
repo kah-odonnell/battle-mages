@@ -22,6 +22,7 @@ uglifyjs --mangle  \
   public/js/battlestat.js \
   public/js/battleinfoswirl.js \
   public/js/battleunitgui.js \
+  public/js/battleunitghost.js \
   public/js/battlechaingui.js \
   public/js/battlebutton.js \
   public/js/dialog.js \

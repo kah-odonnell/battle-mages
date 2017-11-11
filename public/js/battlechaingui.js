@@ -22,7 +22,7 @@
 		var guiUnit = unit.guiUnit;
 		var x = guiUnit.x;
 		var y = guiUnit.y;
-		var token = new createjs.Bitmap(loader.getResult(action.mini_img));
+		var token = new createjs.Bitmap(loader.getResult(action.mini_img_name));
 		var t_bounds = token.getBounds();
 		token.regX = t_bounds.width/2;
 		token.regY = t_bounds.height/2;
@@ -52,7 +52,7 @@
 		}
 		var x = guiUnit.x;
 		var y = guiUnit.y;
-		var token = new createjs.Bitmap(loader.getResult(unit.small_token_img));
+		var token = new createjs.Bitmap(loader.getResult(unit.mini_img_name));
 		var t_bounds = token.getBounds();
 		token.regX = t_bounds.width/2;
 		token.regY = t_bounds.height/2;
@@ -174,7 +174,7 @@
 		guiUnit.active_token_imgs.slice(l, 1);
 
 		this.removeChild(old_img);
-		var imagename = old_token.mini_img;
+		var imagename = old_token.mini_img_name;
 		var token = new createjs.Bitmap(loader.getResult(imagename));
 		var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
 		token.filters = [
@@ -214,7 +214,7 @@
 		guiUnit.active_token_imgs.slice(l, 1);
 
 		this.removeChild(old_img);
-		var imagename = old_token.small_token_img;
+		var imagename = old_token.mini_img_name;
 		var token = new createjs.Bitmap(loader.getResult(imagename));
 		var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
 		token.filters = [
@@ -253,6 +253,7 @@
 			}
 		);
 		this.chain_size = 0;
+		this.removeAllChildren();
 	}
 	BattleChainGui.prototype.tick = function() {
 

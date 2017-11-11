@@ -108,5 +108,30 @@
 		}
 		this.unique_id = id;	
 	}
+	BattleControllerAction.prototype.makeGraphic = function() {
+		var card_image_name = this.card_img_name;
+		var card_frame_name = this.frame_img_name;
+		var attribute_image_name = this.attributes[0].attribute_icon_id;
+		var whole_token = new createjs.Container();
+		var token_art = new createjs.Bitmap(loader.getResult(card_image_name)); 
+		var frame_art = new createjs.Bitmap(loader.getResult(card_frame_name)); 
+		var attribute_art = new createjs.Bitmap(loader.getResult(attribute_image_name)); 
+		var imgs = [token_art, frame_art];
+		for (var i = 0; i < imgs.length; i++) {
+			var bounds = imgs[i].getBounds();
+			imgs[i].regX = bounds.width/2;
+			imgs[i].regY = bounds.height/2;
+			whole_token.addChild(imgs[i]);
+		}
+		whole_token.addChild(attribute_art);
+		var total_bounds = whole_token.getBounds();
+		whole_token.regX -= total_bounds.width/2;
+		whole_token.regY -= total_bounds.height/2;
+		whole_token.mouseChildren = false;
+		return whole_token;
+	}
+	BattleControllerAction.prototype.getGraphic = function() {
+		return this.whole_token_img;
+	}
 	window.BattleControllerAction = BattleControllerAction;
 } (window));

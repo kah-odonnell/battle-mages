@@ -73,7 +73,6 @@
 		this.textline1.x = 100;
 		this.textline2.x = 100;
 		this.textline1.textBaseline = "alphabetic";
-		this.textline1.textBaseline = "alphabetic";
 		this.textline2.textBaseline = "alphabetic";
 
 		for (var key in this.characters) {

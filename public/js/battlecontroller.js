@@ -18,19 +18,69 @@
 			END: {string: "End"},
 		}
 		this.ATTRIBUTE = {
-			ILLUSIONIST: {string: "Illusionist"},
-			ELEMENTALIST: {string: "Elementalist"},
-			NECROMANCER: {string: "Necromancer"},
-			KNIGHT: {string: "Knight"},
-			VAGRANT: {string: "Vagrant"},
-			CONSTRUCT: {string: "Construct"},
-			ABERRATION: {string: "Aberration"},
+			//~~~ ILLUSIONIST ARCHETYPE
+			ILLUSION_MAGIC: {
+				string: "Illusion Magic", 
+				attribute_icon_id: "attribute_illusion_magic"
+			},
+			DISRUPTION: {
+				string: "Disruption"
+			},
+			COERCION: {
+				string: "Coercion"
+			},
+			//~~~ ELEMENTALIST ARCHETYPE
+			FIRE_MAGIC: {
+				string: "Fire Magic"
+			},
+			GEOMANCY: {
+				string: "Geomancy"
+			},
+			AIR_CHANNELING: {
+				string: "Air Channeling"
+			},
+			WATERBENDING: {
+				string: "Waterbending"
+			},
+			//~~~ NECROMANCY ARCHETYPE
+			REAPING: {
+				string: "Reaping"
+			},
+			REANIMATION: {
+				string: "Reanimation"
+			},
+			FEAR: {
+				string: "Fear"
+			},
+			//~~~ PHYSICAL ARCHETYPE
+			SWORDSMANSHIP: {
+				string: "Swordsmanship"
+			},
+			STAFFWEILDING: {
+				string: "Staffweilding"
+			},
+			HAND_TO_HAND: {
+				string: "Hand-to-hand"
+			},
+			//~~~ MODERN COMBAT ARCHETYPE
+			MOUNTED_ARMS: {
+				string: "Mounted Arms"
+			},
+			PERSONAL_ARMS: {
+				string: "Personal Arms"
+			},
+			COMBAT_SUPPORT: {
+				string: "Combat Support"
+			},
+			STEALTH: {
+				string: "Stealth"
+			},
 		}
 		this.TYPE = {
-			ATTACK: {string: "Attack"},
-			SKILL: {string: "Skill"},
-			COUNTER: {string: "Counter"},
-			UNIT: {string: "Unit"},
+			ATTACK: {string: "Attack", frame_id: "frame_attack"},
+			SKILL: {string: "Skill", frame_id: "frame_skill"},
+			COUNTER: {string: "Counter", frame_id: "frame_counter"},
+			UNIT: {string: "Unit", frame_id: "frame_unit"},
 		}
 		this.LOCATION = {
 			DECK: {string: "Deck"},
@@ -49,6 +99,9 @@
 
 		this.blueUnits = this.setUnits(blueDeckJSON.units, "blue");
 		this.redUnits = this.setUnits(redDeckJSON.units, "red");
+
+		this.setPlayer(blueDeckJSON.player, "blue");
+		this.setPlayer(redDeckJSON.player, "red");
 
 		this.blueDestroyed = [];
 		this.redDestroyed = []
@@ -82,8 +135,11 @@
 		this.tick2 = 0;
 
 		this.ghosts = [];
+
+		this.turn_number = 0;
 	}
 	BattleController.prototype.endBattle = function() {
+		level.activebattle.finished = true;
 		var units = this.getAllUnits("all", true);
 		for (var i = 0; i < units.length; i++) {
 			units[i].guiUnit.removeChild(units[i].guiUnit.sprite);
@@ -144,8 +200,10 @@
 			this.blueUnits.splice(i, 1);
 			unit.is_active = false;
 		}
+		unit.summoning_location.occupied = false;
 		unit.guiUnit.location = this.gui.LOCATION.NONE;
 		unit.guiUnit.removeAllChildren();
+		this.decideBattleOutcome();
 	}
 	//each token needs a unique idenitifier that can later be looked up
 	BattleController.prototype.createUniqueIds = function() {
@@ -224,18 +282,6 @@
 	BattleController.prototype.getBattleStage = function() {
 		return this.currentStage.string;
 	}
-	//iterate through a player's unit_id list and initialize their Units
-	BattleController.prototype.setUnits = function(unit_id_list, owner) {
-		var units = [];
-		for (var i = 0; i < unit_id_list.length; i++) {
-			var unit;
-			if ("001" == unit_id_list[i]) unit = new Unit001(this, owner);
-			else if ("002" == unit_id_list[i]) unit = new Unit002(this, owner);
-			else if ("003" == unit_id_list[i]) unit = new Unit003(this, owner);
-			units.push(unit);
-		}
-		return units;
-	}
 	//returns list of all units belonging to red or blue or both
 	//red_blue_all is a string. minions are not yet implemented
 	BattleController.prototype.getAllUnits = function(red_blue_all, minions) {
@@ -306,11 +352,11 @@
 			var collection = this.redUnits;
 			for (var i = 0; i < collection.length; i++) {
 				if (minions == true) {
-					if (!(collection[i].is_active)) {
+					if (collection[i].canSummon()) {
 						units.push(collection[i]);
 					}
 				} else {
-					if (!(collection[i].is_active) && (!collection[i].is_minion)) {
+					if (collection[i].canSummon()) {
 						units.push(collection[i]);
 					}
 				}
@@ -320,11 +366,11 @@
 			var collection = this.blueUnits;
 			for (var i = 0; i < collection.length; i++) {
 				if (minions == true) {
-					if (!(collection[i].is_active)) {
+					if (collection[i].canSummon()) {
 						units.push(collection[i]);
 					}
 				} else {
-					if (!(collection[i].is_active) && (!collection[i].is_minion)) {
+					if (collection[i].canSummon()) {
 						units.push(collection[i]);
 					}
 				}
@@ -378,26 +424,59 @@
 			units[i].guiUnit.removeAllTokens();
 		}
 	}
+	BattleController.prototype.setPlayer = function(player_id, owner) {
+		var units = [];
+		var unit = null;
+		if (player_id == "P001") unit = new Player001(this, owner);
+		else if (player_id == "P002") unit = new Player002(this, owner);
+		else {
+			console.log(player_id + " is not a valid catalog id");
+		}
+		if (owner == "blue") {
+			units = this.blueUnits;
+			level.activebattle.battlePlayer = unit.guiUnit;
+		}
+		else if (owner == "red") {
+			units = this.redUnits;
+			level.activebattle.battleNPC = unit.guiUnit;
+		}
+		units.push(unit);
+		return unit; 
+	}
+	BattleController.prototype.getPlayer = function(owner) {
+		if (owner == "blue") {
+			unit = level.activebattle.battlePlayer.bcunit;
+		}
+		else if (owner == "red") {
+			unit = level.activebattle.battleNPC.bcunit;
+		}
+		return unit; 
+	}
+	//iterate through a player's unit_id list and initialize their Units
+	BattleController.prototype.setUnits = function(unit_id_list, owner) {
+		var units = [];
+		for (var i = 0; i < unit_id_list.length; i++) {
+			var unit;
+			if ("U001" == unit_id_list[i]) unit = new Unit001(this, owner);
+			else if ("U002" == unit_id_list[i]) unit = new Unit002(this, owner);
+			else if ("U003" == unit_id_list[i]) unit = new Unit003(this, owner);
+			else {
+				console.log(unit_id_list[i] + " is not a valid catalog id");
+			}
+			units.push(unit);
+		}
+		return units;
+	}
 	//iterate through a player's action_id list and initialize Actions
 	BattleController.prototype.setActions = function(action_id_list, owner) {
 		var actions = [];
 		for (var i = 0; i < action_id_list.length; i++) {
 			var action = null;
-			if ("ILL001" === action_id_list[i]) {
-				action = new ActionILL001(this, owner);
-			}
-			if ("ILL002" === action_id_list[i]) {
-				action = new ActionILL002(this, owner);
-			}
-			if ("ILL003" === action_id_list[i]) {
-				action = new ActionILL003(this, owner);
-			}
-			if ("ILL004" === action_id_list[i]) {
-				action = new ActionILL004(this, owner);
-			}
-			if ("ILL005" === action_id_list[i]) {
-				action = new ActionILL005(this, owner);
-			}
+			if ("A001" === action_id_list[i]) action = new Action001(this, owner);
+			if ("A002" === action_id_list[i]) action = new Action002(this, owner);
+			if ("A003" === action_id_list[i]) action = new Action003(this, owner);
+			if ("A004" === action_id_list[i]) action = new Action004(this, owner);
+			if ("A005" === action_id_list[i]) action = new Action005(this, owner);
 			if (action != null) {
 				action.location = this.LOCATION.DECK;
 				actions.push(action);				
@@ -493,7 +572,7 @@
 		this.gui.updateActionPane();
 	}
 	BattleController.prototype.resetHand = function() {
-		if (this.getBattleStage() == "Evoking") this.gui.newActionPaneEvoking();
+		if ((this.getBattleStage() == "Evoking") && (this.turnPlayer == "blue")) this.gui.newActionPaneEvoking();
 		else if (this.getBattleStage() == "Action") this.gui.newActionPaneHand();
 	}
 	BattleController.prototype.evoke = function(bcunit) {
@@ -658,7 +737,7 @@
 	}
 	BattleController.prototype.resetActionPane = function() {
 		if (this.getBattleStage() == "Evoking") {
-			this.gui.newActionPaneEvoking();
+			if (this.turnPlayer == "blue") this.gui.newActionPaneEvoking();
 			this.gui.newDirectionPane("Summoning Stage", false);
 		}
 		else if (this.getBattleStage() == "Action") {
@@ -750,16 +829,27 @@
 		this.gui.newDirectionPane("End Stage", true);
 		if (this.turnPlayer == "blue") {
 			this.blueHand = this.newBlueHand();
+			var gui = this.gui;
+			var returnHandBattleStage = function() {
+				gui.returnHand();
+			}
+			var drawHandBattleStage = function() {
+				gui.drawHand();
+			}
+			this.getPlayer(this.turnPlayer).has_normal_summoned = false;
 			var bc = this;
 			var goToStartRed = function() {
 				bc.turnPlayer = "red";
 				bc.setBattleStage(bc.STAGE.START);
 			}
+			this.addToTimeline(returnHandBattleStage);
+			this.addToTimeline(drawHandBattleStage);
 			this.addToTimeline(goToStartRed);
-			this.gui.newActionPaneHand();
+			//this.gui.newActionPaneHand();
 		}
 		else if (this.turnPlayer == "red") {
 			this.redHand = this.newRedHand();
+			this.getPlayer(this.turnPlayer).has_normal_summoned = false;
 			var bc = this;
 			var goToStartBlue = function() {
 				bc.turnPlayer = "blue";
@@ -767,16 +857,18 @@
 			}
 			this.addToTimeline(goToStartBlue);
 			this.gui.newActionPaneHand();
+			level.activebattle.getNPC().has_normal_summoned = false;
 		} else {
 			console.log("doEndStage doesn't know whose turn it is")
 		}
+		this.turn_number++;
 	}
 	BattleController.prototype.doRockPaperScissors = function(string) {
 		this.blue_done = true;
 		this.red_done = true;
 		//if (string == "rock" || ...) {
 		this.turnPlayer = "blue";
-		this.gui.newActionPaneHand();
+		this.gui.newActionPaneHand(true);
 		this.setBattleStage(this.STAGE.START);
 	}
 	BattleController.prototype.addToTimeline = function(func, tick_delay) {
@@ -810,8 +902,8 @@
 		}
 	}
 	BattleController.prototype.decideBattleOutcome = function() {
-		var red_defeated = (this.getAllUnits("red", false).length < 1);
-		var blue_defeated = (this.getAllUnits("blue", false).length < 1);
+		var red_defeated = (this.getPlayer("red").current_health <= 0);
+		var blue_defeated = (this.getPlayer("blue").current_health <= 0);
 		if (red_defeated && blue_defeated) {
 			console.log("Draw?!");
 		}

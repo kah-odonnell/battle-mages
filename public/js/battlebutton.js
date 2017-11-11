@@ -61,7 +61,7 @@
 		}
 		if (type == "unit_target") {
 			//in this case, unit is the target
-			this.setTargetButtonEvents(unit, memory_id);
+			this.setTargetButtonEvents(unit, memory_id, data);
 		}
 		if (type == "counter_activate") {
 			this.setCounterActivateEvents(action);
@@ -71,10 +71,11 @@
 		var g = this;
 		var buttonBounds = null;
 		var best_ghost = null;
-		if (this.bc.is_resolving) {
-			this.on("mouseover", function(evt) {
-				level.activebattle.battleStage.newInfoPane("unit_info", unit);
-			});
+		this.on("mouseover", function(evt) {
+			level.activebattle.battleStage.newInfoPane("unit_info", unit);
+		});
+		if (!unit.canSummon() || this.bc.is_resolving) {
+
 		} else {
 			if ((this.bc.turnPlayer == "blue") && (this.bc.getBattleStage() == "Evoking")) {
 				this.on("mousedown", function(evt) {
@@ -83,23 +84,14 @@
 					//having to translate into a different set of coordinates. 
 					evt.currentTarget.removeChild(this.buttonChild);
 					level.activebattle.battleStage.addChild(this.buttonChild);	
+					this.buttonChild.scaleX = .8;
+					this.buttonChild.scaleY = .8;
 					buttonBounds = evt.currentTarget.buttonChild.getBounds()
 					evt.currentTarget.buttonChild.x = mouseX - buttonBounds.height/2;
 					evt.currentTarget.buttonChild.y = mouseY - buttonBounds.width/2;
 
 					//reveal UnitGhosts at available tiles
 					level.activebattle.battleController.gui.makeSummoningGhosts("blue", unit)
-
-					/*
-					//grey out units that can't use this Action
-					//turn on the marker of those that can
-					var units = g.bc.getActiveUnits("blue", true);
-					for (var i = 0; i < units.length; i++) {
-						if (!action.canUse(units[i])) units[i].guiUnit.greyOut();
-						else units[i].guiUnit.markerOn();
-					}
-					action.location = g.bc.LOCATION.DRAG;
-					*/
 				});
 				this.buttonChild.on("pressmove", function(evt) {
 					//on mouse movement, update the bitmap's x and y
@@ -109,9 +101,10 @@
 
 					//if token is held over a unit shadow, that shadow should light up
 					var ghosts = level.activebattle.battleController.gui.getSummoningGhosts("blue");
+					var bounds = {width: 100, height: 100};
 					var best_dist = 999999999;
+					var has_unit = false;
 					for (var i = 0; i < ghosts.length; i++) {
-						var bounds = {width: 100, height: 100};
 						var ghostX = ghosts[i].x - bounds.width/2;
 						var ghostY = ghosts[i].y - bounds.height;
 						var centerX = ghostX + bounds.width/2;
@@ -119,6 +112,7 @@
 						var inX = ((ghostX < mouseX) && (mouseX < (ghostX + bounds.width))); 
 						var inY = ((ghostY < mouseY) && (mouseY < (ghostY + bounds.height))); 
 						if (inX && inY) {
+							has_unit = true;
 							var d = distanceFormula(centerX, mouseX, centerY, mouseY);
 							if (d < best_dist) {					
 								best_ghost = ghosts[i];
@@ -135,33 +129,14 @@
 							ghosts[i].unGrey();
 						}
 					}
-					if (best_dist == 999999999) {
-						best_ghost == null;
+					if (best_ghost != null) {
+						if (!has_unit) {
+							best_ghost.greyOut();
+							best_ghost = null;
+						}
 					}
 				});
 				this.buttonChild.on("pressup", function(evt) {
-					/*
-					//if unit token is held over a ghost, that unit should be summoned
-					var ghosts = level.activebattle.battleController.getSummoningGhosts("blue");
-					var hits = []
-					var best_ghost = null;
-					var best_dist = 999999999;
-					for (var i = 0; i < ghosts.length; i++) {
-						var ghostX = ghosts[i].guiUnit.x - bounds.width/2;
-						var ghostY = ghosts[i].guiUnit.y - bounds.height;
-						var centerX = ghostX + bounds.width/2;
-						var centerY = ghostY + bounds.height/2;
-						var inX = ((ghostX < mouseX) && (mouseX < (ghostX + bounds.width))); 
-						var inY = ((ghostY < mouseY) && (mouseY < (ghostY + bounds.height))); 
-						if (inX && inY) {
-							var d = distanceFormula(centerX, mouseX, centerY, mouseY);
-							if (d < best_dist) {
-								best_ghost = ghosts[i];
-								best_dist = d;
-							}
-						}
-					}
-					*/
 					if (best_ghost != null) {
 						g.bc.chain.prepareSummon(g.summoning_unit, g.summoning_location);
 					} else {
@@ -173,7 +148,9 @@
 					evt.currentTarget.x = 0;
 					evt.currentTarget.y = 0;
 					level.activebattle.battleStage.removeChild(evt.currentTarget);
-					g.addChild(evt.currentTarget);
+					g.addChild(evt.currentTarget);	
+					evt.currentTarget.scaleX = 1;
+					evt.currentTarget.scaleY = 1;
 				});	
 			}
 		}
@@ -196,7 +173,9 @@
 				//that way, we can use the native mouseX and mouseY values, without
 				//having to translate into a different set of coordinates. 
 				evt.currentTarget.removeChild(this.buttonChild);
-				level.activebattle.battleStage.addChild(this.buttonChild);	
+				level.activebattle.battleStage.addChild(this.buttonChild);		
+				this.buttonChild.scaleX = .8;
+				this.buttonChild.scaleY = .8;
 				var buttonBounds = evt.currentTarget.buttonChild.getBounds()
 				evt.currentTarget.buttonChild.x = mouseX - buttonBounds.height/2;
 				evt.currentTarget.buttonChild.y = mouseY - buttonBounds.width/2;
@@ -249,6 +228,8 @@
 				evt.currentTarget.y = 0;
 				level.activebattle.battleStage.removeChild(evt.currentTarget);
 				g.addChild(evt.currentTarget);	
+				evt.currentTarget.scaleX = 1;
+				evt.currentTarget.scaleY = 1;
 				//ungrey everything
 				var units = g.bc.getActiveUnits("blue", true);
 				for (var i = 0; i < units.length; i++) {
@@ -258,17 +239,17 @@
 			});	
 		}						
 	}
-	BattleButton.prototype.setTargetButtonEvents = function(unit, memory_id) {
+	BattleButton.prototype.setTargetButtonEvents = function(unit, memory_id, data) {
 		var g = this;
-		this.on("mouseover", function(evt) {
+		this.buttonChild.on("mouseover", function(evt) {
 			//update the info pane with info about this Action
 			level.activebattle.battleStage.newInfoPane("unit_info", unit);
-			unit.guiUnit.markerOn();
+			unit.guiUnit.markerOn("target");
 		})
-		this.on("mouseout", function(evt) {
+		this.buttonChild.on("mouseout", function(evt) {
 			unit.guiUnit.markerOff();
 		})
-		this.on("click", function(event) {
+		this.buttonChild.on("click", function(event) {
 			unit.guiUnit.markerOff();
 			level.activebattle.battleStage.newInfoPane("unit_info", unit)
 			var user_unit_id = data.unit_unique_id;
@@ -281,18 +262,18 @@
 	}
 	BattleButton.prototype.setCounterActivateEvents = function(action) {
 		var g = this;
-		this.on("mouseover", function(evt) {
+		this.buttonChild.on("mouseover", function(evt) {
 			//update the info pane with info about this Action
 			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
 			var unit_c = g.bc.chain.getCounterUnit("blue", action);
 			if (unit_c) unit_c.guiUnit.markerOn();
 		})
-		this.on("mouseout", function(evt) {
+		this.buttonChild.on("mouseout", function(evt) {
 			//update the info pane with info about this Action
 			var unit_c = g.bc.chain.getCounterUnit("blue", action);
 			if (unit_c) unit_c.guiUnit.markerOff();
 		})
-		this.on("click", function(event) {
+		this.buttonChild.on("click", function(event) {
 			level.activebattle.battleStage.newInfoPane("action_hand_info", action);
 			var unit_c = g.bc.chain.getCounterUnit("blue", action);
 			unit_c.guiUnit.markerOff();
@@ -300,8 +281,7 @@
 		});
 	}
 	BattleButton.prototype.initUnitTokenButton = function(bcunit) {
-		var imagename = bcunit.token_img;
-		this.buttonChild = new createjs.Bitmap(loader.getResult(imagename));
+		this.buttonChild = bcunit.makeGraphic();
 	}
 	BattleButton.prototype.initRockButton = function() {
 		this.buttonChild = new createjs.Bitmap(loader.getResult("rockbutton"));
@@ -313,9 +293,8 @@
 		this.buttonChild = new createjs.Bitmap(loader.getResult("scissorsbutton"));
 	}
 	BattleButton.prototype.initUnitButton = function(bcunit) {
-		var imagename = bcunit.token_img;
-		if (this.bc.is_resolving) {
-			var image = new createjs.Bitmap(loader.getResult(imagename));
+		if (!bcunit.canSummon() || this.bc.is_resolving) {
+			var image = bcunit.makeGraphic();
 			var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
 			image.filters = [
 			    new createjs.ColorMatrixFilter(matrix)
@@ -324,13 +303,12 @@
 			image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
 			this.buttonChild = image;
 		} else {
-			this.buttonChild = new createjs.Bitmap(loader.getResult(imagename));
+			this.buttonChild = bcunit.makeGraphic();
 		}
 	}
 	BattleButton.prototype.initActionHandButton = function(action) {
 		if (this.bc.is_resolving || (this.bc.turnPlayer == "red") || (this.bc.getBattleStage() != "Action")) {
-			var imagename = action.token_img;
-			var image = new createjs.Bitmap(loader.getResult(imagename));
+			var image = action.makeGraphic();
 			var matrix = new createjs.ColorMatrix().adjustSaturation(-150);
 			image.filters = [
 			    new createjs.ColorMatrixFilter(matrix)
@@ -339,13 +317,18 @@
 			image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
 			this.buttonChild = image;
 		} else {
-			var imagename = action.token_img;
-			this.buttonChild = new createjs.Bitmap(loader.getResult(imagename));
+			this.buttonChild = action.makeGraphic();
 		}
 	}
 	BattleButton.prototype.initActionInfoButton = function(action) {
-		var imagename = action.token_img;
-		this.buttonChild = new createjs.Bitmap(loader.getResult(imagename));
+		var image = action.makeGraphic();
+		var matrix = new createjs.ColorMatrix().adjustSaturation(0);
+		image.filters = [
+		    new createjs.ColorMatrixFilter(matrix)
+		];
+		var bounds = image.getBounds();
+		image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
+		this.buttonChild = image;
 	}
 	BattleButton.prototype.initContinueButton = function() {
 		this.buttonChild = new createjs.Bitmap(loader.getResult("cancelbutton"));

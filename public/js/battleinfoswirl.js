@@ -8,7 +8,7 @@
 		this.Container_initialize();
 		this.bc = battleController;
 		var swirl = new createjs.Bitmap(loader.getResult("infoswirl"));
-		var name = player_npc.battlename;
+		var name = player_npc.name;
 		var name_container = new createjs.Container();
 		for (var i = 0; i < 16; i++) {
 			var nametext1 = new createjs.Text(name, "22px crazycreation", "#000000");			
@@ -16,7 +16,7 @@
 			nametext1.shadow = new createjs.Shadow(color, 0, 0, 4);
 			name_container.addChild(nametext1);
 		}
-		if (player_npc.is_player) {
+		if (player_npc.owner == "blue") {
 			this.owner = "blue";
 			swirl.x = 0;
 			swirl.y = 0;

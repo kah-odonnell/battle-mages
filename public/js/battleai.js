@@ -9,50 +9,30 @@
 			else if (bc.turnPlayer == "blue") return false;
 			else console.log("wtf")
 		}
-		this.evokeRandom = function() {
-			var units = bc.getAllUnits("red", false);
-			var active_units = bc.getActiveUnits("red", false);
-			var num_to_add = Math.floor(Math.random() * units.length);
-			var canEvoke = true;
-			for (var i = 0; i < active_units.length; i++) {
-				if (units[num_to_add] == active_units[i]) {
-					canEvoke = false;
-				}
-			}
+		this.evokeRandom = function(evokable_units) {
+			var num_to_add = Math.floor(Math.random() * evokable_units.length);
 			var locs = bc.getAvailableLocations("red");
 			var location_to_summon = Math.floor(Math.random() * locs.length);
-			if (canEvoke) {
-				bc.chain.prepareSummon(units[num_to_add], locs[location_to_summon]);
-			} else {
-				this.evokeRandom();
-			}
+			bc.chain.prepareSummon(evokable_units[num_to_add], locs[location_to_summon]);
 		}
 		this.doEvokingStageAI = function() {
 			if (!this.isTurn) return false;
 			if (evoking_satisfied == true) {
 				bc.setBattleStage(bc.STAGE.ACTION);						
-			}
-			else if (evoking_satisfied == false) {
-				var active = bc.getActiveUnits("red", false);
+			} else {
 				var evokeable = bc.getEvokeableUnits("red", false);
 				if (evokeable.length > 0) {
-					if (active.length == 0) {
-						this.evokeRandom();
-						if (evokeable.length > 1) evoking_satisfied = false;
-						else evoking_satisfied = true;
-					} else if (active.length == 1) {
-						this.evokeRandom();
-						evoking_satisfied = true;
-					} else {
-						evoking_satisfied = true;
-					}	
+					this.evokeRandom(evokeable);
+					evoking_satisfied = true;
 				} else {
 					evoking_satisfied = true;
+					this.doEvokingStageAI();
 				}
 			}
 		}
 		this.doActionStageAI = function() {
 			if (!this.isTurn) return false;
+			evoking_satisfied = false;
 			var did_action = this.useAction();
 			if (did_action) {
 				return true;

@@ -42,6 +42,9 @@
 		} else {
 
 		}
+		if (bcunit.is_player) {
+			this.scaleX *= -1;
+		}
 	}
 	BattleUnitGhost.prototype.tick = function() {
 		var bounds = {width: 100, height: 100};
@@ -75,12 +78,14 @@
 		var bounds = image.getBounds();
 		image.cache(bounds.x, bounds.y, bounds.width, bounds.height)
 		this.sprite = image;
+		this.sprite.gotoAndPlay("idle");
 	}
 	BattleUnitGhost.prototype.unGrey = function() {
 		if (this.is_grey) {		
 			this.is_grey = false;
 			this.sprite.uncache();
 			this.sprite.play();
+			this.sprite.gotoAndPlay("idle");
 		}
 	}
 	BattleUnitGhost.prototype.markerOn = function() {
@@ -90,11 +95,13 @@
 			var id = this.marker_id;
 			var marker_container = new createjs.Container();
 			for (var i = 0; i < 6; i++) {
-				var new_marker = new createjs.Bitmap(loader.getResult("marker"));
+				var new_marker = new createjs.Bitmap(loader.getResult("marker_default"));
 				var color = "#FFFFFF";
 				new_marker.shadow = new createjs.Shadow(color, 0, 0, 4);
 				marker_container.addChild(new_marker);
-			}		
+			}
+			var b = marker_container.getBounds();
+			marker_container.cache(marker_container.x - 10, marker_container.y - 10, b.width + 10, b.height + 10);
 			this.marker = marker_container;	
 			var marker_b = this.marker.getBounds();
 			this.marker.regX = marker_b.width/2;

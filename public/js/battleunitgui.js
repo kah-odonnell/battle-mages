@@ -22,18 +22,21 @@
 		});
 
 		this.status_pane = new createjs.Container();
-		this.healthbar = new createjs.Bitmap(loader.getResult("healthbar"));
+		if (bcunit.is_player) this.healthbar = new createjs.Bitmap(loader.getResult("healthbar_red"));
+		else this.healthbar = new createjs.Bitmap(loader.getResult("healthbar"));
 		this.healthempty = new createjs.Bitmap(loader.getResult("healthempty"));
 		this.updateStatusPane();
 
 		this.status_pane.addChild(this.healthbar);
 		this.status_pane.addChild(this.healthempty);
 		this.status_pane.x = 0 - 50;
-		this.status_pane.y = 0 - 100;
+		this.status_pane.y = 0 - 115;
 		this.addChild(this.status_pane);
 
 		this.owner = owner;
 		if (owner == "red") this.scaleX = -1;
+
+		if (bcunit.is_player) this.status_pane.y += 5;
 	}
 	BattleUnitGui.prototype.tick = function() {
 
@@ -96,18 +99,22 @@
 		this.sprite.uncache();
 		this.sprite.play();
 	}
-	BattleUnitGui.prototype.markerOn = function() {
+	BattleUnitGui.prototype.markerOn = function(type) {
 		if (!this.marker_on) {
 			this.marker_on = true;
 			this.marker_id++;
 			var id = this.marker_id;
 			var marker_container = new createjs.Container();
 			for (var i = 0; i < 6; i++) {
-				var new_marker = new createjs.Bitmap(loader.getResult("marker"));
+				var new_marker = null;
+				if (type === "target") new_marker = new createjs.Bitmap(loader.getResult("marker_target"));
+				else new_marker = new createjs.Bitmap(loader.getResult("marker_default"));
 				var color = "#FFFFFF";
 				new_marker.shadow = new createjs.Shadow(color, 0, 0, 4);
 				marker_container.addChild(new_marker);
-			}		
+			}
+			var b = marker_container.getBounds();
+			marker_container.cache(marker_container.x - 10, marker_container.y - 10, b.width + 10, b.height + 10);
 			this.marker = marker_container;	
 			var marker_b = this.marker.getBounds();
 			this.marker.regX = marker_b.width/2;
