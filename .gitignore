@@ -4,3 +4,5 @@
 *.txt
 node_modules/
 public/dialogs/
+.vagrant/
+Vagrantfile

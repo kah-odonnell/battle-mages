@@ -1,78 +1,30 @@
 extends layout
 
 block scripts
-  script(src="js/src/mootools-yui-compressed.js")
+  //- each item in list
+  //-  script(src=item)
   script(src="js/src/createjs-2015.05.21.min.js")
   script(src="js/src/jquery.min.js")
   script(src="js/src/jquery-ui.js")
-  script(src="js/data/data_dialog.js")
-  script(src="js/data/data_inventory.js")
-  script(src="js/data/data_maps.js")
-  script(src="js/data/data_npcs.js")
-  script(src="js/gamedata.js")
-  script(src="js/battle.js")
-  script(src="js/battleai.js")
-  script(src="js/battlenpc.js")
-  script(src="js/battleplayer.js")
-  script(src="js/battlecontroller.js")
-  script(src="js/battlecontrollerchain.js")
-  script(src="js/battlecontrollerunit.js")
-  script(src="js/battlecontrolleraction.js")
-  script(src="js/battlestage.js")
-  script(src="js/battlestat.js")
-  script(src="js/battleinfoswirl.js")
-  script(src="js/battleunitgui.js")
-  script(src="js/battleunitghost.js")
-  script(src="js/battlechaingui.js")
-  script(src="js/battlebutton.js")
-  script(src="js/dialog.js")
-  script(src="js/dialogchar.js")
-  script(src="js/initial.js")
-  script(src="js/interactprompt.js")
-  script(src="js/level.js")
-  script(src="js/map.js")
-  script(src="js/mapevent.js")
-  script(src="js/npcknight.js")
-  script(src="js/player.js")
-  script(src="js/scanner.js")
-  script(src="js/units/p001_audrey.js")
-  script(src="js/units/u001_shiren.js")
-  script(src="js/units/u002_pyra.js")
-  script(src="js/units/u003_matriarch.js")
-  script(src="js/actions/a001_srd_smoke.js")
-  script(src="js/actions/a002_mana_tap.js")
-  script(src="js/actions/a003_neurolyse.js")
-  script(src="js/actions/a004_a_chain.js")
-  script(src="js/actions/a005_amp_atk.js")
+  script(src='js/initializer.js')
+  script(src='js/globals.js')
+  script(src='js/keys.js')
+  script(src='js/utils.js')
+  script(src='js/ui/container.js')
+  script(src='js/game.js')
+  script(src='js/player.js')
+  script(src='js/maps/tiles/tile.js')
+  script(src='js/maps/maps/tilemap.js')
+  script(src='js/maps/maps/map1.js')
+  script(src='js/maps/mapgraph/mapgraph.js')
+  script(src='js/maps/mapgraph/mapgraph1.js')
 
 block content
+  body(bgcolor="#000000" id="body")
 
-  body(bgcolor="#000000" onload="init();", style="font-family: crazycreation;")
-    div(id="loader" class="loader")
+    div(class="canvasHolder" id="canvasHolder" style="text-align: center;")
+      canvas(id="canvas")
+      script.
+        bm.initialize();
 
-    div(class="canvasHolder" style="text-align: center;")
-      canvas(id="canvas" width="800" height="450")
-
-    div(style="text-align: center; width: 800px; margin: 0 auto; font-size: 18px;")
-      div(id="instructions", style="float: left; color: #FFFFFF; font-size: 22px; ") 
-        | WASD to Move, SPACE to Interact
-
-      div(style="clear: left; float: left; color: #FFFFFF; font-size: 22px; ") 
-        | Use MOUSE during battle to click/drag tokens to your units.
-
-      div(id="FPSdata", style="text-align: right;")
-
-      div(id="space", style="clear: left; height: 30px;")
-
-      div(id="lose", style="color: #FFFFFF; font-size: 26px; text-align: left; padding-left: 110px; padding-right: 110px;")
-
-      div(id="update", style="color: #FFFFFF; font-size: 26px; text-align: left; padding-left: 110px; padding-right: 110px;")
-        p
-          | Token Tempest is both an RPG and a collectible card game; the player must leverage the attacks, skills, and counters of legendary spirits to outwit opponents in battle. This #[a(target="_blank", href="http://arcanedynamics.tumblr.com/post/135756404379/design-challenges-of-token-tempest") blog post] explains one of the greatest technical challenges in developing the battle system. 
-
-      div(id="update", style="color: #FFFFFF; font-size: 26px; text-align: left; padding-left: 110px; padding-right: 110px;")
-        p
-          | Token Tempest makes use of several tools in the open source #[a(target="_blank", href="https://github.com/CreateJS") CreateJS] suite.
-
-    div(id="guard")
 
