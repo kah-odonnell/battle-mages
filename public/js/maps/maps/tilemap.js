@@ -8,7 +8,10 @@ bm.maps.TileMap = class extends bm.ui.Container {
 		var yLength = this.getMapArray().length;
 		var xLength = this.getMapArray()[0].length;
 		this.mapBackground = new bm.ui.Container();
-		this.tileArray = new Array(yLength).fill(new Array(xLength).fill(new Object()))
+		this.tileArray = new Array(yLength);
+		for (var i = this.tileArray.length - 1; i >= 0; i--) {
+			this.tileArray[i] = new Array(xLength);
+		}
 		for (var i = this.getMapArray().length - 1; i >= 0; i--) {
 			for (var j = this.getMapArray()[i].length - 1; j >= 0; j--) {
 				var tileID= this.getMapArray()[i][j];
@@ -24,9 +27,23 @@ bm.maps.TileMap = class extends bm.ui.Container {
 		this.addToContainer(this.mapBackground)
 	}
 
+	cacheMap() {
+		var mapBounds = this.getBounds()
+		if (mapBounds)
+			this.cache(0,0, mapBounds.width, mapBounds.height)
+	}
+
+	cacheMapBackground() {
+		var backgroundBounds = this.mapBackground.getBounds()
+		if (backgroundBounds)
+			this.mapBackground.cache(0,0, backgroundBounds.width, backgroundBounds.height)
+	}
+
 	addTileToMapContainer(tile, y, x) {
 		tile.x = x * bm.globals._tileSize;
 		tile.y = y * bm.globals._tileSize
+		//var tileBounds = tile.getBounds();
+		//tile.cache(0,0,tileBounds.height,tileBounds.width)
 		this.addToContainer(tile);
 	}
 
@@ -88,8 +105,8 @@ bm.maps.TileMap = class extends bm.ui.Container {
 		if (direction == "down"){
 			tileY = Math.floor((y + bm.globals._tileSize/4)/bm.globals._tileSize);
 		}
-		tile = bm.gameInstance.mapGraph.currentMap.getMapArray()[tileY][tileX];
-		if (tile == "F_E0000"){
+		tile = this.tileArray[tileY][tileX];
+		if (tile.isFloor){
 			return false;
 		}
 		return true;

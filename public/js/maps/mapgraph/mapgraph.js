@@ -5,8 +5,8 @@ bm.maps.MapGraph = class {
 		this.currentMap = this.maps[0];
 	}
 
-	tick() {
-		this.currentMap.tick();
+	tick(event) {
+		this.currentMap.tick(event);
 	}
 
 	addPlayer(player) {

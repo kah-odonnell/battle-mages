@@ -4,10 +4,11 @@ bm.Game = class {
 	}
 
 	tick(event) {
-		if (bm.gameInstance.mapGraph) {
-			bm.gameInstance.mapGraph.currentMap.tick(event);
+		if (this.mapGraph) {
+			this.mapGraph.tick(event);
 		} 
-		bm.gameInstance.stage.update(event);
+		this.stage.update(event);
+		this.updateFPSCounter();
 	}
 
 	setup() {
@@ -79,6 +80,16 @@ bm.Game = class {
 		bm.assets.loadManifest(manifest);
 	}
 
+	updateFPSCounter() {
+		//FPS/Debug info
+		var color1 = "#FFFFFF"
+		var fps = Math.floor(createjs.Ticker.getMeasuredFPS());
+		if (Math.floor(createjs.Ticker.getMeasuredFPS()) < 55) {
+			color1 = "#FF0000"
+		}
+		$("#framerateCounter").css("color",color1).html(fps);
+	}
+
 	handleLoadProgress(event) {
 		var progress = Math.ceil(event.progress*100);
 		this.loadText.text = 'Loading   ' + progress + '%';
@@ -87,8 +98,8 @@ bm.Game = class {
 
 	handleLoadComplete(event) {
 		this.loadText.text = 'Loading   100%';
-		this.stage.update(event);	
 		this.stage.removeChild(this.loadText);
 		this.buildWorld();
+		bm.assets.removeAllEventListeners();
 	}
 }

@@ -22,8 +22,9 @@ block scripts
 block content
   body(bgcolor="#000000" id="body")
 
-    div(class="canvasHolder" id="canvasHolder" style="text-align: center;")
+    div(class="canvasHolder" id="canvasHolder")
       canvas(id="canvas")
+      div(id="framerateCounter")
       script.
         bm.initialize();
 

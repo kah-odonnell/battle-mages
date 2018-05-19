@@ -1,6 +1,7 @@
 bm.Player = class extends bm.ui.Container {
 	constructor() {
 		super();
+		this.spriteSpeedMultiplier = (60/bm.globals._FPS)
 		var data = new createjs.SpriteSheet({
 			"images": [bm.assets.getResult("player")],
 			"frames": {
@@ -12,12 +13,12 @@ bm.Player = class extends bm.ui.Container {
 			},
 			// define two animations, run (loops, 1.5x speed) and jump (returns to run):
 			"animations": {
-				"idleSide": [0, 4, true, 0.0125], 
-				"idleUp": [30, 30, true, 0.0125], 
-				"idleDown": [15, 19, true, 0.0125], 
-				"runSide": [5, 13, true, .25],
-				"runUp": [31, 40, true, .25],
-				"runDown": [20, 29, true, .25]
+				"idleSide": [0, 4, true, 0.0125*this.spriteSpeedMultiplier], 
+				"idleUp": [30, 30, true, 0.0125*this.spriteSpeedMultiplier], 
+				"idleDown": [15, 19, true, 0.0125*this.spriteSpeedMultiplier], 
+				"runSide": [5, 13, true, .25*this.spriteSpeedMultiplier],
+				"runUp": [31, 40, true, .25*this.spriteSpeedMultiplier],
+				"runDown": [20, 29, true, .25*this.spriteSpeedMultiplier]
 			},
 			"framerate": 1
 		});
@@ -127,10 +128,10 @@ bm.Player = class extends bm.ui.Container {
 		this.scaleX = 1;
 		this.spriteDirection = this.FACING.SIDE;
 		if (!map.isBoundary(this.x, this.y, "left")){
-			this.x -= this.xVelocity;
+			this.x -= this.xVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
 			if ((local.x < canvas.width/(bm.globals._canvasScale*3)) && (map.x < 0)) {
-				map.x += this.xVelocity;
+				map.x += this.xVelocity*this.spriteSpeedMultiplier;
 			}	
 		}
 	}
@@ -151,12 +152,12 @@ bm.Player = class extends bm.ui.Container {
 			}
 		}
 		if (moveAllowed) {
-			this.y -= this.yVelocity;
+			this.y -= this.yVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
 			var mapCanMoveDown = (map.y < 0);
 			var playerTowardsTop = (local.y + this.regY < canvas.height/(bm.globals._canvasScale*2.5));
 			if (playerTowardsTop && mapCanMoveDown) {
-				map.y += this.yVelocity;
+				map.y += this.yVelocity*this.spriteSpeedMultiplier;
 			}	
 		}
 	}
@@ -170,10 +171,10 @@ bm.Player = class extends bm.ui.Container {
 			var playerTowardsRight = (local.x > canvas.width/bm.globals._canvasScale - (canvas.width/bm.globals._canvasScale)/3);
 			var mapBiggerThanCanvas = (canvas.width < map.getBounds().width);
 			var moveMap = (mapCanMoveLeft && playerTowardsRight && mapBiggerThanCanvas);
-			this.x += this.xVelocity;
+			this.x += this.xVelocity*this.spriteSpeedMultiplier;
 	  		this.setRun();
 	  		if (moveMap) {
-	  			map.x -= this.xVelocity;
+	  			map.x -= this.xVelocity*this.spriteSpeedMultiplier;
 	  		}
 		}
 	}
@@ -181,6 +182,7 @@ bm.Player = class extends bm.ui.Container {
 		var local = this.localToGlobal(0,0)
 		var moveAllowed = false;
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
+		var mapBounds = map.getBounds();
 		this.spriteDirection = this.FACING.DOWN;
 		if (!map.isBoundary(this.x, this.y, "down")){
 			if (this.scaleX == -1) {
@@ -198,10 +200,10 @@ bm.Player = class extends bm.ui.Container {
 			var playerTowardsBottom = (local.y + this.regY > canvas.height/bm.globals._canvasScale - (canvas.height/bm.globals._canvasScale)/3);
 			var mapBiggerThanCanvas = (canvas.height < map.getBounds().height);
 			var moveMap = (mapCanMoveUp && playerTowardsBottom && mapBiggerThanCanvas);
-			this.y += this.yVelocity;
+			this.y += this.yVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
 			if (moveMap) {
-				map.y -= this.yVelocity;
+				map.y -= this.yVelocity*this.spriteSpeedMultiplier;
 			}
 		}
 	}
