@@ -2,6 +2,7 @@ bm.maps.TileMap = class extends bm.ui.Container {
 	constructor() {
 		super()
 		this.createTileArrayAndMapContainer();
+		//this.cacheMapBackground();
 	}
 
 	createTileArrayAndMapContainer() {
@@ -51,6 +52,7 @@ bm.maps.TileMap = class extends bm.ui.Container {
 	addTileToMapBackground(tile, y, x) {
 		tile.x = x * bm.globals._tileSize;
 		tile.y = y * bm.globals._tileSize
+		//tile.cacheTile();
 		this.addToContainer(tile);
 	}
 

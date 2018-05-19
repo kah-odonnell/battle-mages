@@ -40,8 +40,6 @@ bm.Game = class {
 
 	setupCanvas() {
 		var canvas = document.getElementById('canvas');
-		var context = canvas.getContext('2d');
-		bm.globals.refreshGlobals();
 		canvas.width = bm.globals._canvasWidth;
 		canvas.height = bm.globals._canvasHeight;
 		$("canvas").css("width", bm.globals._canvasScale+"00%")
@@ -58,8 +56,7 @@ bm.Game = class {
 	}
 
 	setupStage() {
-		this.stage = new createjs.Stage('canvas');
-		this.stage.enableMouseOver();
+		this.stage = new createjs.StageGL('canvas');
 	}
 
 	setupLoadingText() {

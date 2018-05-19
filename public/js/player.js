@@ -33,8 +33,8 @@ bm.Player = class extends bm.ui.Container {
 		this.spriteDirection = this.FACING.SIDE;
 		this.currentAnimation;
 
-		this.x = 100;
-		this.y = 100;
+		this.x = 250;
+		this.y = 105;
 		this.regY = 50;
 
 		if (bm.globals._debugMode) {	

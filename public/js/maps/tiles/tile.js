@@ -79,6 +79,12 @@ bm.maps.Tile = class extends bm.ui.Container {
 		}
 	}
 
+	cacheTile() {
+		var tileBounds = this.getBounds()
+		if (tileBounds)
+			this.cache(0,0, tileBounds.width, tileBounds.height)
+	}
+
 	getImage() {
 		return this.image;
 	}
