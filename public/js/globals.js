@@ -16,6 +16,9 @@ bm.Globals = class {
 			{"src":"../imgs/tiles/forest/forest_southeast_cv.png"},
 			{"src":"../imgs/tiles/forest/forest_southwest_cx.png"},
 			{"src":"../imgs/tiles/forest/forest_southwest_cv.png"},
+			{"src":"../imgs/tiles/forest/components/redflower.png"},
+			{"src":"../imgs/tiles/forest/components/blueflower.png"},
+			{"src":"../imgs/tiles/forest/components/whiteflower.png"},
 		]
 		this.setLoadManifestIDs();
 

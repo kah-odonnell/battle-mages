@@ -7479,7 +7479,7 @@ createjs.deprecate = function(fallbackMethod, name) {
 	 * documentation for details.
 	 **/
 	p.sortChildren = function(sortFunction) {
-		this.children.sort(sortFunction);
+		this.children.timsort(sortFunction);
 	};
 
 	/**

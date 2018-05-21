@@ -22,6 +22,12 @@ bm.maps.TileMap = class extends bm.ui.Container {
 				} else {
 					this.addTileToMapContainer(tile, i, j);
 				}
+				if (tile.getComponents()) {
+					this.addComponents(tile);
+				}
+				if (tile.getGeometry()) {
+					this.addToGeometry(tile.getGeometry());
+				}
 				this.addTileToTileArray(tile, i, j);
 			}
 		}
@@ -38,6 +44,16 @@ bm.maps.TileMap = class extends bm.ui.Container {
 		var backgroundBounds = this.mapBackground.getBounds()
 		if (backgroundBounds)
 			this.mapBackground.cache(0,0, backgroundBounds.width, backgroundBounds.height)
+	}
+
+	addComponents(tile) {
+		var components = tile.getComponents();
+		if (!components) return;
+		for (var i = components.length - 1; i >= 0; i--) {
+			components[i].x = components[i].x + tile.x;
+			components[i].y = components[i].y + tile.y;
+			this.addToContainer(components[i]);
+		}
 	}
 
 	addTileToMapContainer(tile, y, x) {
@@ -73,10 +89,18 @@ bm.maps.TileMap = class extends bm.ui.Container {
 			var obj1Y = obj1.y
 			var obj2Y = obj2.y
 			if (!obj1.isFloor && obj1.tileID) obj1Y += bm.globals._tileSize; 
-			if (!obj2.isFloor && obj2.tileID) obj2Y += bm.globals._tileSize; 
+			if (!obj2.isFloor && obj2.tileID) obj2Y += bm.globals._tileSize;
+			if (obj1Y == obj2Y) {
+				if (obj1.x > obj2.x) { return 1; }
+				if (obj1.x < obj2.x) { return -1; }
+				return 0;
+			} 
 		    if (obj1Y > obj2Y) { return 1; }
 		    if (obj1Y < obj2Y) { return -1; }
 		    return 0;
+		}
+		var sortFunction2 = function(obj1, obj2, options) {
+			return obj1.y-obj2.y;
 		}
 		this.sortChildren(sortFunction);
 		bm.gameInstance.player.tick(event);
