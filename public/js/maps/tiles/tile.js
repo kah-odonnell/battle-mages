@@ -12,96 +12,35 @@ bm.maps.Tile = class extends bm.ui.Container {
 		//this.backgroundID  = "grasstile1";
 		this.isFloor = false;
 		switch(this.tileID) {
+			//~~~~~~~~~~ FOREST 
 			case "F_E0000": 
 				this.imageID = "grasstile1"
 				this.isFloor = true;
+				this.isFlat = true;
 				break;
 			case "F_FLWR0": 
 				this.imageID = "grasstile1"
 				this.isFloor = true;
-				var flowername = "redflower";
-				var getFlower = function(flowername) {
-					return new createjs.Bitmap(bm.assets.getResult(flowername));
-				}
-				var flower1 = getFlower(flowername);
-				var flowerBounds = flower1.getBounds();
-				flower1.x = bm.globals._tileSize*(1/4); flower1.y = bm.globals._tileSize*(1/3); 
-				flower1.regX = flowerBounds.width/2; flower1.regY = flowerBounds.height;
-				var flower2 = getFlower(flowername);
-				flower2.x = bm.globals._tileSize*(3/4); flower2.y = bm.globals._tileSize*(1/3); 
-				flower2.regX = flowerBounds.width/2; flower2.regY = flowerBounds.height;
-				var flower3 = getFlower(flowername);
-				flower3.x = bm.globals._tileSize*(1/4); flower3.y = bm.globals._tileSize*(2/3); 
-				flower3.regX = flowerBounds.width/2; flower3.regY = flowerBounds.height;
-				var flower4 = getFlower(flowername);
-				flower4.x = bm.globals._tileSize*(3/4); flower4.y = bm.globals._tileSize*(2/3); 
-				flower4.regX = flowerBounds.width/2; flower4.regY = flowerBounds.height;
-				var flower5 = getFlower(flowername);
-				flower5.x = bm.globals._tileSize*(1/4); flower5.y = bm.globals._tileSize*(3/3); 
-				flower5.regX = flowerBounds.width/2; flower5.regY = flowerBounds.height;
-				var flower6 = getFlower(flowername);
-				flower6.x = bm.globals._tileSize*(3/4); flower6.y = bm.globals._tileSize*(3/3); 
-				flower6.regX = flowerBounds.width/2; flower6.regY = flowerBounds.height;
-				var components = [flower1, flower2, flower3, flower4, flower5, flower6];
-				this.components = components;
+				this.isFlat = true;
+				this.components = bm.maps.ComponentMaker.getComponents(this.tileID);
 				break;
 			case "F_FLWR1": 
 				this.imageID = "grasstile1"
 				this.isFloor = true;
-				var flowername = "whiteflower";
-				var getFlower = function(flowername) {
-					return new createjs.Bitmap(bm.assets.getResult(flowername));
-				}
-				var flower1 = getFlower(flowername);
-				var flowerBounds = flower1.getBounds();
-				flower1.x = bm.globals._tileSize*(1/4); flower1.y = bm.globals._tileSize*(1/3); 
-				flower1.regX = flowerBounds.width/2; flower1.regY = flowerBounds.height;
-				var flower2 = getFlower(flowername);
-				flower2.x = bm.globals._tileSize*(3/4); flower2.y = bm.globals._tileSize*(1/3); 
-				flower2.regX = flowerBounds.width/2; flower2.regY = flowerBounds.height;
-				var flower3 = getFlower(flowername);
-				flower3.x = bm.globals._tileSize*(1/4); flower3.y = bm.globals._tileSize*(2/3); 
-				flower3.regX = flowerBounds.width/2; flower3.regY = flowerBounds.height;
-				var flower4 = getFlower(flowername);
-				flower4.x = bm.globals._tileSize*(3/4); flower4.y = bm.globals._tileSize*(2/3); 
-				flower4.regX = flowerBounds.width/2; flower4.regY = flowerBounds.height;
-				var flower5 = getFlower(flowername);
-				flower5.x = bm.globals._tileSize*(1/4); flower5.y = bm.globals._tileSize*(3/3); 
-				flower5.regX = flowerBounds.width/2; flower5.regY = flowerBounds.height;
-				var flower6 = getFlower(flowername);
-				flower6.x = bm.globals._tileSize*(3/4); flower6.y = bm.globals._tileSize*(3/3); 
-				flower6.regX = flowerBounds.width/2; flower6.regY = flowerBounds.height;
-				var components = [flower1, flower2, flower3, flower4, flower5, flower6];
-				this.components = components;
+				this.isFlat = true;
+				this.components = bm.maps.ComponentMaker.getComponents(this.tileID);
 				break;
 			case "F_FLWR2": 
 				this.imageID = "grasstile1"
 				this.isFloor = true;
-				var flowername = "blueflower";
-				var getFlower = function(flowername) {
-					return new createjs.Bitmap(bm.assets.getResult(flowername));
-				}
-				var flower1 = getFlower(flowername);
-				var flowerBounds = flower1.getBounds();
-				flower1.x = bm.globals._tileSize*(1/4); flower1.y = bm.globals._tileSize*(1/3); 
-				flower1.regX = flowerBounds.width/2; flower1.regY = flowerBounds.height;
-				var flower2 = getFlower(flowername);
-				flower2.x = bm.globals._tileSize*(3/4); flower2.y = bm.globals._tileSize*(1/3); 
-				flower2.regX = flowerBounds.width/2; flower2.regY = flowerBounds.height;
-				var flower3 = getFlower(flowername);
-				flower3.x = bm.globals._tileSize*(1/4); flower3.y = bm.globals._tileSize*(2/3); 
-				flower3.regX = flowerBounds.width/2; flower3.regY = flowerBounds.height;
-				var flower4 = getFlower(flowername);
-				flower4.x = bm.globals._tileSize*(3/4); flower4.y = bm.globals._tileSize*(2/3); 
-				flower4.regX = flowerBounds.width/2; flower4.regY = flowerBounds.height;
-				var flower5 = getFlower(flowername);
-				flower5.x = bm.globals._tileSize*(1/4); flower5.y = bm.globals._tileSize*(3/3); 
-				flower5.regX = flowerBounds.width/2; flower5.regY = flowerBounds.height;
-				var flower6 = getFlower(flowername);
-				flower6.x = bm.globals._tileSize*(3/4); flower6.y = bm.globals._tileSize*(3/3); 
-				flower6.regX = flowerBounds.width/2; flower6.regY = flowerBounds.height;
-				var components = [flower1, flower2, flower3, flower4, flower5, flower6];
-				this.components = components;
+				this.isFlat = true;
+				this.components = bm.maps.ComponentMaker.getComponents(this.tileID);
+				break;
+			case "F_FLWRR": 
+				this.imageID = "grasstile1"
+				this.isFloor = true;
+				this.isFlat = true;
+				this.components = bm.maps.ComponentMaker.getComponents(this.tileID);
 				break;
 			case "F_N_000": 
 				this.imageID = "forest_northwall_0"
@@ -142,11 +81,77 @@ bm.maps.Tile = class extends bm.ui.Container {
 			case "F_SW_CV": 
 				this.imageID = "forest_southwest_cv"
 				break;
+			//~~~~~~~~~~ DUTCH CASTLE
+			case "D_N_000": 
+				this.imageID = "dutch_northwall_0"
+				break;
+			case "D_N_001": 
+				this.imageID = "dutch_northwall_1"
+				break;
+			case "D_N_002": 
+				this.imageID = "dutch_northwall_2"
+				break;
+			case "D_G_000": 
+				this.imageID = "dutch_gate_0"
+				break;
+			case "D_G_001": 
+				this.imageID = "dutch_gate_1"
+				break;
+			case "D_G_002": 
+				this.imageID = "dutch_gate_2"
+				break;
+			case "D_G_003": 
+				this.imageID = "dutch_gate_3"
+				break;
+			case "D_G_004": 
+				this.imageID = "dutch_gate_4"
+				break;
+			case "D_G_005": 
+				this.imageID = "dutch_gate_5"
+				this.isFloor = true;
+				break;
+			case "D_G_006": 
+				this.imageID = "dutch_gate_6"
+				this.isFloor = true;
+				break;
+			case "D_G_007": 
+				this.imageID = "dutch_gate_7"
+				break;
+			case "D_G_008": 
+				this.imageID = "dutch_gate_8"
+				break;
+			case "D_G_009": 
+				this.imageID = "dutch_gate_9"
+				break;
+			case "D_G_010": 
+				this.imageID = "dutch_gate_10"
+				break;
+			case "D_G_011": 
+				this.imageID = "dutch_gate_11"
+				break;
+			case "D_E_000": 
+				this.imageID = "dutch_eastwall_0"
+				break;
+			case "D_W_000": 
+				this.imageID = "dutch_westwall_0"
+				break;
+			case "D_NE_CX": 
+				this.imageID = "dutch_northeast_cx"
+				break;
+			case "D_NW_CX": 
+				this.imageID = "dutch_northwest_cx"
+				break;
+			case "D_SE_CX": 
+				this.imageID = "dutch_southeast_cx"
+				break;
+			case "D_SW_CX": 
+				this.imageID = "dutch_southwest_cx"
+				break;
 		}
 		this.image = new createjs.Bitmap(bm.assets.getResult(this.imageID))
 		//this.backgroundImage = new createjs.Bitmap(bm.assets.getResult(this.backgroundID))
 		//this.backgroundImage.regY = 0;
-		if (!(this.isFloor)) {
+		if (!(this.isFlat)) {
 			this.image.regY = this.image.getBounds().height - bm.globals._tileSize;
 			if (this.image.getBounds().width >  bm.globals._tileSize) {
 				this.image.regX = bm.globals._tileSize;

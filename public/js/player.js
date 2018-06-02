@@ -130,7 +130,7 @@ bm.Player = class extends bm.ui.Container {
 		if (!map.isBoundary(this.x, this.y, "left")){
 			this.x -= this.xVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
-			if ((local.x < canvas.width/(bm.globals._canvasScale*3)) && (map.x < 0)) {
+			if ((local.x < canvas.width/(bm.globals._canvasScale*2.5)) && (map.x < 0)) {
 				map.x += this.xVelocity*this.spriteSpeedMultiplier;
 			}	
 		}
@@ -155,7 +155,7 @@ bm.Player = class extends bm.ui.Container {
 			this.y -= this.yVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
 			var mapCanMoveDown = (map.y < 0);
-			var playerTowardsTop = (local.y + this.regY < canvas.height/(bm.globals._canvasScale*2.5));
+			var playerTowardsTop = (local.y + this.regY < canvas.height/(bm.globals._canvasScale*2));
 			if (playerTowardsTop && mapCanMoveDown) {
 				map.y += this.yVelocity*this.spriteSpeedMultiplier;
 			}	
@@ -168,7 +168,7 @@ bm.Player = class extends bm.ui.Container {
 		this.spriteDirection = this.FACING.SIDE;
 		if (!map.isBoundary(this.x, this.y, "right")){
 			var mapCanMoveLeft = ((map.x-1)*bm.globals._canvasScale > canvas.width - map.getBounds().width);
-			var playerTowardsRight = (local.x > canvas.width/bm.globals._canvasScale - (canvas.width/bm.globals._canvasScale)/3);
+			var playerTowardsRight = (local.x > canvas.width/bm.globals._canvasScale - (canvas.width/bm.globals._canvasScale)/2.5);
 			var mapBiggerThanCanvas = (canvas.width < map.getBounds().width);
 			var moveMap = (mapCanMoveLeft && playerTowardsRight && mapBiggerThanCanvas);
 			this.x += this.xVelocity*this.spriteSpeedMultiplier;
@@ -197,7 +197,7 @@ bm.Player = class extends bm.ui.Container {
 		}
 		if (moveAllowed){
 			var mapCanMoveUp = ((map.y-2)*bm.globals._canvasScale > canvas.height - map.getBounds().height + bm.globals._tileSize*bm.globals._canvasScale);
-			var playerTowardsBottom = (local.y + this.regY > canvas.height/bm.globals._canvasScale - (canvas.height/bm.globals._canvasScale)/3);
+			var playerTowardsBottom = (local.y + this.regY > canvas.height/bm.globals._canvasScale - (canvas.height/bm.globals._canvasScale)/2.5);
 			var mapBiggerThanCanvas = (canvas.height < map.getBounds().height);
 			var moveMap = (mapCanMoveUp && playerTowardsBottom && mapBiggerThanCanvas);
 			this.y += this.yVelocity*this.spriteSpeedMultiplier;
