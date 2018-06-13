@@ -2,7 +2,7 @@ bm.maps.TileMap = class extends bm.ui.Container {
 	constructor() {
 		super()
 		this.createTileArrayAndMapContainer();
-		//this.cacheMapBackground();
+		this.cacheMapBackground();
 	}
 
 	createTileArrayAndMapContainer() {
@@ -88,8 +88,10 @@ bm.maps.TileMap = class extends bm.ui.Container {
 		var sortFunction = function(obj1, obj2, options) {
 			var obj1Y = obj1.y
 			var obj2Y = obj2.y
-			if (!obj1.isFloor && obj1.tileID) obj1Y += bm.globals._tileSize; 
-			if (!obj2.isFloor && obj2.tileID) obj2Y += bm.globals._tileSize;
+			if (obj1.ySortOffset && obj1.tileID) {
+				obj1Y += obj1.ySortOffset; 
+			}
+			if (obj2.ySortOffset && obj2.tileID) obj2Y += obj2.ySortOffset;
 			if (obj1Y == obj2Y) {
 				if (obj1.x > obj2.x) { return 1; }
 				if (obj1.x < obj2.x) { return -1; }

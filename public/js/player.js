@@ -123,20 +123,19 @@ bm.Player = class extends bm.ui.Container {
 		}
 	}
 	moveLeft() {
-		var local = this.localToGlobal(0,0)
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
 		this.scaleX = 1;
 		this.spriteDirection = this.FACING.SIDE;
 		if (!map.isBoundary(this.x, this.y, "left")){
 			this.x -= this.xVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
+			var local = this.localToGlobal(0,0)
 			if ((local.x < canvas.width/(bm.globals._canvasScale*2.5)) && (map.x < 0)) {
 				map.x += this.xVelocity*this.spriteSpeedMultiplier;
 			}	
 		}
 	}
 	moveUp() {
-		var local = this.localToGlobal(0,0)
 		var moveAllowed = false;
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
 		this.spriteDirection = this.FACING.UP;
@@ -154,6 +153,7 @@ bm.Player = class extends bm.ui.Container {
 		if (moveAllowed) {
 			this.y -= this.yVelocity*this.spriteSpeedMultiplier;
 			this.setRun();
+			var local = this.localToGlobal(0,0)
 			var mapCanMoveDown = (map.y < 0);
 			var playerTowardsTop = (local.y + this.regY < canvas.height/(bm.globals._canvasScale*2));
 			if (playerTowardsTop && mapCanMoveDown) {
@@ -163,15 +163,16 @@ bm.Player = class extends bm.ui.Container {
 	}
 	moveRight() {
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
-		var local = this.localToGlobal(0,0)
 		this.scaleX = -1;
 		this.spriteDirection = this.FACING.SIDE;
 		if (!map.isBoundary(this.x, this.y, "right")){
-			var mapCanMoveLeft = ((map.x-1)*bm.globals._canvasScale > canvas.width - map.getBounds().width);
-			var playerTowardsRight = (local.x > canvas.width/bm.globals._canvasScale - (canvas.width/bm.globals._canvasScale)/2.5);
-			var mapBiggerThanCanvas = (canvas.width < map.getBounds().width);
-			var moveMap = (mapCanMoveLeft && playerTowardsRight && mapBiggerThanCanvas);
 			this.x += this.xVelocity*this.spriteSpeedMultiplier;
+			var mapBounds = map.getBounds();
+			var local = this.localToGlobal(0,0)
+			var mapCanMoveLeft = ((map.x-1)*bm.globals._canvasScale > canvas.width - mapBounds.width);
+			var playerTowardsRight = (local.x > canvas.width/bm.globals._canvasScale - (canvas.width/bm.globals._canvasScale)/2.5);
+			var mapBiggerThanCanvas = (canvas.width < mapBounds.width);
+			var moveMap = (mapCanMoveLeft && playerTowardsRight && mapBiggerThanCanvas);
 	  		this.setRun();
 	  		if (moveMap) {
 	  			map.x -= this.xVelocity*this.spriteSpeedMultiplier;
@@ -179,10 +180,8 @@ bm.Player = class extends bm.ui.Container {
 		}
 	}
 	moveDown() {
-		var local = this.localToGlobal(0,0)
 		var moveAllowed = false;
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
-		var mapBounds = map.getBounds();
 		this.spriteDirection = this.FACING.DOWN;
 		if (!map.isBoundary(this.x, this.y, "down")){
 			if (this.scaleX == -1) {
@@ -196,9 +195,11 @@ bm.Player = class extends bm.ui.Container {
 			}
 		}
 		if (moveAllowed){
-			var mapCanMoveUp = ((map.y-2)*bm.globals._canvasScale > canvas.height - map.getBounds().height + bm.globals._tileSize*bm.globals._canvasScale);
+			var local = this.localToGlobal(0,0);
+			var mapBounds = map.getBounds();
+			var mapCanMoveUp = ((map.y-2)*bm.globals._canvasScale > canvas.height - mapBounds.height + bm.globals._tileSize*bm.globals._canvasScale);
 			var playerTowardsBottom = (local.y + this.regY > canvas.height/bm.globals._canvasScale - (canvas.height/bm.globals._canvasScale)/2.5);
-			var mapBiggerThanCanvas = (canvas.height < map.getBounds().height);
+			var mapBiggerThanCanvas = (canvas.height < mapBounds.height);
 			var moveMap = (mapCanMoveUp && playerTowardsBottom && mapBiggerThanCanvas);
 			this.y += this.yVelocity*this.spriteSpeedMultiplier;
 			this.setRun();

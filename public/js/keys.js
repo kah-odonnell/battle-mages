@@ -32,7 +32,7 @@ bm.Keys = class {
 		//prevents default canvas stretching
 		window.addEventListener("resize", function( event ) {
 			bm.gameInstance.resetCanvas();
-			bm.gameInstance.mapGraph.currentMap.recenter();
+			if (bm.gameInstance.mapGraph.currentMap) bm.gameInstance.mapGraph.currentMap.recenter();
 		}, true);
 	}
 	  

@@ -22,6 +22,7 @@ bm.Globals = class {
 			{"src":"../imgs/tiles/castle_dutch/dutch_northwall_0.png"},
 			{"src":"../imgs/tiles/castle_dutch/dutch_northwall_1.png"},
 			{"src":"../imgs/tiles/castle_dutch/dutch_northwall_2.png"},
+			{"src":"../imgs/tiles/castle_dutch/dutch_northwall_3.png"},
 			{"src":"../imgs/tiles/castle_dutch/dutch_gate_0.png"},
 			{"src":"../imgs/tiles/castle_dutch/dutch_gate_1.png"},
 			{"src":"../imgs/tiles/castle_dutch/dutch_gate_2.png"},
@@ -45,7 +46,7 @@ bm.Globals = class {
 
 		this._uiScale = 2;
 		this._pixelScale = 1;
-		this._canvasScale = 4;
+		this._canvasScale = 3;
 
 		this._tileSize = 20;
 

@@ -3,7 +3,9 @@ bm.maps.Tile = class extends bm.ui.Container {
 		super();
 		this.tileID = tileID
 		this.setupTile();
-		//this.addToContainer(this.getBackgroundImage())
+		if (this.getBackgroundImage()) {
+			this.addToContainer(this.getBackgroundImage())
+		}
 		this.addToContainer(this.getImage())
 	}
 
@@ -53,33 +55,43 @@ bm.maps.Tile = class extends bm.ui.Container {
 				break;
 			case "F_E_000": 
 				this.imageID = "forest_eastwall_0"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_W_000": 
 				this.imageID = "forest_westwall_0"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_NE_CX": 
 				this.imageID = "forest_northeast_cx"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_NE_CV": 
 				this.imageID = "forest_northeast_cv"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_NW_CX": 
 				this.imageID = "forest_northwest_cx"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_NW_CV": 
 				this.imageID = "forest_northwest_cv"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_SE_CX": 
 				this.imageID = "forest_southeast_cx"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_SE_CV": 
 				this.imageID = "forest_southeast_cv"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_SW_CX": 
 				this.imageID = "forest_southwest_cx"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "F_SW_CV": 
 				this.imageID = "forest_southwest_cv"
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			//~~~~~~~~~~ DUTCH CASTLE
 			case "D_N_000": 
@@ -91,6 +103,9 @@ bm.maps.Tile = class extends bm.ui.Container {
 			case "D_N_002": 
 				this.imageID = "dutch_northwall_2"
 				break;
+			case "D_N_003": 
+				this.imageID = "dutch_northwall_3"
+				break;
 			case "D_G_000": 
 				this.imageID = "dutch_gate_0"
 				break;
@@ -99,29 +114,39 @@ bm.maps.Tile = class extends bm.ui.Container {
 				break;
 			case "D_G_002": 
 				this.imageID = "dutch_gate_2"
+				this.backgroundID = "grasstile1"
 				break;
 			case "D_G_003": 
 				this.imageID = "dutch_gate_3"
+				this.backgroundID = "grasstile1"
 				break;
 			case "D_G_004": 
 				this.imageID = "dutch_gate_4"
+				this.backgroundID = "grasstile1"
+				this.backgroundXOffset = bm.globals._tileSize;
 				break;
 			case "D_G_005": 
 				this.imageID = "dutch_gate_5"
 				this.isFloor = true;
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "D_G_006": 
 				this.imageID = "dutch_gate_6"
 				this.isFloor = true;
+				this.ySortOffset = bm.globals._tileSize;
 				break;
 			case "D_G_007": 
 				this.imageID = "dutch_gate_7"
+				this.backgroundID = "grasstile1"
+				this.backgroundXOffset = -bm.globals._tileSize;
 				break;
 			case "D_G_008": 
 				this.imageID = "dutch_gate_8"
+				this.backgroundID = "grasstile1"
 				break;
 			case "D_G_009": 
 				this.imageID = "dutch_gate_9"
+				this.backgroundID = "grasstile1"
 				break;
 			case "D_G_010": 
 				this.imageID = "dutch_gate_10"
@@ -149,8 +174,12 @@ bm.maps.Tile = class extends bm.ui.Container {
 				break;
 		}
 		this.image = new createjs.Bitmap(bm.assets.getResult(this.imageID))
-		//this.backgroundImage = new createjs.Bitmap(bm.assets.getResult(this.backgroundID))
-		//this.backgroundImage.regY = 0;
+		if (this.backgroundID) {
+			this.backgroundImage = new createjs.Bitmap(bm.assets.getResult(this.backgroundID))
+			if (this.backgroundXOffset) {
+				this.backgroundImage.x += this.backgroundXOffset;
+			}
+		}
 		if (!(this.isFlat)) {
 			this.image.regY = this.image.getBounds().height - bm.globals._tileSize;
 			if (this.image.getBounds().width >  bm.globals._tileSize) {
