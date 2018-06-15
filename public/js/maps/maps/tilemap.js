@@ -58,18 +58,35 @@ bm.maps.TileMap = class extends bm.ui.Container {
 
 	addTileToMapContainer(tile, y, x) {
 		tile.x = x * bm.globals._tileSize;
-		tile.y = y * bm.globals._tileSize
+		tile.y = y * bm.globals._tileSize;
+		if (tile.getBackgroundImage()) {
+			var backgroundImage = tile.getBackgroundImage()
+			backgroundImage.x = tile.x;
+			backgroundImage.y = tile.y
+			this.addToContainer(backgroundImage)
+		}
+		var image = tile.getImage()
+		image.x = tile.x;
+		image.y = tile.y
+		this.addToContainer(image)
 		//var tileBounds = tile.getBounds();
 		//tile.cache(0,0,tileBounds.height,tileBounds.width)
-		this.addToContainer(tile);
 	}
 
 
 	addTileToMapBackground(tile, y, x) {
 		tile.x = x * bm.globals._tileSize;
 		tile.y = y * bm.globals._tileSize
-		//tile.cacheTile();
-		this.addToContainer(tile);
+		if (tile.getBackgroundImage()) {
+			var backgroundImage = tile.getBackgroundImage()
+			backgroundImage.x = tile.x;
+			backgroundImage.y = tile.y
+			this.addToContainer(backgroundImage)
+		}
+		var image = tile.getImage()
+		image.x = tile.x;
+		image.y = tile.y
+		this.addToContainer(image);
 	}
 
 	addTileToTileArray(tile, y, x) {
@@ -88,10 +105,10 @@ bm.maps.TileMap = class extends bm.ui.Container {
 		var sortFunction = function(obj1, obj2, options) {
 			var obj1Y = obj1.y
 			var obj2Y = obj2.y
-			if (obj1.ySortOffset && obj1.tileID) {
+			if (obj1.ySortOffset) {
 				obj1Y += obj1.ySortOffset; 
 			}
-			if (obj2.ySortOffset && obj2.tileID) obj2Y += obj2.ySortOffset;
+			if (obj2.ySortOffset) obj2Y += obj2.ySortOffset;
 			if (obj1Y == obj2Y) {
 				if (obj1.x > obj2.x) { return 1; }
 				if (obj1.x < obj2.x) { return -1; }

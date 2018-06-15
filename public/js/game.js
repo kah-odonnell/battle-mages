@@ -15,7 +15,10 @@ bm.Game = class {
 		this.setupCanvas();
 		this.setupStage();
 		this.setupLoadingText();
+		bm.globals.completeLoadManifest();
+		bm.globals.setLoadManifestIDs();
 		this.loadAssets();
+		//bm.gamedata.tiledata.addComponents();
 	}
 
 	addTicker() {

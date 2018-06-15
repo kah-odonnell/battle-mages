@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageChopper", "ImageChopper\ImageChopper.csproj", "{37D59706-B40E-4F98-8885-A5FF9D71DF53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37D59706-B40E-4F98-8885-A5FF9D71DF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37D59706-B40E-4F98-8885-A5FF9D71DF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37D59706-B40E-4F98-8885-A5FF9D71DF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37D59706-B40E-4F98-8885-A5FF9D71DF53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B30E5ED0-BFF1-4BE2-A466-81F27EBC7591}
+	EndGlobalSection
+EndGlobal

@@ -110,9 +110,11 @@ bm.maps.ComponentMaker = class {
 				flower6.regX = flowerBounds.width/2; flower6.regY = flowerBounds.height;
 				components = [flower1, flower2, flower3, flower4, flower5, flower6];
 				break;
-			case "F_N_000": 
+			case "F_BR_0A": 
+				components = [new createjs.Bitmap(bm.assets.getResult("bridge_0_A"))]
 				break;
-			case "F_N_001": 
+			case "F_BR_0B": 
+				components = [new createjs.Bitmap(bm.assets.getResult("bridge_0_B"))]
 				break;
 			case "F_S_000": 
 				break;
