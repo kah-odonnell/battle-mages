@@ -31,8 +31,6 @@ bm.maps.ComponentMaker = class {
 				components = [flower1, flower2, flower3, flower4, flower5, flower6];
 				break;
 			case "F_FLWR1": 
-				this.imageID = "grasstile1"
-				this.isFloor = true;
 				var flowername = "whiteflower";
 				var getFlower = function(flowername) {
 					return new createjs.Bitmap(bm.assets.getResult(flowername));
@@ -109,34 +107,6 @@ bm.maps.ComponentMaker = class {
 				flower6.x = bm.globals._tileSize*(3/4); flower6.y = bm.globals._tileSize*(3/3); 
 				flower6.regX = flowerBounds.width/2; flower6.regY = flowerBounds.height;
 				components = [flower1, flower2, flower3, flower4, flower5, flower6];
-				break;
-			case "F_BR_0A": 
-				components = [new createjs.Bitmap(bm.assets.getResult("bridge_0_A"))]
-				break;
-			case "F_BR_0B": 
-				components = [new createjs.Bitmap(bm.assets.getResult("bridge_0_B"))]
-				break;
-			case "F_S_000": 
-				break;
-			case "F_E_000": 
-				break;
-			case "F_W_000": 
-				break;
-			case "F_NE_CX": 
-				break;
-			case "F_NE_CV": 
-				break;
-			case "F_NW_CX": 
-				break;
-			case "F_NW_CV": 
-				break;
-			case "F_SE_CX": 
-				break;
-			case "F_SE_CV": 
-				break;
-			case "F_SW_CX": 
-				break;
-			case "F_SW_CV": 
 				break;
 		}
 		return components

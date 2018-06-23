@@ -6,6 +6,7 @@ bm.Keys = class {
 		this.RIGHT = 68
 		this.DOWN = 83
 		this.SPACE = 32
+		this.F12 = 123
 
 
 		window.addEventListener('keyup', function(event) { 
@@ -31,8 +32,8 @@ bm.Keys = class {
 		//resets the canvas to the size of the window
 		//prevents default canvas stretching
 		window.addEventListener("resize", function( event ) {
-			bm.gameInstance.resetCanvas();
-			if (bm.gameInstance.mapGraph.currentMap) bm.gameInstance.mapGraph.currentMap.recenter();
+			bm.gameInstance.resetCanvasAndStage();
+			if (bm.gameInstance.mapGraph.getCurrentMap()) bm.gameInstance.mapGraph.getCurrentMap().centerOn(bm.gameInstance.player);
 		}, true);
 	}
 	  

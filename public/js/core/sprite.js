@@ -1,6 +1,6 @@
-bm.ui.Container = class extends createjs.Container {
-	constructor() {
-		super();
+bm.core.Sprite = class extends createjs.Sprite {
+	constructor(data) {
+		super(data);
 	}
 
 	addToContainer(container) {

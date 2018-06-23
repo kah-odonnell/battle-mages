@@ -15,14 +15,13 @@ bm.Game = class {
 		this.setupCanvas();
 		this.setupStage();
 		this.setupLoadingText();
-		bm.globals.completeLoadManifest();
-		bm.globals.setLoadManifestIDs();
 		this.loadAssets();
 		//bm.gamedata.tiledata.addComponents();
 	}
 
 	addTicker() {
 		createjs.Ticker.setFPS(bm.globals._FPS);
+		createjs.Ticker.timingMode = createjs.Ticker.RAF;
 		createjs.Ticker.addEventListener("tick", function() {
 			bm.gameInstance.tick();
 		});
@@ -30,15 +29,24 @@ bm.Game = class {
 
 	buildWorld() {
 		this.player = new bm.Player();
-		this.mapGraph = new bm.maps.MapGraph1();
+		this.mapGraph = bm.maps.MapGraphMaker.getMapGraph("DEMO");
 		this.mapGraph.addPlayer();
 		this.addCurrentMapToStage();
+		this.mapGraph.getCurrentMap().centerOn(this.player);
+		bm.gameInstance.addTicker();
 	}
 
 	addCurrentMapToStage() {
-		this.mapGraph.currentMap.scaleX = bm.globals._pixelScale;
-		this.mapGraph.currentMap.scaleY = bm.globals._pixelScale;
-		this.stage.addChild(this.mapGraph.currentMap);
+		this.mapGraph.getCurrentMap().scaleX = bm.globals._pixelScale;
+		this.mapGraph.getCurrentMap().scaleY = bm.globals._pixelScale;
+		this.stage.addChild(this.mapGraph.getCurrentMap());
+	}
+
+	resetMapOnStage() {
+		this.stage.removeAllChildren();
+		this.mapGraph.getCurrentMap().scaleX = bm.globals._pixelScale;
+		this.mapGraph.getCurrentMap().scaleY = bm.globals._pixelScale;
+		this.stage.addChild(this.mapGraph.getCurrentMap());
 	}
 
 	setupCanvas() {
@@ -49,13 +57,13 @@ bm.Game = class {
 		$("canvas").css("height", bm.globals._canvasScale+"00%")
 	}
 
-	resetCanvas() {
-		var canvasHolder = document.getElementById('canvasHolder');
-		canvasHolder.style.width = window.innerWidth;
-		canvasHolder.style.height = window.innerHeight;
+	resetCanvasAndStage() {
+		bm.globals._canvasWidth = window.innerWidth;
+		bm.globals._canvasHeight = window.innerHeight;
 		var canvas = document.getElementById('canvas');
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
+		canvas.width = bm.globals._canvasWidth;
+		canvas.height = bm.globals._canvasHeight;
+		this.stage.updateViewport(bm.globals._canvasWidth, bm.globals._canvasHeight)
 	}
 
 	setupStage() {
@@ -64,10 +72,10 @@ bm.Game = class {
 
 	setupLoadingText() {
 		var fontSize = bm.globals._fontSize.big;
-		this.loadText = new createjs.Text('Loading   0%', fontSize + 'px disposabledroid', '#FFFFFF');
+		this.loadText = new createjs.Text('Loading   0%', fontSize + 'px Arial', '#FFFFFF');
 		var b = this.loadText.getBounds();
-		this.loadText.x = this.stage.canvas.width/2 - b.width/2;
-		this.loadText.y = this.stage.canvas.height/2 - b.height/2;
+		this.loadText.x = 0;
+		this.loadText.y = 0;
 		this.stage.addChild(this.loadText);
 	}
 
@@ -87,7 +95,12 @@ bm.Game = class {
 		if (Math.floor(createjs.Ticker.getMeasuredFPS()) < 55) {
 			color1 = "#FF0000"
 		}
-		$("#framerateCounter").css("color",color1).html(fps);
+		var coords = bm.gameInstance.player.getCoords()
+		$("#framerateCounter").css("color",color1).html(fps + " - " + coords.tileX + ", " + coords.tileY);
+	}
+
+	showInteractInfo(data) {
+		
 	}
 
 	handleLoadProgress(event) {
