@@ -9,6 +9,9 @@ bm.maps.TileMaker = class {
 				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
 				attributes.isFloor = true
 				break; 
+			case "F_E000X": 
+				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
+				break; 
 			case "F_FLWR0": 
 				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
 				attributes.isFloor = true

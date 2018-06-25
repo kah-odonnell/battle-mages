@@ -6,6 +6,7 @@ bm.Keys = class {
 		this.RIGHT = 68
 		this.DOWN = 83
 		this.SPACE = 32
+		this.SHIFT = 16
 		this.F12 = 123
 
 
@@ -47,5 +48,17 @@ bm.Keys = class {
 	  
 	onKeyup(event) {
 	  delete this._pressed[event.keyCode];
+	}
+
+	isMoving() {
+		if (bm.keys.isDown(bm.keys.UP) ||
+			bm.keys.isDown(bm.keys.DOWN) ||
+			bm.keys.isDown(bm.keys.LEFT) || 
+			bm.keys.isDown(bm.keys.RIGHT)
+		) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

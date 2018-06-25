@@ -44,6 +44,8 @@ bm.Player = class extends bm.characters.Character {
 		this.x = 760;
 		this.y = 900;
 
+		this._canMove = true;
+
 		this.createSprite();
 	}
 
@@ -66,18 +68,35 @@ bm.Player = class extends bm.characters.Character {
 		else if (bm.keys.isDown(bm.keys.DOWN) && bm.keys.isDown(bm.keys.RIGHT)) this._diagonalMovement = true;
 		else this._diagonalMovement = false;
 		//Handle movement of sprite
-		if (!(false)) {
+		if (this._canMove) {
 		 	if (bm.keys.isDown(bm.keys.UP)) this.moveUp();
 		 	if (bm.keys.isDown(bm.keys.DOWN)) this.moveDown();
 		 	if (bm.keys.isDown(bm.keys.LEFT)) this.moveLeft();
 		 	if (bm.keys.isDown(bm.keys.RIGHT)) this.moveRight();
-		 	if (bm.utils.isEmpty(bm.keys._pressed)) this.setIdle();			
+		 	if (!bm.keys.isMoving()) this.setIdle();			
 		} else {
 			this.setIdle();
 		}	
 		this.interact()
 	}
 
+	switchMaps(mapExit) {
+		var map = bm.gameInstance.mapGraph.getCurrentMap();
+		map.removePlayer();
+		this._canMove = false;
+		this.x = mapExit.outputLocation[0];
+		this.y = mapExit.outputLocation[1];
+		var destinationID = mapExit.destinationMapID;
+		bm.gameInstance.mapGraph.setDestinationID(destinationID);
+		bm.gameInstance.userInterface.addBlackout(function() {
+			var destinationID = bm.gameInstance.mapGraph.getDestinationID();
+			var destMap = bm.gameInstance.mapGraph.getMapFromID(destinationID);
+			bm.gameInstance.mapGraph.setCurrentMap(destMap);
+			destMap.addPlayer();
+			bm.gameInstance.player._canMove = true;
+			bm.gameInstance.mapGraph.getCurrentMap().centerOn(bm.gameInstance.player);
+		})
+	}
 
 	interact() {
 		super.interact();
@@ -85,18 +104,11 @@ bm.Player = class extends bm.characters.Character {
 		var tileY = Math.floor(this.y/bm.globals._tileSize);
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
 		if (map.getNearbyExits(tileX, tileY)) {
-			bm.gameInstance.showInteractInfo(map.getNearbyExits(tileX, tileY)[0]);
+			bm.gameInstance.userInterface.showInteractInfo(map.getNearbyExits(tileX, tileY)[0]);
 		}
 		if (map.isExit(tileX, tileY)) {
-			map.removePlayer();
 			var mapExit = map.getNearbyExits(tileX, tileY)[0];
-			var destinationID = mapExit.destinationMapID;
-			var destMap = bm.gameInstance.mapGraph.getMapFromID(destinationID);
-			bm.gameInstance.mapGraph.setCurrentMap(destMap);
-			this.x = mapExit.outputLocation[0];
-			this.y = mapExit.outputLocation[1];
-			destMap.addPlayer();
-			bm.gameInstance.mapGraph.getCurrentMap().centerOn(bm.gameInstance.player);
+			this.switchMaps(mapExit);
 		}
 	}
 
@@ -109,7 +121,7 @@ bm.Player = class extends bm.characters.Character {
 		this.scaleX = 1;
 		this._spriteDirection = this._FACING.SIDE;
 		this.setRun();
-		if (!map.isBoundary(this.x, this.y, "left")){
+		if (!map.isBoundary(this.x, this.y - 2, "left") && !map.isBoundary(this.x, this.y + 2, "left")){
 			this.x -= this._xVelocity*this._spriteSpeedMultiplier;
 			var local = this.localToGlobal(0,0)
 			if ((local.x < canvas.width/(bm.globals._canvasScale*2.5)) && (map.x < 0)) {
@@ -123,16 +135,8 @@ bm.Player = class extends bm.characters.Character {
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
 		this._spriteDirection = this._FACING.UP;
 		this.setRun();
-		if (!map.isBoundary(this.x, this.y, "up")){
-			if (this.scaleX == -1) {
-				if ((!map.isBoundary(this.x-0.325*bm.globals._tileSize,this.y,"up"))){
-					moveAllowed = true;
-				}
-			} else {
-				if (!map.isBoundary(this.x+0.325*bm.globals._tileSize,this.y,"up")){
-					moveAllowed = true;
-				}				
-			}
+		if (!map.isBoundary(this.x - 2, this.y, "up") && !map.isBoundary(this.x + 2, this.y, "up")){
+			moveAllowed = true;
 		}
 		if (moveAllowed) {
 			this.y -= this.getYVelocity();
@@ -150,7 +154,7 @@ bm.Player = class extends bm.characters.Character {
 		this.scaleX = -1;
 		this._spriteDirection = this._FACING.SIDE;
 	  	this.setRun();
-		if (!map.isBoundary(this.x, this.y, "right")){
+		if (!map.isBoundary(this.x, this.y - 2, "right") && !map.isBoundary(this.x, this.y + 2, "right")){
 			this.x += this.getXVelocity()
 			var mapBounds = map.getBounds();
 			var local = this.localToGlobal(0,0)
@@ -169,16 +173,8 @@ bm.Player = class extends bm.characters.Character {
 		var map = bm.gameInstance.mapGraph.getCurrentMap();
 		this._spriteDirection = this._FACING.DOWN;
 		this.setRun();
-		if (!map.isBoundary(this.x, this.y, "down")){
-			if (this.scaleX == -1) {
-				if (!map.isBoundary(this.x-0.325*bm.globals._tileSize,this.y,"down")){
-					moveAllowed = true;
-				}
-			} else {
-				if (!map.isBoundary(this.x+0.325*bm.globals._tileSize ,this.y,"down")){
-					moveAllowed = true; 
-				}
-			}
+		if (!map.isBoundary(this.x + 2, this.y, "down") && !map.isBoundary(this.x - 2, this.y, "down")){
+			moveAllowed = true;
 		}
 		if (moveAllowed){
 			var local = this.localToGlobal(0,0);

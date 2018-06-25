@@ -18,6 +18,14 @@ bm.maps.MapGraph = class {
 		}
 	}
 
+	setDestinationID(destinationID) {
+		this._destinationID = destinationID;
+	}
+
+	getDestinationID() {
+		return this._destinationID;
+	}
+
 	addPlayer(player) {
 		this._currentMap.addPlayer();
 	}

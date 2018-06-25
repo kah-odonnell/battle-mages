@@ -127,9 +127,13 @@ bm.maps.TileMap = class extends bm.core.Container {
 		var currentY = Math.round(this.y);
 		var goalX = obj.x - canvas.width/2 + currentX;
 		var goalY = obj.y - canvas.height/2 + currentY;
-		var newX = obj.x - (canvas.width/2)/(bm.globals._canvasScale*bm.globals._pixelScale);
-		var newY = obj.y - (canvas.height/2)/(bm.globals._canvasScale*bm.globals._pixelScale);
-		createjs.Tween.get(this, {loop: false}).to({x: -newX,y:-newY},tweenTime,createjs.Ease.getPowInOut(4));
+		var newX = -(obj.x - (canvas.width/2)/(bm.globals._canvasScale*bm.globals._pixelScale));
+		var newY = -(obj.y - (canvas.height/2)/(bm.globals._canvasScale*bm.globals._pixelScale));
+		if (newY > 0) newY = 0;
+		if (newY < (canvas.height)/(bm.globals._canvasScale*bm.globals._pixelScale) - this.getBounds().height/(bm.globals._canvasScale*bm.globals._pixelScale)) {
+			newY = (canvas.height)/(bm.globals._canvasScale*bm.globals._pixelScale) - this.getBounds().height/(bm.globals._canvasScale*bm.globals._pixelScale);
+		}
+		createjs.Tween.get(this, {loop: false}).to({x: newX,y: newY},tweenTime,createjs.Ease.getPowInOut(4));
 	}
 
 	isBoundary(x, y, direction) {
