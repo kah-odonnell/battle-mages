@@ -39,7 +39,7 @@ bm.ui.UserInterface = class extends bm.ui.UI {
 					bm.gameInstance.userInterface.fadeOutPanel("blackoutPanel", 30);
 				}
 			}
-		};
+		}
 	}
 
 	addInitialBlackout() {
