@@ -24,10 +24,18 @@ bm.maps.TileMaker = class {
 				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
 				attributes.isFloor = true
 				break; 
+			case "F_FLWR3":
+				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
+				attributes.isFloor = true
+				break;
 			case "F_FLWRR": 
 				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
 				attributes.isFloor = true
 				break; 
+			case "F_FLWRX": 
+				img0 = new createjs.Bitmap(bm.assets.getResult("grasstile1"));
+				attributes.isFloor = true
+				break;
 			case "F_N_000": 
 				img0 = new createjs.Bitmap(bm.assets.getResult("forest_northwall_0"));
 				img0.regY = img0.getBounds().height - bm.globals._tileSize;
@@ -95,7 +103,7 @@ bm.maps.TileMaker = class {
 				img0 = new createjs.Bitmap(bm.assets.getResult("forest_southwest_cx"));
 				img0.regY = img0.getBounds().height - bm.globals._tileSize;
 				img0.regX = bm.globals._tileSize;
-				img0.ySortOffset = bm.globals._tileSize
+				img0.ySortOffset = 3*bm.globals._tileSize/4
 				break;
 			case "F_SW_CV": 
 				img0 = new createjs.Bitmap(bm.assets.getResult("forest_southwest_cv"));

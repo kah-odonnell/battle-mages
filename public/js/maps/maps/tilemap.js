@@ -27,6 +27,9 @@ bm.maps.TileMap = class extends bm.core.Container {
 		    if (obj1Y < obj2Y) { return -1; }
 		    return 0;
 		}
+		var sortFunction2 = function(obj1, obj2, options) {
+			return obj1.y - obj2.y;
+		}
 		this.sortChildren(sortFunction);
 	}
 

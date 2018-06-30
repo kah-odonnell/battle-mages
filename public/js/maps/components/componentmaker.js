@@ -1,6 +1,6 @@
 bm.maps.ComponentMaker = class {
 	static getComponents(tileID) {
-		var components
+		var components = [];
 		switch(tileID) {
 			case "F_E0000": 
 				break;
@@ -83,7 +83,81 @@ bm.maps.ComponentMaker = class {
 				components = [flower1, flower2, flower3, flower4, flower5, flower6];
 				break;
 			case "F_FLWRR": 
-				var flowernames = "blueflower";
+				var flowername = "blueflower";
+				var getFlower = function() {
+					var list = ["blueflower", "redflower", "whiteflower", "bluebonnet", "fern", "grass", "grass2", "grass3", "fern", "grass", "grass2"]
+					var rand = Math.floor(Math.random() * list.length);
+					return new createjs.Bitmap(bm.assets.getResult(list[rand]));
+				}
+				var setFlowerVals = function(flower, iteration) {
+					var bounds = flower.getBounds();
+					var x; var y;
+					if (i == 0) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2);
+						y = Math.floor(Math.random() * bm.globals._tileSize/2);
+					}
+					if (i == 1) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+						y = Math.floor(Math.random() * bm.globals._tileSize/2);
+					}
+					if (i == 2) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2);
+						y = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+					}
+					if (i == 3) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+						y = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+					}
+					flower.x = x;
+					flower.y = y;
+					flower.regX = bounds.width/2;
+					flower.regY = bounds.height;
+				}
+				for (var i = 0; i < 1; i++) {
+					var flower = getFlower()
+					setFlowerVals(flower, i);
+					components.push(flower);
+				}
+				break;
+			case "F_FLWRX": 
+				var flowername = "blueflower";
+				var getFlower = function() {
+					var list = ["blueflower", "redflower", "whiteflower", "bluebonnet", "fern", "grass", "grass2", "grass3", "fern", "grass", "grass2"]
+					var rand = Math.floor(Math.random() * list.length);
+					return new createjs.Bitmap(bm.assets.getResult(list[rand]));
+				}
+				var setFlowerVals = function(flower, iteration) {
+					var bounds = flower.getBounds();
+					var x; var y;
+					if (i == 0) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2);
+						y = Math.floor(Math.random() * bm.globals._tileSize/2);
+					}
+					if (i == 1) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+						y = Math.floor(Math.random() * bm.globals._tileSize/2);
+					}
+					if (i == 2) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2);
+						y = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+					}
+					if (i == 3) {
+						x = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+						y = Math.floor(Math.random() * bm.globals._tileSize/2) + bm.globals._tileSize/2;
+					}
+					flower.x = x;
+					flower.y = y;
+					flower.regX = bounds.width/2;
+					flower.regY = bounds.height;
+				}
+				for (var i = 0; i < 2; i++) {
+					var flower = getFlower()
+					setFlowerVals(flower, i);
+					components.push(flower);
+				}
+				break;
+			case "F_FLWR3": 
+				var flowername = "bluebonnet";
 				var getFlower = function(flowername) {
 					return new createjs.Bitmap(bm.assets.getResult(flowername));
 				}

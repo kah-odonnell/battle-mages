@@ -6,14 +6,14 @@ bm.maps.MapGraphMaker = class {
 		data.edges = [];
 		switch(mapGraphID) {
 			case "DEMO":
-				var mapGraphVertexA = new bm.maps.MapGraphVertex(bm.maps.MapMaker.getMap("BijenstadCreek"));
-				var mapGraphVertexB = new bm.maps.MapGraphVertex(bm.maps.MapMaker.getMap("Bijenstad"));
+				var mapGraphVertexA = new bm.maps.MapGraphVertex(bm.maps.MapMaker.getMap("NewAmsterdamCreek"));
+				var mapGraphVertexB = new bm.maps.MapGraphVertex(bm.maps.MapMaker.getMap("NewAmsterdam"));
 				var mapGraphVertexC = new bm.maps.MapGraphVertex(bm.maps.MapMaker.getMap("SouthernForest"));
 				var mapGraphEdgeA = new bm.maps.MapGraphEdge(mapGraphVertexA, mapGraphVertexB);
 				var mapGraphEdgeB = new bm.maps.MapGraphEdge(mapGraphVertexA, mapGraphVertexC);
 				data.vertices = [mapGraphVertexA, mapGraphVertexB, mapGraphVertexC];
 				data.edges = [mapGraphEdgeA, mapGraphEdgeB];
-				data.startingMapID = "BijenstadCreek";
+				data.startingMapID = "NewAmsterdamCreek";
 				break;
 		}
 		var mapGraph = new bm.maps.MapGraph(data);
