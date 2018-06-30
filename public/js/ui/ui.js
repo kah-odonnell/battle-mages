@@ -41,6 +41,29 @@ bm.ui.UI = class {
 		//this.removeTransparentPanels();
 	}
 
+	addBlackout(onComplete) {
+		this._panelData.blackoutPanel = {
+			style: {
+				position: "absolute",
+				background: "#000000",
+				width: canvas.width + "px",
+				height: canvas.height + "px",
+				opacity: 0
+			},
+			innerHtml: "",
+			id: "blackoutPanel",
+			tween: {
+				totalTime: 30,
+				newValue: 1,
+				property: "opacity",
+				onComplete: function () {
+					onComplete();
+					bm.gameInstance.userInterface.fadeOutPanel("blackoutPanel", 30);
+				}
+			}
+		}
+	}
+
 	updateUI() {
 		$("#ui").html(this.getHmtl());
 	}
